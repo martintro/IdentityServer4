@@ -5,7 +5,7 @@
 using IdentityServer4.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
-using IdentityModel;
+using Duende.IdentityModel;
 using System.Text;
 using System;
 using Microsoft.Extensions.Logging;

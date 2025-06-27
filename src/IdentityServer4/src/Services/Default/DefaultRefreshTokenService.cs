@@ -8,7 +8,7 @@ using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer4.Logging.Models;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Authentication;

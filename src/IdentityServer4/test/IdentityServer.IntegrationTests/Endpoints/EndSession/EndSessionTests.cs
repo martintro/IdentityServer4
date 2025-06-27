@@ -12,7 +12,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -137,7 +137,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
@@ -224,7 +224,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
@@ -272,7 +272,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
 
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
@@ -305,7 +305,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
 
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             await _mockPipeline.LoginAsync("alice");
@@ -429,7 +429,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 state: "123_state",
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
@@ -454,7 +454,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 state: "123_state",
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;

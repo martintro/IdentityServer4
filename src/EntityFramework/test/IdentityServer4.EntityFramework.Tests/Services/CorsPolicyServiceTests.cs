@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Services;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.EntityFramework.IntegrationTests.Services
 {

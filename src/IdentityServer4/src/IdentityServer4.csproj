@@ -46,7 +46,6 @@
     <PackageReference Include="IdentityServer4.Storage" />
     <PackageReference Include="Duende.IdentityModel" />
 
-    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />

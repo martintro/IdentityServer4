@@ -76,7 +76,7 @@ namespace IdentityServer.UnitTests.Cors
             ctx.Request.Scheme = "https";
             ctx.Request.Host = new HostString("server");
             ctx.Request.Path = new PathString(path);
-            ctx.Request.Headers.Add("Origin", "http://notserver");
+            ctx.Request.Headers.Append("Origin", "http://notserver");
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
@@ -104,7 +104,7 @@ namespace IdentityServer.UnitTests.Cors
             ctx.Request.Scheme = "https";
             ctx.Request.Host = new HostString("server");
             ctx.Request.Path = new PathString(path);
-            ctx.Request.Headers.Add("Origin", "http://notserver");
+            ctx.Request.Headers.Append("Origin", "http://notserver");
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
@@ -127,7 +127,7 @@ namespace IdentityServer.UnitTests.Cors
             ctx.Request.Scheme = "https";
             ctx.Request.Host = new HostString("server");
             ctx.Request.Path = new PathString("/foo");
-            ctx.Request.Headers.Add("Origin", "http://notserver");
+            ctx.Request.Headers.Append("Origin", "http://notserver");
 
             var response = await _subject.GetPolicyAsync(ctx, "wrong_name");
 
@@ -148,7 +148,7 @@ namespace IdentityServer.UnitTests.Cors
             ctx.Request.Scheme = "https";
             ctx.Request.Host = new HostString("server");
             ctx.Request.Path = new PathString("/foo");
-            ctx.Request.Headers.Add("Origin", "https://server");
+            ctx.Request.Headers.Append("Origin", "https://server");
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
@@ -171,7 +171,7 @@ namespace IdentityServer.UnitTests.Cors
             ctx.Request.Scheme = "https";
             ctx.Request.Host = new HostString("server");
             ctx.Request.Path = new PathString("/foo");
-            ctx.Request.Headers.Add("Origin", origin);
+            ctx.Request.Headers.Append("Origin", origin);
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 

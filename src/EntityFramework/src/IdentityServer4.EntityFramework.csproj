@@ -3,9 +3,9 @@
   <PropertyGroup>
     <PackageId>IdentityServer4.EntityFramework</PackageId>
     <TargetFramework>net8.0</TargetFramework>
-	<LangVersion>latest</LangVersion>
-	<Nullable>disable</Nullable>
-	<ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
 
     <Description>EntityFramework persistence layer for IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier;Scott Brady</Authors>

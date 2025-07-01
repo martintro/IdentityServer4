@@ -1,12 +1,8 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
@@ -14,6 +10,12 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer.UnitTests.Services.Default
@@ -148,7 +150,7 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockHttpContext.HttpContext.Response.Headers.Clear();
 
             string cookie = cookieContainer.GetCookieHeader(new Uri("http://server"));
-            _mockHttpContext.HttpContext.Request.Headers.Add("Cookie", cookie);
+            _mockHttpContext.HttpContext.Request.Headers.Append("Cookie", cookie);
 
             await _subject.RemoveSessionIdCookieAsync();
 

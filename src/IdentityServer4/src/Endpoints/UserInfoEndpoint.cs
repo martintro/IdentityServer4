@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +9,7 @@ using IdentityServer4.ResponseHandling;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Hosting;
 using IdentityServer4.Endpoints.Results;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 

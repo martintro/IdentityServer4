@@ -1,14 +1,19 @@
-﻿using System.Net;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using Duende.IdentityModel;
 using FluentAssertions;
-using IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Extensibility
@@ -67,16 +72,16 @@ namespace IdentityServer.IntegrationTests.Extensibility
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client/callback");
 
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IsError.Should().BeFalse();
             authorization.IdentityToken.Should().NotBeNull();
 
             var payload = authorization.IdentityToken.Split('.')[1];
             var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
-            var obj = JObject.Parse(json);
+            var obj = JsonNode.Parse(json)?.AsObject();
 
-            obj.GetValue("foo").Should().NotBeNull();
-            obj["foo"].ToString().Should().Be("bar");
+            obj["foo"].Should().NotBeNull();
+            obj["foo"].GetValue<string>().Should().Be("bar");
         }
     }
 

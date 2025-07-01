@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +9,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -175,7 +176,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
                 ClientSecret = scope_secret,
 
                 Token = token,
-                TokenTypeHint = IdentityModel.OidcConstants.TokenTypes.AccessToken
+                TokenTypeHint = Duende.IdentityModel.OidcConstants.TokenTypes.AccessToken
             });
 
             return response.IsError == false && response.IsActive;

@@ -1,4 +1,5 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -101,7 +102,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
         }
@@ -120,7 +121,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().NotBeNull();
         }
@@ -139,7 +140,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client2/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
         }
@@ -172,7 +173,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
             authorization.Code.Should().NotBeNull();
@@ -192,7 +193,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().NotBeNull();
             authorization.Code.Should().NotBeNull();
@@ -213,7 +214,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client4/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
             authorization.Code.Should().NotBeNull();

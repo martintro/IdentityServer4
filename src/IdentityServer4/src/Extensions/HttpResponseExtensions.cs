@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -39,7 +40,7 @@ namespace IdentityServer4.Extensions
             {
                 if (!response.Headers.ContainsKey("Cache-Control"))
                 {
-                    response.Headers.Add("Cache-Control", $"max-age={maxAge}");
+                    response.Headers.Append("Cache-Control", $"max-age={maxAge}");
                 }
 
                 if (varyBy?.Any() == true)
@@ -58,7 +59,7 @@ namespace IdentityServer4.Extensions
         {
             if (!response.Headers.ContainsKey("Cache-Control"))
             {
-                response.Headers.Add("Cache-Control", "no-store, no-cache, max-age=0");
+                response.Headers.Append("Cache-Control", "no-store, no-cache, max-age=0");
             }
             else
             {
@@ -67,7 +68,7 @@ namespace IdentityServer4.Extensions
 
             if (!response.Headers.ContainsKey("Pragma"))
             {
-                response.Headers.Add("Pragma", "no-cache");
+                response.Headers.Append("Pragma", "no-cache");
             }
         }
 
@@ -113,11 +114,11 @@ namespace IdentityServer4.Extensions
         {
             if (!headers.ContainsKey("Content-Security-Policy"))
             {
-                headers.Add("Content-Security-Policy", cspHeader);
+                headers.Append("Content-Security-Policy", cspHeader);
             }
             if (options.AddDeprecatedHeader && !headers.ContainsKey("X-Content-Security-Policy"))
             {
-                headers.Add("X-Content-Security-Policy", cspHeader);
+                headers.Append("X-Content-Security-Policy", cspHeader);
             }
         }
     }

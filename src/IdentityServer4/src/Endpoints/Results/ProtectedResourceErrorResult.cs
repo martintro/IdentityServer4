@@ -1,4 +1,5 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using IdentityModel;
+using Duende.IdentityModel;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -42,12 +43,12 @@ namespace IdentityServer4.Endpoints.Results
             var errorString = string.Format($"error=\"{Error}\"");
             if (ErrorDescription.IsMissing())
             {
-                context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString }).ToString());
+                context.Response.Headers.Append(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString }).ToString());
             }
             else
             {
                 var errorDescriptionString = string.Format($"error_description=\"{ErrorDescription}\"");
-                context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString, errorDescriptionString }).ToString());
+                context.Response.Headers.Append(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString, errorDescriptionString }).ToString());
             }
 
             return Task.CompletedTask;

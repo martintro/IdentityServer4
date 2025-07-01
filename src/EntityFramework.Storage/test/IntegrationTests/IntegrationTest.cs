@@ -1,4 +1,9 @@
-﻿using System;
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +55,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
 
         protected IntegrationTest(DatabaseProviderFixture<TDbContext> fixture)
         {
-            fixture.Options = TestDatabaseProviders.SelectMany(x => x.Select(y => (DbContextOptions<TDbContext>)y)).ToList();
+            fixture.Options = TestDatabaseProviders.ToList<DbContextOptions<TDbContext>>();
             fixture.StoreOptions = StoreOptions;
         }
     }

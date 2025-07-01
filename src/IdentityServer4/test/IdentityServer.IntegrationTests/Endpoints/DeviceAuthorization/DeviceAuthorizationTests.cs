@@ -1,3 +1,8 @@
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,11 +11,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
-using Newtonsoft.Json;
 using Xunit;
+using System.Text.Json;
 
 namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
 {
@@ -135,7 +140,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
             using (var reader = new StreamReader(streamBody))
             {
                 var jsonString = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(jsonString);
+                return JsonSerializer.Deserialize<T>(jsonString);
             }
         }
 

@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -53,25 +54,25 @@ namespace IdentityServer.UnitTests.ResponseHandling
         }
 
         [Fact]
-        public void ProcessAsync_when_valiationresult_null_exect_exception()
+        public async Task ProcessAsync_when_valiationresult_null_exect_exception()
         {
             Func<Task> act = () => generator.ProcessAsync(null, TestBaseUrl);
-            act.Should().Throw<ArgumentNullException>();
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
-        public void ProcessAsync_when_valiationresult_client_null_exect_exception()
+        public async Task ProcessAsync_when_valiationresult_client_null_exect_exception()
         {
             var validationResult = new DeviceAuthorizationRequestValidationResult(new ValidatedDeviceAuthorizationRequest());
             Func <Task> act = () => generator.ProcessAsync(validationResult, TestBaseUrl);
-            act.Should().Throw<ArgumentNullException>();
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
-        public void ProcessAsync_when_baseurl_null_exect_exception()
+        public async Task ProcessAsync_when_baseurl_null_exect_exception()
         {
             Func<Task> act = () => generator.ProcessAsync(testResult, null);
-            act.Should().Throw<ArgumentException>();
+            await act.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]

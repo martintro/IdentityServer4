@@ -1,9 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
@@ -30,7 +32,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void EmptyContext()
+        public async Task EmptyContext()
         {
             var context = new DefaultHttpContext();
 
@@ -41,13 +43,13 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void Valid_BasicAuthentication_Request()
+        public async Task Valid_BasicAuthentication_Request()
         {
             var context = new DefaultHttpContext();
 
             var headerValue = string.Format("Basic {0}",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes("client:secret")));
-            context.Request.Headers.Add("Authorization", new StringValues(headerValue));
+            context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
 
             var secret = await _parser.ParseAsync(context);
@@ -59,13 +61,13 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void Valid_BasicAuthentication_Request_With_UserName_Only_And_Colon_For_Optional_ClientSecret()
+        public async Task Valid_BasicAuthentication_Request_With_UserName_Only_And_Colon_For_Optional_ClientSecret()
         {
             var context = new DefaultHttpContext();
 
             var headerValue = string.Format("Basic {0}",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes("client:")));
-            context.Request.Headers.Add("Authorization", new StringValues(headerValue));
+            context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
 
@@ -76,11 +78,11 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void BasicAuthentication_Request_With_Empty_Basic_Header()
+        public async Task BasicAuthentication_Request_With_Empty_Basic_Header()
         {
             var context = new DefaultHttpContext();
 
-            context.Request.Headers.Add("Authorization", new StringValues(string.Empty));
+            context.Request.Headers.Append("Authorization", new StringValues(string.Empty));
 
             var secret = await _parser.ParseAsync(context);
 
@@ -89,7 +91,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void Valid_BasicAuthentication_Request_ClientId_Too_Long()
+        public async Task Valid_BasicAuthentication_Request_ClientId_Too_Long()
         {
             var context = new DefaultHttpContext();
 
@@ -98,7 +100,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var headerValue = string.Format("Basic {0}",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes(credential)));
-            context.Request.Headers.Add("Authorization", new StringValues(headerValue));
+            context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
             secret.Should().BeNull();
@@ -106,7 +108,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void Valid_BasicAuthentication_Request_ClientSecret_Too_Long()
+        public async Task Valid_BasicAuthentication_Request_ClientSecret_Too_Long()
         {
             var context = new DefaultHttpContext();
 
@@ -115,7 +117,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var headerValue = string.Format("Basic {0}",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes(credential)));
-            context.Request.Headers.Add("Authorization", new StringValues(headerValue));
+            context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
             secret.Should().BeNull();
@@ -123,11 +125,11 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void BasicAuthentication_Request_With_Empty_Basic_Header_Variation()
+        public async Task BasicAuthentication_Request_With_Empty_Basic_Header_Variation()
         {
             var context = new DefaultHttpContext();
 
-            context.Request.Headers.Add("Authorization", new StringValues("Basic "));
+            context.Request.Headers.Append("Authorization", new StringValues("Basic "));
 
             var secret = await _parser.ParseAsync(context);
 
@@ -136,11 +138,11 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void BasicAuthentication_Request_With_Unknown_Scheme()
+        public async Task BasicAuthentication_Request_With_Unknown_Scheme()
         {
             var context = new DefaultHttpContext();
 
-            context.Request.Headers.Add("Authorization", new StringValues("Unknown"));
+            context.Request.Headers.Append("Authorization", new StringValues("Unknown"));
 
             var secret = await _parser.ParseAsync(context);
 
@@ -149,11 +151,11 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
+        public async Task BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
         {
             var context = new DefaultHttpContext();
 
-            context.Request.Headers.Add("Authorization", new StringValues("Basic somerandomdata"));
+            context.Request.Headers.Append("Authorization", new StringValues("Basic somerandomdata"));
 
             var secret = await _parser.ParseAsync(context);
 
@@ -162,13 +164,13 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
+        public async Task BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
             var context = new DefaultHttpContext();
 
             var headerValue = string.Format("Basic {0}",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes("client")));
-            context.Request.Headers.Add("Authorization", new StringValues(headerValue));
+            context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
 

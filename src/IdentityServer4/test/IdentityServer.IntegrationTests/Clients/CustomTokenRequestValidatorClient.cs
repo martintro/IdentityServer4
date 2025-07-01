@@ -1,15 +1,18 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Duende.IdentityModel.Client;
 using FluentAssertions;
-using IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
+using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -45,7 +48,7 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             var fields = GetFields(response);
-            fields.Should().Contain("custom", "custom");
+            fields["custom"].GetString().Should().Be("custom");
         }
 
         [Fact]
@@ -64,7 +67,7 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             var fields = GetFields(response);
-            fields.Should().Contain("custom", "custom");
+            fields["custom"].GetString().Should().Be("custom");
         }
 
         [Fact]
@@ -92,7 +95,7 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             var fields = GetFields(response);
-            fields.Should().Contain("custom", "custom");
+            fields["custom"].GetString().Should().Be("custom");
         }
 
         [Fact]
@@ -114,12 +117,12 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             var fields = GetFields(response);
-            fields.Should().Contain("custom", "custom");
+            fields["custom"].GetString().Should().Be("custom");
         }
 
-        private Dictionary<string, object> GetFields(TokenResponse response)
+        private Dictionary<string, JsonElement> GetFields(TokenResponse response)
         {
-            return response.Json.ToObject<Dictionary<string, object>>();
+            return response.Json.Value.ToObject<Dictionary<string, JsonElement>>();
         }
     }
 }

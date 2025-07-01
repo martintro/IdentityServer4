@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Services;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.EntityFramework.IntegrationTests.Services
 {
@@ -22,7 +24,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Services
     {
         public CorsPolicyServiceTests(DatabaseProviderFixture<ConfigurationDbContext> fixture) : base(fixture)
         {
-            foreach (var options in TestDatabaseProviders.SelectMany(x => x.Select(y => (DbContextOptions<ConfigurationDbContext>)y)).ToList())
+            foreach (var options in TestDatabaseProviders)
             {
                 using (var context = new ConfigurationDbContext(options, StoreOptions))
                     context.Database.EnsureCreated();
@@ -30,7 +32,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Services
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
-        public void IsOriginAllowedAsync_WhenOriginIsAllowed_ExpectTrue(DbContextOptions<ConfigurationDbContext> options)
+        public async Task IsOriginAllowedAsync_WhenOriginIsAllowed_ExpectTrue(DbContextOptions<ConfigurationDbContext> options)
         {
             const string testCorsOrigin = "https://identityserver.io/";
 
@@ -62,14 +64,14 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Services
                 ctxAccessor.HttpContext = ctx;
 
                 var service = new CorsPolicyService(ctxAccessor, FakeLogger<CorsPolicyService>.Create());
-                result = service.IsOriginAllowedAsync(testCorsOrigin).Result;
+                result = await service.IsOriginAllowedAsync(testCorsOrigin);
             }
 
             Assert.True(result);
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
-        public void IsOriginAllowedAsync_WhenOriginIsNotAllowed_ExpectFalse(DbContextOptions<ConfigurationDbContext> options)
+        public async Task IsOriginAllowedAsync_WhenOriginIsNotAllowed_ExpectFalse(DbContextOptions<ConfigurationDbContext> options)
         {
             using (var context = new ConfigurationDbContext(options, StoreOptions))
             {
@@ -93,7 +95,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Services
                 ctxAccessor.HttpContext = ctx;
 
                 var service = new CorsPolicyService(ctxAccessor, FakeLogger<CorsPolicyService>.Create());
-                result = service.IsOriginAllowedAsync("InvalidOrigin").Result;
+                result = await service.IsOriginAllowedAsync("InvalidOrigin");
             }
 
             Assert.False(result);

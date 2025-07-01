@@ -1,4 +1,5 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Extensions;
 using IdentityServer4.Hosting;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -132,7 +133,7 @@ namespace IdentityServer4.Endpoints.Results
             var referrer_policy = "no-referrer";
             if (!context.Response.Headers.ContainsKey("Referrer-Policy"))
             {
-                context.Response.Headers.Add("Referrer-Policy", referrer_policy);
+                context.Response.Headers.Append("Referrer-Policy", referrer_policy);
             }
         }
 

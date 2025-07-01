@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,11 +8,11 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using JsonWebKey = Microsoft.IdentityModel.Tokens.JsonWebKey;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -185,7 +186,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 if (persistKey)
                 {
-                    File.WriteAllText(filename, JsonConvert.SerializeObject(jwk));
+                    File.WriteAllText(filename, JsonSerializer.Serialize(jwk));
                 }
 
                 return builder.AddSigningCredential(key, signingAlgorithm);

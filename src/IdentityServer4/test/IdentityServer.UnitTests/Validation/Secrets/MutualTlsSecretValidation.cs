@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2025 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -64,7 +65,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             Func<Task> act = async () => await validator.ValidateAsync(client.ClientSecrets, secret);
-            act.Should().Throw<InvalidOperationException>();
+            await act.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [Fact]
@@ -151,7 +152,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             Func<Task> act = async () => await validator.ValidateAsync(client.ClientSecrets, secret);
-            act.Should().Throw<InvalidOperationException>();
+            await act.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [Fact]

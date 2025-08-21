@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>IdentityServer4.EntityFramework</PackageId>
+    <PackageId>IdentityServer4NG.EntityFramework</PackageId>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>

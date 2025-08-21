@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>IdentityServer4.AspNetIdentity</PackageId>
+    <PackageId>IdentityServer4NG.AspNetIdentity</PackageId>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>

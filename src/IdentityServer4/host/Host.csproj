@@ -22,7 +22,7 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
-    <!--<PackageReference Include="IdentityServer4.EntityFramework" />-->
+    <!--<PackageReference Include="IdentityServer4NG.EntityFramework" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="All" />
     <PackageReference Include="System.Security.Principal.Windows" />
     

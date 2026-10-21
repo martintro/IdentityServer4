@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -34,7 +34,7 @@ namespace build
         {
             Target(Targets.CleanBuildOutput, () =>
             {
-                //Run("dotnet", "clean -c Release -v m --nologo", echoPrefix: Prefix);
+                Run("dotnet", "clean -c Release -v m --nologo", echoPrefix: Prefix);
             });
 
             Target(Targets.Build, dependsOn: [Targets.CleanBuildOutput], () =>
@@ -49,6 +49,13 @@ namespace build
 
             Target(Targets.Test, dependsOn: [Targets.Build], () =>
             {
+                // dotnet test on Microsoft Testing Platform fails when a solution has no test projects
+                if (!Directory.Exists("./test"))
+                {
+                    Console.WriteLine($"{Prefix}: no test projects, skipping.");
+                    return;
+                }
+
                 Run("dotnet", $"test -c Release --no-build", echoPrefix: Prefix);
             });
 

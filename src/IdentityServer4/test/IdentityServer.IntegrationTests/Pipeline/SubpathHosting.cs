@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -69,7 +69,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 redirectUri: "https://client1/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginWasCalled.Should().BeTrue();
         }

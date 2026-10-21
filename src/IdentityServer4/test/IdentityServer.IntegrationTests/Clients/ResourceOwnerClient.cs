@@ -1,22 +1,23 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
+using FluentAssertions;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
-using System.Text.Json;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
@@ -47,7 +48,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -87,7 +88,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -135,7 +136,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -178,7 +179,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -222,7 +223,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "unknown",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -241,7 +242,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 Scope = "api1",
                 UserName = "bob_no_password"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
         }
@@ -260,7 +261,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = password
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -273,7 +274,7 @@ namespace IdentityServer.IntegrationTests.Clients
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

@@ -1,4 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -88,7 +89,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             _mockPipeline.RemoveSessionCookie();
 
-            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint);
+            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint, TestContext.Current.CancellationToken);
 
             var sid2 = _mockPipeline.GetSessionCookie().Value;
             sid2.Should().Be(sid1);

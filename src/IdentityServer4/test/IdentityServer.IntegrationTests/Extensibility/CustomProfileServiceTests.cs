@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -9,6 +9,7 @@ using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Buffers.Text;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -67,7 +68,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
                 nonce: "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client/callback");
@@ -77,7 +78,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
             authorization.IdentityToken.Should().NotBeNull();
 
             var payload = authorization.IdentityToken.Split('.')[1];
-            var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
+            var json = Encoding.UTF8.GetString(Base64Url.DecodeFromChars(payload));
             var obj = JsonNode.Parse(json)?.AsObject();
 
             obj["foo"].Should().NotBeNull();

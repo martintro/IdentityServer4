@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -38,7 +38,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.and.ro",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
         }
@@ -52,7 +52,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.and.ro",
                 ClientSecret = "secret",
                 Scope = "openid api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
         }
@@ -69,7 +69,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
         }
@@ -86,7 +86,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
         }

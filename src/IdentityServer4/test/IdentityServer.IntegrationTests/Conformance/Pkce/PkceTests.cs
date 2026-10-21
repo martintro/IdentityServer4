@@ -1,9 +1,10 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
@@ -215,7 +216,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
             tokenResponse.TokenType.Should().Be("Bearer");
@@ -255,7 +256,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
             tokenResponse.TokenType.Should().Be("Bearer");
@@ -308,7 +309,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
         }
@@ -414,7 +415,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
 
                 Code = code,
                 RedirectUri = redirect_uri,
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -451,7 +452,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "a"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -488,7 +489,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = new string('a', _pipeline.Options.InputLengthRestrictions.CodeVerifierMaxLength + 1)
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -525,7 +526,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "mismatched_code_verifier"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -535,7 +536,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
         {
             var codeVerifierBytes = Encoding.ASCII.GetBytes(codeVerifier);
             var hashedBytes = codeVerifierBytes.Sha256();
-            var transformedCodeVerifier = Base64Url.Encode(hashedBytes);
+            var transformedCodeVerifier = Base64Url.EncodeToString(hashedBytes);
 
             return transformedCodeVerifier;
         }

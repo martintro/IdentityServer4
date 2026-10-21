@@ -1,4 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -77,7 +78,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            redirectUri: "https://bad",
                            state: state,
                            nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
@@ -100,7 +101,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                           redirectUri: null,
                           state: state,
                           nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
@@ -123,7 +124,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            redirectUri: "https://code_client/callback?foo=bar&baz=quux",
                            state: state,
                            nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://code_client/callback?");
@@ -151,7 +152,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            redirectUri: "https://code_client/callback?baz=quux&foo=bar",
                            state: state,
                            nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");

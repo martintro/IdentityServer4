@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -9,6 +10,9 @@
     <AssemblyOriginatorKeyFile>../../../../key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+
+    <!-- xunit.analyzers 2.2.0 MemberDataShouldReferenceValidMember crashes on MemberData pointing to a member of the generic IntegrationTest base class -->
+    <NoWarn>$(NoWarn);AD0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,9 +27,7 @@
     <PackageReference Include="IdentityServer4NG" />
     <PackageReference Include="IdentityServer4NG.Storage" />
     
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="xunit.v3" />
     <PackageReference Include="FluentAssertions" />
     
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />

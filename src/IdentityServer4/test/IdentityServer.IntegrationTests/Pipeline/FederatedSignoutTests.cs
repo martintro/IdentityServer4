@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -80,11 +80,11 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 state: "123_state",
                 nonce: "123_nonce");
 
-            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123");
+            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.MediaType.Should().Be("text/html");
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Contain("https://server/connect/endsession/callback?endSessionId=");
         }
 
@@ -101,11 +101,11 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 state: "123_state",
                 nonce: "123_nonce");
 
-            var response = await _pipeline.BrowserClient.PostAsync(IdentityServerPipeline.FederatedSignOutUrl, new FormUrlEncodedContent(new Dictionary<string, string> { { "sid", "123" } }));
+            var response = await _pipeline.BrowserClient.PostAsync(IdentityServerPipeline.FederatedSignOutUrl, new FormUrlEncodedContent(new Dictionary<string, string> { { "sid", "123" } }), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.MediaType.Should().Be("text/html");
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Contain("https://server/connect/endsession/callback?endSessionId=");
         }
 
@@ -114,22 +114,22 @@ namespace IdentityServer.IntegrationTests.Pipeline
         {
             await _pipeline.LoginAsync(_user);
 
-            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123");
+            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.Should().BeNull();
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Be(String.Empty);
         }
 
         [Fact]
         public async Task no_authenticated_user_should_not_render_page_with_iframe()
         {
-            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123");
+            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.Should().BeNull();
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Be(String.Empty);
         }
 
@@ -151,11 +151,11 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 state: "123_state",
                 nonce: "123_nonce");
 
-            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123");
+            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.Should().BeNull();
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Be(String.Empty);
         }
 
@@ -180,11 +180,11 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 nonce: "123_nonce");
 
             _pipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123");
+            var response = await _pipeline.BrowserClient.GetAsync(IdentityServerPipeline.FederatedSignOutUrl + "?sid=123", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Content.Headers.ContentType.Should().BeNull();
-            var html = await response.Content.ReadAsStringAsync();
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Be(String.Empty);
         }
     }

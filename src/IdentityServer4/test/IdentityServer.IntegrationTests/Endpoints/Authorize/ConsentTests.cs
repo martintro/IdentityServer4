@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -112,7 +112,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 state: "123_state",
                 nonce: "123_nonce"
             );
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ConsentWasCalled.Should().BeTrue();
         }
@@ -150,7 +150,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     custom_foo = "foo_value"
                 }
             );
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ConsentRequest.Should().NotBeNull();
             _mockPipeline.ConsentRequest.Client.ClientId.Should().Be("client2");
@@ -194,7 +194,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 redirectUri: "https://client2/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client2/callback");
@@ -226,12 +226,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 redirectUri: "https://client2/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://server/consent");
 
-            response = await _mockPipeline.BrowserClient.GetAsync(response.Headers.Location.ToString());
+            response = await _mockPipeline.BrowserClient.GetAsync(response.Headers.Location.ToString(), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("/connect/authorize/callback");
@@ -239,7 +239,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             var modifiedAuthorizeCallback = "https://server" + response.Headers.Location.ToString();
             modifiedAuthorizeCallback = modifiedAuthorizeCallback.Replace("api2", "api1%20api2");
 
-            response = await _mockPipeline.BrowserClient.GetAsync(modifiedAuthorizeCallback);
+            response = await _mockPipeline.BrowserClient.GetAsync(modifiedAuthorizeCallback, TestContext.Current.CancellationToken);
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://server/consent");
         }
@@ -263,7 +263,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 redirectUri: "https://client2/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client2/callback");
 

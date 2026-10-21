@@ -1,4 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -88,7 +89,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
             _pipeline.BackChannelClient.DefaultRequestHeaders.Add("Access-Control-Request-Method", "GET");
             
             var message = new HttpRequestMessage(HttpMethod.Options, url);
-            var response = await _pipeline.BackChannelClient.SendAsync(message);
+            var response = await _pipeline.BackChannelClient.SendAsync(message, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
             response.Headers.Contains("Access-Control-Allow-Origin").Should().BeTrue();
@@ -108,7 +109,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
             _pipeline.BackChannelClient.DefaultRequestHeaders.Add("Access-Control-Request-Method", "GET");
 
             var message = new HttpRequestMessage(HttpMethod.Options, url);
-            var response = await _pipeline.BackChannelClient.SendAsync(message);
+            var response = await _pipeline.BackChannelClient.SendAsync(message, TestContext.Current.CancellationToken);
 
             response.Headers.Contains("Access-Control-Allow-Origin").Should().BeFalse();
         }
@@ -128,7 +129,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
             _pipeline.BackChannelClient.DefaultRequestHeaders.Add("Access-Control-Request-Method", "GET");
 
             var message = new HttpRequestMessage(HttpMethod.Options, IdentityServerPipeline.DiscoveryEndpoint);
-            var response = await _pipeline.BackChannelClient.SendAsync(message);
+            var response = await _pipeline.BackChannelClient.SendAsync(message, TestContext.Current.CancellationToken);
 
             policy.WasCalled.Should().BeTrue();
         }

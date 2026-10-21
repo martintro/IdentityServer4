@@ -1,0 +1,65 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <!-- only for IdentityServer4NG packages, whose version MinVer changes on every build -->
+    <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--build related-->
+    <GlobalPackageReference Include="MinVer" Version="8.0.0" />
+    <PackageVersion Include="SimpleExec" Version="13.1.0" />
+    <PackageVersion Include="Bullseye" Version="6.3.0" />
+
+    <!--tests -->
+    <PackageVersion Include="FluentAssertions" Version="8.11.0" />
+    <PackageVersion Include="xunit.v3" Version="4.0.2" />
+
+    <!--our stuff -->
+    <PackageVersion Include="Duende.IdentityModel" Version="8.1.0" />
+
+    <PackageVersion Include="IdentityServer4NG" Version="$(IdentityServerVersion)" />
+    <PackageVersion Include="IdentityServer4NG.AspNetIdentity" Version="$(IdentityServerVersion)" />
+    <PackageVersion Include="IdentityServer4NG.Storage" Version="$(IdentityServerVersion)" />
+    <PackageVersion Include="IdentityServer4NG.EntityFramework.Storage" Version="$(IdentityServerVersion)" />
+    <PackageVersion Include="IdentityServer4NG.EntityFramework" Version="$(IdentityServerVersion)" />
+
+    <!--microsoft extensions -->
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(ExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="$(ExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(ExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(ExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
+
+    <!--misc -->
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="$(IdentityModelVersion)" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="$(IdentityModelVersion)" />
+
+    <!--microsoft asp.net core -->
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(FrameworkVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity" Version="$(FrameworkVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(FrameworkVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Certificate" Version="$(FrameworkVersion)" />
+
+    <!--microsoft entity framework -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(EntityFrameworkVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EntityFrameworkVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EntityFrameworkVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EntityFrameworkVersion)" />
+
+    <!--hosts -->
+    <PackageVersion Include="Serilog" Version="4.4.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+
+    <!--transitive pins -->
+    <!--vulnerable versions come in via Microsoft.Data.SqlClient (EF SqlServer) -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="$(ExtensionsVersion)" />
+  </ItemGroup>
+
+</Project>

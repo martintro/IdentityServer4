@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -89,10 +89,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
             };
             var form = new FormUrlEncodedContent(data);
             _mockPipeline.BackChannelClient.DefaultRequestHeaders.Add("Referer", "http://127.0.0.1:33086/appservice/appservice?t=1564165664142?load");
-            var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.TokenEndpoint, form);
+            var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.TokenEndpoint, form, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var result = JsonNode.Parse(json)?.AsObject();
             result.ContainsKey("error").Should().BeFalse();
         }
@@ -112,10 +112,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
             };
             var form = new FormUrlEncodedContent(data);
             _mockPipeline.BackChannelClient.DefaultRequestHeaders.Add("Referer", "http://127.0.0.1:33086/appservice/appservice?t=1564165664142?load");
-            var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.TokenEndpoint, form);
+            var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.TokenEndpoint, form, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var result = JsonNode.Parse(json)?.AsObject();
             result.ContainsKey("error").Should().BeFalse();
         }

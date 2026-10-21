@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -69,7 +69,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
         {
             await _mockPipeline.LoginAsync("bob");
 
-            var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint);
+            var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint, TestContext.Current.CancellationToken);
             metadata.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var state = Guid.NewGuid().ToString();
@@ -82,7 +82,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            redirectUri: "https://code_client/callback",
                            state: state,
                            nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             response.StatusCode.Should().Be(HttpStatusCode.Found);
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
@@ -116,7 +116,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var url = request.Create(values);
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("unsupported_response_type");
         }

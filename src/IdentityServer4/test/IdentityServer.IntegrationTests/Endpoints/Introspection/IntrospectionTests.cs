@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -45,7 +45,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
         {
             var form = new Dictionary<string, string>();
 
-            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form));
+            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -57,7 +57,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             var form = new Dictionary<string, string>();
 
             _client.SetBasicAuthentication("unknown", "invalid");
-            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form));
+            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -69,7 +69,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             var form = new Dictionary<string, string>();
 
             _client.SetBasicAuthentication("api1", "invalid");
-            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form));
+            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -81,7 +81,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             var form = new Dictionary<string, string>();
 
             _client.SetBasicAuthentication("api1", "secret");
-            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form));
+            var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -97,7 +97,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = "invalid"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             introspectionResponse.IsActive.Should().Be(false);
             introspectionResponse.IsError.Should().Be(false);
@@ -113,7 +113,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientId = "client1",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var data = new
             {
@@ -124,7 +124,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             var json = JsonSerializer.Serialize(data);
 
             var client = new HttpClient(_handler);
-            var response = await client.PostAsync(IntrospectionEndpoint, new StringContent(json, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync(IntrospectionEndpoint, new StringContent(json, Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
@@ -138,7 +138,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientId = "client1",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -147,7 +147,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             introspectionResponse.IsActive.Should().Be(true);
             introspectionResponse.IsError.Should().Be(false);
@@ -170,7 +170,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientId = "client1",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -179,7 +179,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
@@ -207,7 +207,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Password = "bob",
 
                 Scope = "api1",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
 
@@ -218,7 +218,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
@@ -246,7 +246,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Scope = "api2 api3-a api3-b",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
 
@@ -257,7 +257,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
@@ -291,7 +291,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Scope = "api3-a api3-b",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
 
@@ -302,7 +302,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
@@ -329,7 +329,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Scope = "api1 api2 api3-a",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
 
@@ -340,7 +340,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             introspectionResponse.IsActive.Should().BeTrue();
             introspectionResponse.IsError.Should().BeFalse();
@@ -364,7 +364,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Scope = "api1 api2",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -373,7 +373,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             introspectionResponse.IsActive.Should().Be(true);
             introspectionResponse.IsError.Should().Be(false);
@@ -397,7 +397,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Scope = "api1",
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -406,7 +406,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 ClientSecret = "secret",
 
                 Token = tokenResponse.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             introspectionResponse.IsActive.Should().Be(false);
             introspectionResponse.IsError.Should().Be(false);

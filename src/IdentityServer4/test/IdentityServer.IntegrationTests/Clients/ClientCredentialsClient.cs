@@ -1,8 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -44,7 +45,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Http);
@@ -61,7 +62,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -92,7 +93,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1 other_api"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -126,7 +127,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.cnf",
                 ClientSecret = "foo",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -160,7 +161,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1 api2"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -192,7 +193,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
                 ClientId = "client",
                 ClientSecret = "secret"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -228,7 +229,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
                 ClientId = "client.no_default_scopes",
                 ClientSecret = "secret"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ExpiresIn.Should().Be(0);
@@ -249,7 +250,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
 
                 ClientCredentialStyle = ClientCredentialStyle.PostBody
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -277,7 +278,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
                 ClientId = "client.no_secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -305,7 +306,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "invalid",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.Error.Should().Be("invalid_client");
@@ -320,7 +321,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "invalid",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -336,7 +337,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
                 ClientId = "implicit",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -353,7 +354,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "implicit_and_client_creds",
                 ClientSecret = "invalid",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -371,7 +372,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "unknown"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -388,7 +389,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.identityscopes",
                 ClientSecret = "secret",
                 Scope = "openid api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -405,7 +406,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1 offline_access"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -422,7 +423,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api3"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -439,7 +440,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1 api3"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -451,7 +452,7 @@ namespace IdentityServer.IntegrationTests.Clients
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

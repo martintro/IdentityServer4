@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -15,7 +15,6 @@ using IdentityServer4.EntityFramework.Stores;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Xunit;
 
 namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
@@ -112,6 +111,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
         {
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
+                context.PersistedGrants.RemoveRange(context.PersistedGrants.ToArray());
                 context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s1", type: "t1").ToEntity());
                 context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s1", type: "t2").ToEntity());
                 context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s2", type: "t1").ToEntity());

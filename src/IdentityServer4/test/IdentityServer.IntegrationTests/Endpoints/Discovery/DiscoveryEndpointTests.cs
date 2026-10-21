@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -30,9 +30,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             IdentityServerPipeline pipeline = new IdentityServerPipeline();
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION");
+            var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var data = JsonNode.Parse(json).AsObject();
             var issuer = data["issuer"].GetValue<string>();
 
@@ -48,9 +48,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
 
             pipeline.Options.LowerCaseIssuerUri = false;
 
-            var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION");
+            var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var data = JsonNode.Parse(json);
             var issuer = data["issuer"].GetValue<string>();
 
@@ -78,9 +78,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             };
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration");
+            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var data = JsonNode.Parse(json).AsObject();
             var algorithmsSupported = data["id_token_signing_alg_values_supported"]?.AsArray();
 
@@ -120,9 +120,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
 
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
+            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var data = JsonNode.Parse(json).AsObject();
 
             var keys = data["keys"]?.AsArray();
@@ -145,9 +145,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             IdentityServerPipeline pipeline = new IdentityServerPipeline();
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
+            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var data = JsonNode.Parse(json).AsObject();
 
             var keys = data["keys"]?.AsArray();
@@ -179,9 +179,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             };
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
+            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var jwks = new JsonWebKeySet(json);
             var parsedKeys = jwks.GetSigningKeys();
 
@@ -205,9 +205,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             };
             pipeline.Initialize("/ROOT");
 
-            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
+            var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks", TestContext.Current.CancellationToken);
 
-            var json = await result.Content.ReadAsStringAsync();
+            var json = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             var jwks = new JsonWebKeySet(json);
 
             jwks.Keys.Should().Contain(x => x.KeyId == ecdsaKey.KeyId && x.Alg == "ES256");
@@ -231,7 +231,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
                     RequireHttps = false,
                     RequireKeySet = false
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             result.Issuer.Should().Be("https://грант.рф");
         }

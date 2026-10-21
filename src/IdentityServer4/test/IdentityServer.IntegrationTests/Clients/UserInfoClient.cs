@@ -49,7 +49,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
 
@@ -57,7 +57,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             userInfo.IsError.Should().BeFalse();
             userInfo.Claims.Count().Should().Be(3);
@@ -79,7 +79,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid address",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
 
@@ -87,7 +87,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             userInfo.IsError.Should().BeFalse();
             userInfo.Claims.First().Value.Should().Be("{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }");
@@ -105,7 +105,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
 
@@ -113,7 +113,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             userInfo.IsError.Should().BeTrue();
             userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -131,7 +131,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
 
@@ -139,7 +139,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             userInfo.IsError.Should().BeTrue();
             userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -152,7 +152,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = "invalid"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             userInfo.IsError.Should().BeTrue();
             userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -170,7 +170,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1 api4.with.roles roles",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             
@@ -193,7 +193,7 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             roles = userInfo.Json.Value.TryGetStringArray("role").ToArray();
             roles.Length.Should().Be(2);

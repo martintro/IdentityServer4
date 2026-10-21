@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -202,7 +202,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 nonce: "123nonce",
                 redirectUri: "https://client/callback");
             
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Client must use request object, but no request or request_uri parameter present");
@@ -238,7 +238,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -286,7 +286,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -334,7 +334,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -384,7 +384,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -434,7 +434,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.LoginRequest.Should().BeNull();
@@ -478,7 +478,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     foo = "bad",
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Parameter mismatch in JWT request");
@@ -522,7 +522,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
 
@@ -571,7 +571,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid client_id");
@@ -606,7 +606,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -643,7 +643,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -680,7 +680,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -717,7 +717,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -754,7 +754,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -790,7 +790,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -827,7 +827,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
             _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
@@ -872,7 +872,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
 
             _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeFalse();
@@ -916,7 +916,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -972,7 +972,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.LoginRequest.Should().NotBeNull();
             _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
@@ -1027,7 +1027,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_uri");
             _mockPipeline.LoginRequest.Should().BeNull();
@@ -1049,7 +1049,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.LoginRequest.Should().BeNull();
@@ -1072,7 +1072,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.LoginRequest.Should().BeNull();
@@ -1093,7 +1093,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://" + new string('x', 512)
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.LoginRequest.Should().BeNull();
 
@@ -1134,7 +1134,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt,
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
             _mockPipeline.LoginRequest.Should().BeNull();
 

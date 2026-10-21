@@ -49,6 +49,13 @@ namespace build
 
             Target(Targets.Test, dependsOn: [Targets.Build], () =>
             {
+                // dotnet test on Microsoft Testing Platform fails when a solution has no test projects
+                if (!Directory.Exists("./test"))
+                {
+                    Console.WriteLine($"{Prefix}: no test projects, skipping.");
+                    return;
+                }
+
                 Run("dotnet", $"test -c Release --no-build", echoPrefix: Prefix);
             });
 

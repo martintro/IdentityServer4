@@ -54,7 +54,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -103,7 +103,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "extra_claim", "extra_value" },
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -153,7 +153,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "extra_claim", "extra_value" },
                     { "scope", "api1 offline_access" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -170,7 +170,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             refreshResponse.IsError.Should().BeFalse();
             refreshResponse.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -219,7 +219,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -255,7 +255,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 {
                     { "custom_credential", "custom credential"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -300,7 +300,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 {
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -324,7 +324,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -348,7 +348,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -374,7 +374,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "lifetime", "5000"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -424,7 +424,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "type", "jwt"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -455,7 +455,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "impersonated_client", "impersonated_client_id"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -488,7 +488,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "type", "reference"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -518,7 +518,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "claim", "extra_claim"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
@@ -564,7 +564,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                     { "claim", "extra_claim"},
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);

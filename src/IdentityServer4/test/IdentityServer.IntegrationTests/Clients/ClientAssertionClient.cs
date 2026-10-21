@@ -77,7 +77,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
         }
@@ -100,7 +100,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
         }
@@ -123,7 +123,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
             
@@ -141,7 +141,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeTrue();
             response.Error.Should().Be("invalid_client");
@@ -163,7 +163,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.Error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
@@ -189,7 +189,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.Error.Should().Be(OidcConstants.TokenErrors.InvalidClient);

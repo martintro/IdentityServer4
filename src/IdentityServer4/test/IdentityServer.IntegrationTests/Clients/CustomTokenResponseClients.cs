@@ -49,7 +49,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 UserName = "bob",
                 Password = "bob",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             // raw fields
             var fields = GetFields(response);
@@ -113,7 +113,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 UserName = "bob",
                 Password = "invalid",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             // raw fields
             var fields = GetFields(response);
@@ -165,7 +165,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "scope", "api1" },
                     { "outcome", "succeed"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
 
             // raw fields
@@ -235,7 +235,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "scope", "api1" },
                     { "outcome", "fail"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
 
             // raw fields

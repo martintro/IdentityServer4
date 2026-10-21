@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -45,7 +45,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
             fields["custom"].GetString().Should().Be("custom");
@@ -64,7 +64,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
             fields["custom"].GetString().Should().Be("custom");
@@ -83,7 +83,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
@@ -92,7 +92,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
             fields["custom"].GetString().Should().Be("custom");
@@ -114,7 +114,7 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "scope", "api1" },
                     { "custom_credential", "custom credential"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
             fields["custom"].GetString().Should().Be("custom");

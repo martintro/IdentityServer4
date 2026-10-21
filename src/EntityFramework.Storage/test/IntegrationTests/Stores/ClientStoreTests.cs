@@ -1,10 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityServer4.EntityFramework.DbContexts;
@@ -147,14 +146,14 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 const int timeout = 5000;
                 var task = Task.Run(() => store.FindClientByIdAsync(testClient.ClientId));
 
-                if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+                if (await Task.WhenAny(task, Task.Delay(timeout, TestContext.Current.CancellationToken)) == task)
                 {
-                    var client = task.Result;
+                    var client = await task;
                     client.Should().BeEquivalentTo(testClient);
                 }
                 else
                 {
-                    throw new TestTimeoutException(timeout);
+                    throw TestTimeoutException.ForTimedOutTest(timeout);
                 }
             }
         }

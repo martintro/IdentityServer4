@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -42,7 +42,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -57,7 +57,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -78,7 +78,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -93,7 +93,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -114,7 +114,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -131,7 +131,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -156,7 +156,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -173,7 +173,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -199,7 +199,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -217,7 +217,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -233,7 +233,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = rt1
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeTrue();
             response.Error.Should().Be("invalid_grant");
@@ -252,7 +252,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -270,7 +270,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = rt1
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
         }
@@ -288,7 +288,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeFalse();
             response.ExpiresIn.Should().Be(3600);
@@ -308,7 +308,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 Token = rt1,
                 TokenTypeHint = "refresh_token"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             revocationResponse.IsError.Should().Be(false);
             
@@ -320,7 +320,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = rt1
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().BeTrue();
             response.Error.Should().Be("invalid_grant");

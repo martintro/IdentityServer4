@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -98,7 +98,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "id_token", "openid", "https://client1/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
@@ -117,7 +117,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "id_token token", "openid", "https://client1/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
@@ -136,7 +136,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "id_token", "openid", "https://client2/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client2/callback");
@@ -155,7 +155,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "id_token token", "openid", "https://client2/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
         }
 
@@ -169,7 +169,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "code id_token", "openid", "https://client3/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
@@ -189,7 +189,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "code id_token token", "openid", "https://client3/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
@@ -210,7 +210,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "code id_token", "openid", "https://client4/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client4/callback");
@@ -230,7 +230,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 "code id_token token", "openid", "https://client4/callback", "state", "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             _mockPipeline.ErrorWasCalled.Should().BeTrue();
         }
     }

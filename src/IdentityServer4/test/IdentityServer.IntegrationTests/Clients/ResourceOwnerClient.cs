@@ -48,7 +48,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -88,7 +88,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -136,7 +136,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -179,7 +179,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1 offline_access",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
             response.ExpiresIn.Should().Be(3600);
@@ -223,7 +223,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "unknown",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
@@ -242,7 +242,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 Scope = "api1",
                 UserName = "bob_no_password"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(false);
         }
@@ -261,7 +261,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = password
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response.IsError.Should().Be(true);
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);

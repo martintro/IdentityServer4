@@ -107,7 +107,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
         [Trait("Category", Category)]
         public async Task get_request_should_not_return_404()
         {
-            var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().NotBe(HttpStatusCode.NotFound);
         }
@@ -116,7 +116,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
         [Trait("Category", Category)]
         public async Task signout_request_should_redirect_to_logout_page()
         {
-            var response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            var response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
         }
@@ -139,13 +139,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
                 "?id_token_hint=" + id_token +
-                "&post_logout_redirect_uri=https://client1/signout-callback");
+                "&post_logout_redirect_uri=https://client1/signout-callback", TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://server/logout?id=");
@@ -169,7 +169,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
 
             var response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
                 "?id_token_hint=" + id_token +
-                "&post_logout_redirect_uri=https://client2/signout-callback2");
+                "&post_logout_redirect_uri=https://client2/signout-callback2", TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
             _mockPipeline.LogoutRequest.Should().NotBeNull();
@@ -202,7 +202,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
 
             var response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
                 "?id_token_hint=" + id_token +
-                "&post_logout_redirect_uri=https://client2/signout-callback2");
+                "&post_logout_redirect_uri=https://client2/signout-callback2", TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
             _mockPipeline.LogoutRequest.Should().NotBeNull();
@@ -226,7 +226,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
@@ -236,7 +236,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             values.Add(new KeyValuePair<string, string>("id_token_hint", id_token));
             values.Add(new KeyValuePair<string, string>("post_logout_redirect_uri", "https://client1/signout-callback"));
             var content = new FormUrlEncodedContent(values);
-            response = await _mockPipeline.BrowserClient.PostAsync(IdentityServerPipeline.EndSessionEndpoint, content);
+            response = await _mockPipeline.BrowserClient.PostAsync(IdentityServerPipeline.EndSessionEndpoint, content, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
             _mockPipeline.LogoutRequest.Should().NotBeNull();
@@ -253,7 +253,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
         [Trait("Category", Category)]
         public async Task signout_callback_without_params_should_return_400()
         {
-            var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.EndSessionCallbackEndpoint);
+            var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.EndSessionCallbackEndpoint, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -273,7 +273,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
@@ -281,11 +281,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
                 "?id_token_hint=" + id_token +
-                "&post_logout_redirect_uri=https://client1/signout-callback-not-valid");
+                "&post_logout_redirect_uri=https://client1/signout-callback-not-valid", TestContext.Current.CancellationToken);
 
             var signoutFrameUrl = _mockPipeline.LogoutRequest.SignOutIFrameUrl;
 
-            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl);
+            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutRequest.ClientId.Should().NotBeNull();
             _mockPipeline.LogoutRequest.PostLogoutRedirectUri.Should().BeNull();
@@ -306,7 +306,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
@@ -316,7 +316,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
                 "?id_token_hint=" + id_token +
-                "&post_logout_redirect_uri=https://client1/signout-callback");
+                "&post_logout_redirect_uri=https://client1/signout-callback", TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutRequest.ClientId.Should().BeNull();
             _mockPipeline.LogoutRequest.PostLogoutRedirectUri.Should().BeNull();
@@ -337,14 +337,14 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             var signoutFrameUrl = _mockPipeline.LogoutRequest.SignOutIFrameUrl;
 
-            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl);
+            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl, TestContext.Current.CancellationToken);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType.MediaType.Should().Be("text/html");
         }
@@ -364,7 +364,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 redirectUri: "https://client1/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var url2 = _mockPipeline.CreateAuthorizeUrl(
                 clientId: "client2",
@@ -373,15 +373,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 redirectUri: "https://client2/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response2 = await _mockPipeline.BrowserClient.GetAsync(url2);
+            var response2 = await _mockPipeline.BrowserClient.GetAsync(url2, TestContext.Current.CancellationToken);
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             var signoutFrameUrl = _mockPipeline.LogoutRequest.SignOutIFrameUrl;
 
-            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl);
-            var html = await response.Content.ReadAsStringAsync();
+            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl, TestContext.Current.CancellationToken);
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Contain(HtmlEncoder.Default.Encode("https://client1/signout?sid=" + sid + "&iss=" + UrlEncoder.Default.Encode("https://server")));
             html.Should().Contain(HtmlEncoder.Default.Encode("https://client2/signout?sid=" + sid + "&iss=" + UrlEncoder.Default.Encode("https://server")));
         }
@@ -401,10 +401,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 redirectUri: "https://client4/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             var signoutFrameUrl = _mockPipeline.LogoutRequest.SignOutIFrameUrl;
 
@@ -412,8 +412,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
             // at signout to use ws-fed so we can test the iframe params
             _wsfedClient.ProtocolType = ProtocolTypes.WsFederation;
 
-            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl);
-            var html = await response.Content.ReadAsStringAsync();
+            response = await _mockPipeline.BrowserClient.GetAsync(signoutFrameUrl, TestContext.Current.CancellationToken);
+            var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             html.Should().Contain("https://client4/signout?wa=wsignoutcleanup1.0");
         }
 
@@ -431,13 +431,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 redirectUri: "https://client1/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint + 
-                "?id_token_hint=" + id_token);
+                "?id_token_hint=" + id_token, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutRequest.PostLogoutRedirectUri.Should().BeNull();
         }
@@ -456,13 +456,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 redirectUri: "https://client2/callback",
                 state: "123_state",
                 nonce: "123_nonce");
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             var id_token = authorization.IdentityToken;
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
             response = await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint +
-                "?id_token_hint=" + id_token);
+                "?id_token_hint=" + id_token, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutRequest.PostLogoutRedirectUri.Should().BeNull();
         }
@@ -482,7 +482,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
             response.Should().NotBeNull();
 
-            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
             _mockPipeline.LogoutRequest.SignOutIFrameUrl.Should().NotBeNull();
@@ -494,7 +494,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
         {
             await _mockPipeline.LoginAsync("bob");
 
-            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             _mockPipeline.LogoutWasCalled.Should().BeTrue();
             _mockPipeline.LogoutRequest.SignOutIFrameUrl.Should().BeNull();
@@ -546,7 +546,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
             response.Should().NotBeNull();
 
-            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             _mockPipeline.BackChannelMessageHandler.InvokeWasCalled.Should().BeTrue();
         }
@@ -568,7 +568,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 nonce: "123_nonce");
             response.Should().NotBeNull();
 
-            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint);
+            await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.EndSessionEndpoint, TestContext.Current.CancellationToken);
 
             _mockPipeline.BackChannelMessageHandler.InvokeWasCalled.Should().BeTrue();
         }

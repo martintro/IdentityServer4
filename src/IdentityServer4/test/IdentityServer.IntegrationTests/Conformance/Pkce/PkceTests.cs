@@ -216,7 +216,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
             tokenResponse.TokenType.Should().Be("Bearer");
@@ -256,7 +256,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeFalse();
             tokenResponse.TokenType.Should().Be("Bearer");
@@ -309,7 +309,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
         }
@@ -415,7 +415,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
 
                 Code = code,
                 RedirectUri = redirect_uri,
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -452,7 +452,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "a"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -489,7 +489,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = new string('a', _pipeline.Options.InputLengthRestrictions.CodeVerifierMaxLength + 1)
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
@@ -526,7 +526,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "mismatched_code_verifier"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             tokenResponse.IsError.Should().BeTrue();
             tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);

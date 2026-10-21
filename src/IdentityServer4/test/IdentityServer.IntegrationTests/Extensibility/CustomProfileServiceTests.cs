@@ -68,7 +68,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
                 nonce: "nonce");
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client/callback");

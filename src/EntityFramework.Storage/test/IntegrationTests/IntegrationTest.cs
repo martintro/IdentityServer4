@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -38,8 +38,8 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
                 TestDatabaseProviders = new TheoryData<DbContextOptions<TDbContext>>
                 {
                     DatabaseProviderBuilder.BuildInMemory<TDbContext>(typeof(TClass).Name),
-                    //DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name),
-                    //DatabaseProviderBuilder.BuildLocalDb<TDbContext>(typeof(TClass).Name)
+                    DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name),
+                    DatabaseProviderBuilder.BuildLocalDb<TDbContext>(typeof(TClass).Name)
                 };
             }
             else
@@ -55,7 +55,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
 
         protected IntegrationTest(DatabaseProviderFixture<TDbContext> fixture)
         {
-            fixture.Options = TestDatabaseProviders.ToList<DbContextOptions<TDbContext>>();
+            fixture.Options = TestDatabaseProviders.Select(row => row.Data).ToList();
             fixture.StoreOptions = StoreOptions;
         }
     }

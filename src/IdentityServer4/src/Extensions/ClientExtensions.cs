@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -55,7 +56,7 @@ namespace IdentityServer4.Models
         {
             return secrets
                 .Where(s => s.Type == IdentityServerConstants.SecretTypes.X509CertificateBase64)
-                .Select(s => new X509Certificate2(Convert.FromBase64String(s.Value)))
+                .Select(s => X509CertificateLoader.LoadCertificate(Convert.FromBase64String(s.Value)))
                 .Where(c => c != null)
                 .ToList();
         }

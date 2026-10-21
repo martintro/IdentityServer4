@@ -1,9 +1,9 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
+using System.Linq;
 
 namespace IdentityServer4.EntityFramework.Mappers
 {
@@ -12,14 +12,6 @@ namespace IdentityServer4.EntityFramework.Mappers
     /// </summary>
     public static class ApiResourceMappers
     {
-        static ApiResourceMappers()
-        {
-            Mapper = new MapperConfiguration(cfg => cfg.AddProfile<ApiResourceMapperProfile>())
-                .CreateMapper();
-        }
-
-        internal static IMapper Mapper { get; }
-
         /// <summary>
         /// Maps an entity to a model.
         /// </summary>
@@ -27,7 +19,27 @@ namespace IdentityServer4.EntityFramework.Mappers
         /// <returns></returns>
         public static Models.ApiResource ToModel(this ApiResource entity)
         {
-            return entity == null ? null : Mapper.Map<Models.ApiResource>(entity);
+            if (entity == null) return null;
+
+            return new Models.ApiResource
+            {
+                Enabled = entity.Enabled,
+                Name = entity.Name,
+                DisplayName = entity.DisplayName,
+                Description = entity.Description,
+                ShowInDiscoveryDocument = entity.ShowInDiscoveryDocument,
+                UserClaims = entity.UserClaims.MapToHashSet(uc => uc.Type),
+                Properties = entity.Properties.ToPropertyDictionary(),
+                ApiSecrets = entity.Secrets.MapToHashSet(s => new Models.Secret
+                {
+                    Description = s.Description,
+                    Value = s.Value,
+                    Expiration = s.Expiration,
+                    Type = s.Type
+                }),
+                Scopes = entity.Scopes.MapToHashSet(s => s.Scope),
+                AllowedAccessTokenSigningAlgorithms = AllowedSigningAlgorithmsConverter.Convert(entity.AllowedAccessTokenSigningAlgorithms)
+            };
         }
 
         /// <summary>
@@ -37,7 +49,33 @@ namespace IdentityServer4.EntityFramework.Mappers
         /// <returns></returns>
         public static ApiResource ToEntity(this Models.ApiResource model)
         {
-            return model == null ? null : Mapper.Map<ApiResource>(model);
+            if (model == null) return null;
+
+            return new ApiResource
+            {
+                Enabled = model.Enabled,
+                Name = model.Name,
+                DisplayName = model.DisplayName,
+                Description = model.Description,
+                ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
+                UserClaims = model.UserClaims.MapToList(uc => new ApiResourceClaim
+                {
+                    Type = uc
+                }),
+                Properties = model.Properties.ToPropertyEntities<ApiResourceProperty>(),
+                Secrets = model.ApiSecrets.MapToList(s => new ApiResourceSecret
+                {
+                    Description = s.Description,
+                    Value = s.Value,
+                    Expiration = s.Expiration,
+                    Type = s.Type
+                }),
+                Scopes = model.Scopes.MapToList(s => new ApiResourceScope
+                {
+                    Scope = s
+                }),
+                AllowedAccessTokenSigningAlgorithms = AllowedSigningAlgorithmsConverter.Convert(model.AllowedAccessTokenSigningAlgorithms)
+            };
         }
     }
 }

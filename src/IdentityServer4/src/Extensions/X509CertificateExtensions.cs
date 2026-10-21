@@ -1,8 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -27,7 +28,7 @@ namespace IdentityServer4.Extensions
                             
             var values = new Dictionary<string, string>
             {
-                { "x5t#S256", Base64Url.Encode(hash) }
+                { "x5t#S256", Base64Url.EncodeToString(hash) }
             };
 
             return JsonSerializer.Serialize(values);

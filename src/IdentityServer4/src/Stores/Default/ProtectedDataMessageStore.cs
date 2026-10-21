@@ -1,15 +1,15 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using IdentityServer4.Models;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
-using Duende.IdentityModel;
-using System.Text;
-using System;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Buffers.Text;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.Stores
 {
@@ -51,7 +51,7 @@ namespace IdentityServer4.Stores
             {
                 try
                 {
-                    var bytes = Base64Url.Decode(value);
+                    var bytes = Base64Url.DecodeFromChars(value);
                     bytes = Protector.Unprotect(bytes);
                     var json = Encoding.UTF8.GetString(bytes);
                     result = ObjectSerializer.FromString<Message<TModel>>(json);
@@ -75,7 +75,7 @@ namespace IdentityServer4.Stores
                 var json = ObjectSerializer.ToString(message);
                 var bytes = Encoding.UTF8.GetBytes(json);
                 bytes = Protector.Protect(bytes);
-                value = Base64Url.Encode(bytes);
+                value = Base64Url.EncodeToString(bytes);
             }
             catch(Exception ex)
             {

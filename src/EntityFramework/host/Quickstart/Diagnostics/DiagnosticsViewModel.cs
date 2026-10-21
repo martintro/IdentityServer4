@@ -1,10 +1,10 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
@@ -20,7 +20,7 @@ namespace IdentityServerHost.Quickstart.UI
             if (result.Properties.Items.ContainsKey("client_list"))
             {
                 var encoded = result.Properties.Items["client_list"];
-                var bytes = Base64Url.Decode(encoded);
+                var bytes = Base64Url.DecodeFromChars(encoded);
                 var value = Encoding.UTF8.GetString(bytes);
 
                 Clients = JsonSerializer.Deserialize<string[]>(value);

@@ -1,11 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using Duende.IdentityModel;
 using IdentityServer4.Extensions;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -126,7 +127,7 @@ namespace IdentityServer4.Validation
                 hash = sha.ComputeHash(bytes);
             }
 
-            return Base64Url.Encode(hash) + "." + salt;
+            return Base64Url.EncodeToString(hash) + "." + salt;
         }
     }
 }

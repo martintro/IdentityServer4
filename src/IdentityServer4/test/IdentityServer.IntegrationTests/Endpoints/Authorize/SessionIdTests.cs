@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -85,14 +85,14 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
         {
             await _mockPipeline.LoginAsync("bob");
             var sid1 = _mockPipeline.GetSessionCookie().Value;
-            sid1.Should().NotBeNull();
+            sid1.ShouldNotBeNull();
 
             _mockPipeline.RemoveSessionCookie();
 
             await _mockPipeline.BrowserClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint, TestContext.Current.CancellationToken);
 
             var sid2 = _mockPipeline.GetSessionCookie().Value;
-            sid2.Should().Be(sid1);
+            sid2.ShouldBe(sid1);
         }
     }
 }

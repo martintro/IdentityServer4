@@ -5,7 +5,7 @@
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -70,7 +70,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             await _mockPipeline.LoginAsync("bob");
 
             var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint, TestContext.Current.CancellationToken);
-            metadata.StatusCode.Should().Be(HttpStatusCode.OK);
+            metadata.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
@@ -83,12 +83,12 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            state: state,
                            nonce: nonce);
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
-            response.StatusCode.Should().Be(HttpStatusCode.Found);
+            response.StatusCode.ShouldBe(HttpStatusCode.Found);
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
-            authorization.IsError.Should().BeFalse();
-            authorization.Code.Should().NotBeNull();
-            authorization.State.Should().Be(state);
+            authorization.IsError.ShouldBeFalse();
+            authorization.Code.ShouldNotBeNull();
+            authorization.State.ShouldBe(state);
         }
 
         // this might not be in sync with the actual conformance tests
@@ -118,7 +118,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("unsupported_response_type");
+            _mockPipeline.ErrorMessage.Error.ShouldBe("unsupported_response_type");
         }
     }
 }

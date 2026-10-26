@@ -23,7 +23,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     
     <PackageReference Include="xunit.v3" />
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Shouldly" />
   </ItemGroup>
 
   <ItemGroup>

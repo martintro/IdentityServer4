@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Options;
@@ -132,57 +132,57 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1"
-                })).ToList().Count.Should().Be(9);
+                })).ToList().Count.ShouldBe(9);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub2"
-                })).ToList().Count.Should().Be(0);
+                })).ToList().Count.ShouldBe(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c1"
-                })).ToList().Count.Should().Be(4);
+                })).ToList().Count.ShouldBe(4);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c2"
-                })).ToList().Count.Should().Be(4);
+                })).ToList().Count.ShouldBe(4);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c3"
-                })).ToList().Count.Should().Be(1);
+                })).ToList().Count.ShouldBe(1);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c4"
-                })).ToList().Count.Should().Be(0);
+                })).ToList().Count.ShouldBe(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c1",
                     SessionId = "s1"
-                })).ToList().Count.Should().Be(2);
+                })).ToList().Count.ShouldBe(2);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c3",
                     SessionId = "s1"
-                })).ToList().Count.Should().Be(0);
+                })).ToList().Count.ShouldBe(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c1",
                     SessionId = "s1",
                     Type = "t1"
-                })).ToList().Count.Should().Be(1);
+                })).ToList().Count.ShouldBe(1);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
                     SubjectId = "sub1",
                     ClientId = "c1",
                     SessionId = "s1",
                     Type = "t3"
-                })).ToList().Count.Should().Be(0);
+                })).ToList().Count.ShouldBe(0);
             }
         }
 
@@ -296,7 +296,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 {
                     SubjectId = "sub1"
                 });
-                context.PersistedGrants.Count().Should().Be(1);
+                context.PersistedGrants.Count().ShouldBe(1);
             }
 
             PopulateDb();
@@ -308,7 +308,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 {
                     SubjectId = "sub2"
                 });
-                context.PersistedGrants.Count().Should().Be(10);
+                context.PersistedGrants.Count().ShouldBe(10);
             }
 
             PopulateDb();
@@ -320,7 +320,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 {
                     SubjectId = "sub1", ClientId = "c1"
                 });
-                context.PersistedGrants.Count().Should().Be(6);
+                context.PersistedGrants.Count().ShouldBe(6);
             }
 
             PopulateDb();
@@ -333,7 +333,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     SubjectId = "sub1",
                     ClientId = "c2"
                 });
-                context.PersistedGrants.Count().Should().Be(6);
+                context.PersistedGrants.Count().ShouldBe(6);
             }
 
             PopulateDb();
@@ -346,7 +346,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     SubjectId = "sub1",
                     ClientId = "c3"
                 });
-                context.PersistedGrants.Count().Should().Be(9);
+                context.PersistedGrants.Count().ShouldBe(9);
             }
 
 
@@ -360,7 +360,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     SubjectId = "sub1",
                     ClientId = "c4"
                 });
-                context.PersistedGrants.Count().Should().Be(10);
+                context.PersistedGrants.Count().ShouldBe(10);
             }
 
             PopulateDb();
@@ -374,7 +374,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     ClientId = "c1", 
                     SessionId = "s1"
                 });
-                context.PersistedGrants.Count().Should().Be(8);
+                context.PersistedGrants.Count().ShouldBe(8);
             }
 
             PopulateDb();
@@ -388,7 +388,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     ClientId = "c3",
                     SessionId = "s1"
                 });
-                context.PersistedGrants.Count().Should().Be(10);
+                context.PersistedGrants.Count().ShouldBe(10);
             }
 
             PopulateDb();
@@ -403,7 +403,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     SessionId = "s1", 
                     Type = "t1"
                 });
-                context.PersistedGrants.Count().Should().Be(9);
+                context.PersistedGrants.Count().ShouldBe(9);
             }
 
             PopulateDb();
@@ -418,7 +418,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                     SessionId = "s1",
                     Type = "t3"
                 });
-                context.PersistedGrants.Count().Should().Be(10);
+                context.PersistedGrants.Count().ShouldBe(10);
             }
         }
 

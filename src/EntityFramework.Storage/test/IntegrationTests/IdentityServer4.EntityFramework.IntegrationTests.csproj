@@ -28,7 +28,7 @@
     <PackageReference Include="IdentityServer4NG.Storage" />
     
     <PackageReference Include="xunit.v3" />
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Shouldly" />
     
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />

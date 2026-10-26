@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
 using IdentityServer4.Endpoints.Results;
@@ -42,7 +43,7 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.StatusCode.Should().Be(400);
+            _context.Response.StatusCode.ShouldBe(400);
         }
 
         [Fact]
@@ -53,22 +54,22 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.ContentType.Should().StartWith("text/html");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-store");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-cache");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("max-age=0");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY=';");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("frame-src http://foo.com http://bar.com");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY=';");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("frame-src http://foo.com http://bar.com");
+            _context.Response.ContentType.ShouldStartWith("text/html");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-store");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-cache");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("max-age=0");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY=';");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("frame-src http://foo.com http://bar.com");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY=';");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("frame-src http://foo.com http://bar.com");
             _context.Response.Body.Seek(0, SeekOrigin.Begin);
             using (var rdr = new StreamReader(_context.Response.Body))
             {
                 var html = rdr.ReadToEnd();
-                html.Should().Contain("<iframe src='http://foo.com'></iframe>");
-                html.Should().Contain("<iframe src='http://bar.com'></iframe>");
+                html.ShouldContain("<iframe src='http://foo.com'></iframe>");
+                html.ShouldContain("<iframe src='http://bar.com'></iframe>");
             }
         }
 
@@ -81,8 +82,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("style-src 'unsafe-inline' 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("style-src 'unsafe-inline' 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("style-src 'unsafe-inline' 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("style-src 'unsafe-inline' 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
         }
 
         [Fact]
@@ -94,8 +95,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
-            _context.Response.Headers["X-Content-Security-Policy"].Should().BeEmpty();
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("style-src 'sha256-u+OupXgfekP+x/f6rMdoEAspPCYUtca912isERnoEjY='");
+            _context.Response.Headers["X-Content-Security-Policy"].ShouldBeEmpty();
         }
     }
 }

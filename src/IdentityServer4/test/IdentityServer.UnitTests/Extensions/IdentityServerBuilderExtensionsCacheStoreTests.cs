@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
@@ -56,7 +61,7 @@ namespace IdentityServer.UnitTests.Extensions
 
             identityServerBuilder.AddClientStoreCache<CustomClientStore>();
 
-            services.Any(x => x.ImplementationType == typeof(CustomClientStore)).Should().BeTrue();
+            services.Any(x => x.ImplementationType == typeof(CustomClientStore)).ShouldBeTrue();
         }
 
         [Fact]
@@ -67,7 +72,7 @@ namespace IdentityServer.UnitTests.Extensions
 
             identityServerBuilder.AddResourceStoreCache<CustomResourceStore>();
 
-            services.Any(x => x.ImplementationType == typeof(CustomResourceStore)).Should().BeTrue();
+            services.Any(x => x.ImplementationType == typeof(CustomResourceStore)).ShouldBeTrue();
         }
     }
 }

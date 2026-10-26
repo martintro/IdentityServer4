@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
@@ -47,12 +47,12 @@ namespace IdentityServer.UnitTests.Extensions
             var options = new IdentityServerOptions();
             var payload = _token.CreateJwtPayload(new SystemClock(), options, TestLogger.Create<JwtPayloadCreationTests>());
 
-            payload.Should().NotBeNull();
+            payload.ShouldNotBeNull();
             var scopes = payload.Claims.Where(c => c.Type == JwtClaimTypes.Scope).ToArray();
-            scopes.Count().Should().Be(3);
-            scopes[0].Value.Should().Be("scope1");
-            scopes[1].Value.Should().Be("scope2");
-            scopes[2].Value.Should().Be("scope3");
+            scopes.Count().ShouldBe(3);
+            scopes[0].Value.ShouldBe("scope1");
+            scopes[1].Value.ShouldBe("scope2");
+            scopes[2].Value.ShouldBe("scope3");
         }
         
         [Fact]
@@ -65,10 +65,10 @@ namespace IdentityServer.UnitTests.Extensions
             
             var payload = _token.CreateJwtPayload(new SystemClock(), options, TestLogger.Create<JwtPayloadCreationTests>());
 
-            payload.Should().NotBeNull();
+            payload.ShouldNotBeNull();
             var scopes = payload.Claims.Where(c => c.Type == JwtClaimTypes.Scope).ToList();
-            scopes.Count().Should().Be(1);
-            scopes.First().Value.Should().Be("scope1 scope2 scope3");
+            scopes.Count().ShouldBe(1);
+            scopes.First().Value.ShouldBe("scope1 scope2 scope3");
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -37,7 +37,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                 }
             });
 
-            (await _subject.IsOriginAllowedAsync("http://foo")).Should().BeTrue();
+            (await _subject.IsOriginAllowedAsync("http://foo")).ShouldBeTrue();
         }
 
         [Theory]
@@ -54,7 +54,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                     clientOrigin
                 }
             });
-            (await _subject.IsOriginAllowedAsync("http://bar")).Should().Be(false);
+            (await _subject.IsOriginAllowedAsync("http://bar")).ShouldBe(false);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                     "http://baz"
                 }
             });
-            (await _subject.IsOriginAllowedAsync("http://bar")).Should().Be(true);
+            (await _subject.IsOriginAllowedAsync("http://bar")).ShouldBe(true);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                     "http://baz"
                 }
             });
-            (await _subject.IsOriginAllowedAsync("http://quux")).Should().Be(false);
+            (await _subject.IsOriginAllowedAsync("http://quux")).ShouldBe(false);
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                     }
                 }
             });
-            (await _subject.IsOriginAllowedAsync("http://foo")).Should().BeTrue();
+            (await _subject.IsOriginAllowedAsync("http://foo")).ShouldBeTrue();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace IdentityServer.UnitTests.Services.InMemory
                     }
                 }
             });
-            (await _subject.IsOriginAllowedAsync("http://bar")).Should().BeTrue();
+            (await _subject.IsOriginAllowedAsync("http://bar")).ShouldBeTrue();
         }
     }
 }

@@ -5,7 +5,7 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.Mappers;
 using Xunit;
 using Client = IdentityServer4.Models.Client;
@@ -40,23 +40,23 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
 
             var mappedEntity = model.ToEntity();
 
-            mappedEntity.Properties.Count.Should().Be(2);
+            mappedEntity.Properties.Count.ShouldBe(2);
             var foo1 = mappedEntity.Properties.FirstOrDefault(x => x.Key == "foo1");
-            foo1.Should().NotBeNull();
-            foo1.Value.Should().Be("bar1");
+            foo1.ShouldNotBeNull();
+            foo1.Value.ShouldBe("bar1");
             var foo2 = mappedEntity.Properties.FirstOrDefault(x => x.Key == "foo2");
-            foo2.Should().NotBeNull();
-            foo2.Value.Should().Be("bar2");
+            foo2.ShouldNotBeNull();
+            foo2.Value.ShouldBe("bar2");
 
 
 
             var mappedModel = mappedEntity.ToModel();
 
-            mappedModel.Properties.Count.Should().Be(2);
-            mappedModel.Properties.ContainsKey("foo1").Should().BeTrue();
-            mappedModel.Properties.ContainsKey("foo2").Should().BeTrue();
-            mappedModel.Properties["foo1"].Should().Be("bar1");
-            mappedModel.Properties["foo2"].Should().Be("bar2");
+            mappedModel.Properties.Count.ShouldBe(2);
+            mappedModel.Properties.ContainsKey("foo1").ShouldBeTrue();
+            mappedModel.Properties.ContainsKey("foo2").ShouldBeTrue();
+            mappedModel.Properties["foo1"].ShouldBe("bar1");
+            mappedModel.Properties["foo2"].ShouldBe("bar2");
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
             };
 
             Action modelAction = () => entity.ToModel();
-            modelAction.Should().Throw<Exception>();
+            modelAction.ShouldThrow<Exception>();
         }
 
         [Fact]
@@ -94,8 +94,8 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
             };
 
             var model = entity.ToModel();
-            model.ProtocolType.Should().Be(def.ProtocolType);
-            model.ClientSecrets.First().Type.Should().Be(def.ClientSecrets.First().Type);
+            model.ProtocolType.ShouldBe(def.ProtocolType);
+            model.ClientSecrets.First().Type.ShouldBe(def.ClientSecrets.First().Type);
         }
     }
 }

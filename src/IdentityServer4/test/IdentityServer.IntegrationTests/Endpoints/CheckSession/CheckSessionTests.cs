@@ -5,7 +5,7 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using Xunit;
 
@@ -28,7 +28,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.CheckSession
         {
             var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.CheckSessionEndpoint, TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().NotBe(HttpStatusCode.NotFound);
+            response.StatusCode.ShouldNotBe(HttpStatusCode.NotFound);
         }
     }
 }

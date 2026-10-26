@@ -5,7 +5,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
@@ -40,7 +40,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid api1"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
+            response.IsError.ShouldBe(true);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
     }
 }

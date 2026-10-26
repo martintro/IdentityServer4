@@ -1,8 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Validation;
 using Xunit;
 
@@ -33,7 +34,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = null;
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
 
             [Fact]
@@ -44,7 +45,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = string.Empty;
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
 
             [Fact]
@@ -55,7 +56,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = null;
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
 
             [Fact]
@@ -66,7 +67,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = "token";
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
 
             [Fact]
@@ -77,7 +78,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = "id_token";
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
 
             [Fact]
@@ -88,7 +89,7 @@ namespace IdentityServer.UnitTests.Validation
                 string y = "token";
                 var result = comparer.Equals(x, y);
                 var expected = (x == y);
-                result.Should().Be(expected);
+                result.ShouldBe(expected);
             }
         }
 
@@ -106,7 +107,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "id_token token";
                 string y = "token id_token";
                 var result = comparer.Equals(x, y);
-                result.Should().BeTrue();
+                result.ShouldBeTrue();
             }
 
             [Fact]
@@ -116,7 +117,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token";
                 string y = "id_token code";
                 var result = comparer.Equals(x, y);
-                result.Should().BeTrue();
+                result.ShouldBeTrue();
             }
 
             [Fact]
@@ -126,7 +127,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code token";
                 string y = "token code";
                 var result = comparer.Equals(x, y);
-                result.Should().BeTrue();
+                result.ShouldBeTrue();
             }
 
             [Fact]
@@ -136,7 +137,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token token";
                 string y = "id_token code token";
                 var result = comparer.Equals(x, y);
-                result.Should().BeTrue();
+                result.ShouldBeTrue();
             }
 
             [Fact]
@@ -146,7 +147,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token token";
                 string y = "token id_token code";
                 var result = comparer.Equals(x, y);
-                result.Should().BeTrue();
+                result.ShouldBeTrue();
             }
 
             [Fact]
@@ -156,7 +157,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token token";
                 string y = "id_token token";
                 var result = comparer.Equals(x, y);
-                result.Should().BeFalse();
+                result.ShouldBeFalse();
             }
 
             [Fact]
@@ -166,7 +167,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token token";
                 string y = "id_token";
                 var result = comparer.Equals(x, y);
-                result.Should().BeFalse();
+                result.ShouldBeFalse();
             }
 
             [Fact]
@@ -176,7 +177,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "blerg smoo";
                 string y = "token code";
                 var result = comparer.Equals(x, y);
-                result.Should().BeFalse();
+                result.ShouldBeFalse();
             }
 
             [Fact]
@@ -186,7 +187,7 @@ namespace IdentityServer.UnitTests.Validation
                 string x = "code id_token token";
                 string y = "tokenizer bleegerfi";
                 var result = comparer.Equals(x, y);
-                result.Should().BeFalse();
+                result.ShouldBeFalse();
             }
         }
     }

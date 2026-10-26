@@ -5,7 +5,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
@@ -44,11 +44,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
@@ -59,11 +59,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
         }
 
         [Fact]
@@ -80,11 +80,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
@@ -95,11 +95,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().NotBeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldNotBeNull();
+            response.RefreshToken.ShouldNotBeNull();
         }
 
         [Fact]
@@ -116,11 +116,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt1 = response.RefreshToken;
 
@@ -133,15 +133,15 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().NotBeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldNotBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt2 = response.RefreshToken;
 
-            rt1.Should().BeEquivalentTo(rt2);
+            rt1.ShouldBe(rt2);
         }
         
         [Fact]
@@ -158,11 +158,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt1 = response.RefreshToken;
 
@@ -175,15 +175,15 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().NotBeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldNotBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt2 = response.RefreshToken;
 
-            rt1.Should().NotBeEquivalentTo(rt2);
+            rt1.ShouldNotBe(rt2);
         }
         
         [Fact]
@@ -201,11 +201,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt1 = response.RefreshToken;
 
@@ -219,11 +219,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().NotBeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldNotBeNull();
+            response.RefreshToken.ShouldNotBeNull();
             
             // refresh token (again)
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
@@ -235,8 +235,8 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = rt1
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeTrue();
-            response.Error.Should().Be("invalid_grant");
+            response.IsError.ShouldBeTrue();
+            response.Error.ShouldBe("invalid_grant");
         }
         
         [Fact]
@@ -254,11 +254,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt1 = response.RefreshToken;
 
@@ -272,7 +272,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = rt1
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
         }
         
         [Fact]
@@ -290,11 +290,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var rt1 = response.RefreshToken;
 
@@ -310,7 +310,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 TokenTypeHint = "refresh_token"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            revocationResponse.IsError.Should().Be(false);
+            revocationResponse.IsError.ShouldBe(false);
             
             // refresh token
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
@@ -322,8 +322,8 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = rt1
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeTrue();
-            response.Error.Should().Be("invalid_grant");
+            response.IsError.ShouldBeTrue();
+            response.Error.ShouldBe("invalid_grant");
         }
     }
 }

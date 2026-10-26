@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
@@ -40,7 +40,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await service.ShouldSlowDown(handle, deviceCode);
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
 
             CheckCacheEntry(handle);
         }
@@ -55,7 +55,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await service.ShouldSlowDown(handle, deviceCode);
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
             
             CheckCacheEntry(handle);
         }
@@ -71,7 +71,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await service.ShouldSlowDown(handle, deviceCode);
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
 
             CheckCacheEntry(handle);
         }
@@ -89,21 +89,21 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await service.ShouldSlowDown(handle, deviceCode);
             
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
 
-            cache.Items.TryGetValue(CacheKey + handle, out var values).Should().BeTrue();
-            values?.Item2.AbsoluteExpiration.Should().BeOnOrAfter(testDate);
+            cache.Items.TryGetValue(CacheKey + handle, out var values).ShouldBeTrue();
+            values.Item2.AbsoluteExpiration.ShouldNotBeNull().ShouldBeGreaterThanOrEqualTo(testDate);
         }
 
         private void CheckCacheEntry(string handle)
         {
-            cache.Items.TryGetValue(CacheKey + handle, out var values).Should().BeTrue();
+            cache.Items.TryGetValue(CacheKey + handle, out var values).ShouldBeTrue();
 
             var dateTimeAsString = Encoding.UTF8.GetString(values?.Item1);
             var dateTime = DateTime.Parse(dateTimeAsString);
-            dateTime.Should().Be(testDate);
+            dateTime.ShouldBe(testDate);
 
-            values?.Item2.AbsoluteExpiration.Should().BeCloseTo(testDate.AddSeconds(deviceCode.Lifetime), TimeSpan.FromMicroseconds(1));
+            values.Item2.AbsoluteExpiration.ShouldNotBeNull().ShouldBe(testDate.AddSeconds(deviceCode.Lifetime), TimeSpan.FromMicroseconds(1));
         }
     }
 

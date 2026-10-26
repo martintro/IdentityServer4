@@ -1,8 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
@@ -199,7 +200,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -215,7 +216,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -248,7 +249,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -265,7 +266,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
         [Fact]
         [Trait("Category", Category)]
@@ -281,7 +282,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
         [Fact]
         [Trait("Category", Category)]
@@ -297,7 +298,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
         [Fact]
         [Trait("Category", Category)]
@@ -313,7 +314,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
         [Fact]
         [Trait("Category", Category)]
@@ -329,7 +330,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var context = await ValidateAsync(client);
-            context.IsValid.Should().BeTrue();
+            context.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -362,7 +363,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var result = await ValidateAsync(client);
-            result.IsValid.Should().BeTrue();
+            result.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -378,7 +379,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var result = await ValidateAsync(client);
-            result.IsValid.Should().BeTrue();
+            result.IsValid.ShouldBeTrue();
         }
 
         [Fact]
@@ -413,7 +414,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var result = await ValidateAsync(client);
-            result.IsValid.Should().BeTrue();
+            result.IsValid.ShouldBeTrue();
         }
 
         [Theory]
@@ -444,15 +445,15 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var result = await ValidateAsync(client);
-            result.IsValid.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("invalid origin");
+            result.IsValid.ShouldBeFalse();
+            result.ErrorMessage.ShouldContain("invalid origin");
             if (!String.IsNullOrWhiteSpace(origin))
             {
-                result.ErrorMessage.Should().Contain(origin);
+                result.ErrorMessage.ShouldContain(origin);
             }
             else
             {
-                result.ErrorMessage.Should().Contain("empty value");
+                result.ErrorMessage.ShouldContain("empty value");
             }
         }
 
@@ -477,7 +478,7 @@ namespace IdentityServer.UnitTests.Validation
             };
 
             var result = await ValidateAsync(client);
-            result.IsValid.Should().BeTrue();
+            result.IsValid.ShouldBeTrue();
         }
 
 
@@ -493,8 +494,8 @@ namespace IdentityServer.UnitTests.Validation
         {
             var context = await ValidateAsync(client);
 
-            context.IsValid.Should().BeFalse();
-            context.ErrorMessage.Should().Be(expectedError);
+            context.IsValid.ShouldBeFalse();
+            context.ErrorMessage.ShouldBe(expectedError);
         }
     }
 }

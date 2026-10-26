@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Configuration;
@@ -83,7 +83,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var response = await _pipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = _pipeline.ParseAuthorizationResponseUrl(response.Headers.Location.ToString());
-            authorization.Code.Should().NotBeNull();
+            authorization.Code.ShouldNotBeNull();
 
             var code = authorization.Code;
 
@@ -100,17 +100,17 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                 RedirectUri = "https://code_pipeline.Client/callback?foo=bar&baz=quux"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResult.IsError.Should().BeFalse();
-            tokenResult.HttpErrorReason.Should().Be("OK");
-            tokenResult.TokenType.Should().Be("Bearer");
-            tokenResult.AccessToken.Should().NotBeNull();
-            tokenResult.ExpiresIn.Should().BeGreaterThan(0);
-            tokenResult.IdentityToken.Should().NotBeNull();
+            tokenResult.IsError.ShouldBeFalse();
+            tokenResult.HttpErrorReason.ShouldBe("OK");
+            tokenResult.TokenType.ShouldBe("Bearer");
+            tokenResult.AccessToken.ShouldNotBeNull();
+            tokenResult.ExpiresIn.ShouldBeGreaterThan(0);
+            tokenResult.IdentityToken.ShouldNotBeNull();
 
             var token = new JwtSecurityToken(tokenResult.IdentityToken);
             
             var s_hash = token.Claims.FirstOrDefault(c => c.Type == "s_hash");
-            s_hash.Should().BeNull();
+            s_hash.ShouldBeNull();
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var response = await _pipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = _pipeline.ParseAuthorizationResponseUrl(response.Headers.Location.ToString());
-            authorization.Code.Should().NotBeNull();
+            authorization.Code.ShouldNotBeNull();
 
             var code = authorization.Code;
 
@@ -149,18 +149,18 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                 RedirectUri = "https://code_pipeline.Client/callback?foo=bar&baz=quux"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResult.IsError.Should().BeFalse();
-            tokenResult.HttpErrorReason.Should().Be("OK");
-            tokenResult.TokenType.Should().Be("Bearer");
-            tokenResult.AccessToken.Should().NotBeNull();
-            tokenResult.ExpiresIn.Should().BeGreaterThan(0);
-            tokenResult.IdentityToken.Should().NotBeNull();
+            tokenResult.IsError.ShouldBeFalse();
+            tokenResult.HttpErrorReason.ShouldBe("OK");
+            tokenResult.TokenType.ShouldBe("Bearer");
+            tokenResult.AccessToken.ShouldNotBeNull();
+            tokenResult.ExpiresIn.ShouldBeGreaterThan(0);
+            tokenResult.IdentityToken.ShouldNotBeNull();
 
             var token = new JwtSecurityToken(tokenResult.IdentityToken);
             
             var s_hash = token.Claims.FirstOrDefault(c => c.Type == "s_hash");
-            s_hash.Should().NotBeNull();
-            s_hash.Value.Should().Be(CryptoHelper.CreateHashClaimValue("state", "RS256"));
+            s_hash.ShouldNotBeNull();
+            s_hash.Value.ShouldBe(CryptoHelper.CreateHashClaimValue("state", "RS256"));
         }
     }
 }

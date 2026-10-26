@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -38,7 +38,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -54,9 +54,9 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Type.Should().Be(IdentityServerConstants.ParsedSecretTypes.SharedSecret);
-            secret.Id.Should().Be("client");
-            secret.Credential.Should().Be("secret");
+            secret.Type.ShouldBe(IdentityServerConstants.ParsedSecretTypes.SharedSecret);
+            secret.Id.ShouldBe("client");
+            secret.Credential.ShouldBe("secret");
         }
 
         [Fact]
@@ -71,9 +71,9 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Type.Should().Be(IdentityServerConstants.ParsedSecretTypes.NoSecret);
-            secret.Id.Should().Be("client");
-            secret.Credential.Should().BeNull();
+            secret.Type.ShouldBe(IdentityServerConstants.ParsedSecretTypes.NoSecret);
+            secret.Id.ShouldBe("client");
+            secret.Credential.ShouldBeNull();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             context.Request.Headers.Append("Authorization", new StringValues(headerValue));
 
             var secret = await _parser.ParseAsync(context);
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context);
 
-            secret.Should().BeNull();
+            secret.ShouldBeNull();
         }
     }
 }

@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
@@ -59,7 +59,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.TokenCleanup
 
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.PersistedGrants.FirstOrDefault(x => x.Key == expiredGrant.Key).Should().BeNull();
+                context.PersistedGrants.FirstOrDefault(x => x.Key == expiredGrant.Key).ShouldBeNull();
             }
         }
 
@@ -86,7 +86,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.TokenCleanup
 
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.PersistedGrants.FirstOrDefault(x => x.Key == validGrant.Key).Should().NotBeNull();
+                context.PersistedGrants.FirstOrDefault(x => x.Key == validGrant.Key).ShouldNotBeNull();
             }
         }
 
@@ -114,7 +114,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.TokenCleanup
 
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == expiredGrant.DeviceCode).Should().BeNull();
+                context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == expiredGrant.DeviceCode).ShouldBeNull();
             }
         }
 
@@ -142,7 +142,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.TokenCleanup
 
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == validGrant.DeviceCode).Should().NotBeNull();
+                context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == validGrant.DeviceCode).ShouldNotBeNull();
             }
         }
 

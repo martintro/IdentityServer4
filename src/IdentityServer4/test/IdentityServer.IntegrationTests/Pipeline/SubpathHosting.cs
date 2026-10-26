@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
@@ -71,7 +71,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginWasCalled.Should().BeTrue();
+            _mockPipeline.LoginWasCalled.ShouldBeTrue();
         }
     }
 }

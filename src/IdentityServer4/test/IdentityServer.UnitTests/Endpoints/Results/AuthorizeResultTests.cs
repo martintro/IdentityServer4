@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
@@ -52,12 +52,12 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockErrorMessageStore.Messages.Count.Should().Be(1);
-            _context.Response.StatusCode.Should().Be(302);
+            _mockErrorMessageStore.Messages.Count.ShouldBe(1);
+            _context.Response.StatusCode.ShouldBe(302);
             var location = _context.Response.Headers["Location"].First();
-            location.Should().StartWith("https://server/error");
+            location.ShouldStartWith("https://server/error");
             var query = QueryHelpers.ParseQuery(new Uri(location).Query);
-            query["errorId"].First().Should().Be(_mockErrorMessageStore.Messages.First().Key);
+            query["errorId"].First().ShouldBe(_mockErrorMessageStore.Messages.First().Key);
         }
 
         [Theory]
@@ -77,10 +77,10 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockUserSession.Clients.Count.Should().Be(0);
-            _context.Response.StatusCode.Should().Be(302);
+            _mockUserSession.Clients.Count.ShouldBe(0);
+            _context.Response.StatusCode.ShouldBe(302);
             var location = _context.Response.Headers["Location"].First();
-            location.Should().StartWith("http://client/callback");
+            location.ShouldStartWith("http://client/callback");
         }
 
         [Theory]
@@ -101,10 +101,10 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockUserSession.Clients.Count.Should().Be(0);
-            _context.Response.StatusCode.Should().Be(302);
+            _mockUserSession.Clients.Count.ShouldBe(0);
+            _context.Response.StatusCode.ShouldBe(302);
             var location = _context.Response.Headers["Location"].First();
-            location.Should().Contain("session_state=some_session_state");
+            location.ShouldContain("session_state=some_session_state");
         }
 
         [Fact]
@@ -122,16 +122,16 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockUserSession.Clients.Count.Should().Be(0);
-            _context.Response.StatusCode.Should().Be(302);
+            _mockUserSession.Clients.Count.ShouldBe(0);
+            _context.Response.StatusCode.ShouldBe(302);
             var location = _context.Response.Headers["Location"].First();
-            location.Should().StartWith("http://client/callback");
+            location.ShouldStartWith("http://client/callback");
 
             var queryString = new Uri(location).Query;
             var queryParams = QueryHelpers.ParseQuery(queryString);
 
-            queryParams["error"].Should().Equal(OidcConstants.AuthorizeErrors.AccessDenied);
-            queryParams["error_description"].Should().Equal(errorDescription);
+            queryParams["error"].ToString().ShouldBe(OidcConstants.AuthorizeErrors.AccessDenied);
+            queryParams["error_description"].ToString().ShouldBe(errorDescription);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockUserSession.Clients.Should().Contain("client");
+            _mockUserSession.Clients.ShouldContain("client");
         }
 
         [Fact]
@@ -162,13 +162,13 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.StatusCode.Should().Be(302);
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-store");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-cache");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("max-age=0");
+            _context.Response.StatusCode.ShouldBe(302);
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-store");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-cache");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("max-age=0");
             var location = _context.Response.Headers["Location"].First();
-            location.Should().StartWith("http://client/callback");
-            location.Should().Contain("?state=state");
+            location.ShouldStartWith("http://client/callback");
+            location.ShouldContain("?state=state");
         }
 
         [Fact]
@@ -184,13 +184,13 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.StatusCode.Should().Be(302);
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-store");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-cache");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("max-age=0");
+            _context.Response.StatusCode.ShouldBe(302);
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-store");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-cache");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("max-age=0");
             var location = _context.Response.Headers["Location"].First();
-            location.Should().StartWith("http://client/callback");
-            location.Should().Contain("#state=state");
+            location.ShouldStartWith("http://client/callback");
+            location.ShouldContain("#state=state");
         }
 
         [Fact]
@@ -206,22 +206,22 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.StatusCode.Should().Be(200);
-            _context.Response.ContentType.Should().StartWith("text/html");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-store");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("no-cache");
-            _context.Response.Headers["Cache-Control"].First().Should().Contain("max-age=0");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
+            _context.Response.StatusCode.ShouldBe(200);
+            _context.Response.ContentType.ShouldStartWith("text/html");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-store");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("no-cache");
+            _context.Response.Headers["Cache-Control"].First().ShouldContain("max-age=0");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
             _context.Response.Body.Seek(0, SeekOrigin.Begin);
             using (var rdr = new StreamReader(_context.Response.Body))
             {
                 var html = rdr.ReadToEnd();
-                html.Should().Contain("<base target='_self'/>");
-                html.Should().Contain("<form method='post' action='http://client/callback'>");
-                html.Should().Contain("<input type='hidden' name='state' value='state' />");
+                html.ShouldContain("<base target='_self'/>");
+                html.ShouldContain("<form method='post' action='http://client/callback'>");
+                html.ShouldContain("<input type='hidden' name='state' value='state' />");
             }
         }
 
@@ -240,8 +240,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'unsafe-inline' 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("script-src 'unsafe-inline' 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'unsafe-inline' 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("script-src 'unsafe-inline' 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
         }
 
         [Fact]
@@ -259,8 +259,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
-            _context.Response.Headers["X-Content-Security-Policy"].Should().BeEmpty();
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'sha256-orD0/VhH8hLqrLxKHD/HUEMdwqX6/0ve7c5hspX5VJ8='");
+            _context.Response.Headers["X-Content-Security-Policy"].ShouldBeEmpty();
         }
     }
 }

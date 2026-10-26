@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Validation.Setup;
 using Microsoft.AspNetCore.Http;
 using Xunit;
@@ -30,8 +31,8 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(context);
 
-            result.IsError.Should().BeFalse();
-            result.Client.ClientId.Should().Be("roclient");
+            result.IsError.ShouldBeFalse();
+            result.Client.ClientId.ShouldBe("roclient");
         }
 
         [Fact]
@@ -48,7 +49,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(context);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -65,9 +66,9 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(context);
 
-            result.IsError.Should().BeFalse();
-            result.Client.ClientId.Should().Be("roclient.public");
-            result.Client.RequireClientSecret.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
+            result.Client.ClientId.ShouldBe("roclient.public");
+            result.Client.RequireClientSecret.ShouldBeFalse();
         }
 
         [Fact]
@@ -84,8 +85,8 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(context);
 
-            result.IsError.Should().BeFalse();
-            result.Client.ClientId.Should().Be("client.implicit");
+            result.IsError.ShouldBeFalse();
+            result.Client.ClientId.ShouldBe("client.implicit");
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(context);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
     }
 }

@@ -1,11 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Configuration;
 using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Extensions;
@@ -39,17 +40,17 @@ namespace IdentityServer.UnitTests.Endpoints.Results
         {
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.StatusCode.Should().Be(200);
-            _context.Response.ContentType.Should().StartWith("text/html");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("default-src 'none';");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
+            _context.Response.StatusCode.ShouldBe(200);
+            _context.Response.ContentType.ShouldStartWith("text/html");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("default-src 'none';");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
             _context.Response.Body.Seek(0, SeekOrigin.Begin);
             using (var rdr = new StreamReader(_context.Response.Body))
             {
                 var html = rdr.ReadToEnd();
-                html.Should().Contain("<script id='cookie-name' type='application/json'>foobar</script>");
+                html.ShouldContain("<script id='cookie-name' type='application/json'>foobar</script>");
             }
         }
 
@@ -60,8 +61,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'unsafe-inline' 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
-            _context.Response.Headers["X-Content-Security-Policy"].First().Should().Contain("script-src 'unsafe-inline' 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'unsafe-inline' 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
+            _context.Response.Headers["X-Content-Security-Policy"].First().ShouldContain("script-src 'unsafe-inline' 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
         }
 
         [Fact]
@@ -71,8 +72,8 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _context.Response.Headers["Content-Security-Policy"].First().Should().Contain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
-            _context.Response.Headers["X-Content-Security-Policy"].Should().BeEmpty();
+            _context.Response.Headers["Content-Security-Policy"].First().ShouldContain("script-src 'sha256-fa5rxHhZ799izGRP38+h4ud5QXNT0SFaFlh4eqDumBI='");
+            _context.Response.Headers["X-Content-Security-Policy"].ShouldBeEmpty();
         }
 
         [Theory]
@@ -87,7 +88,7 @@ namespace IdentityServer.UnitTests.Endpoints.Results
             using (var rdr = new StreamReader(_context.Response.Body))
             {
                 var html = rdr.ReadToEnd();
-                html.Should().Contain($"<script id='cookie-name' type='application/json'>{cookieName}</script>");
+                html.ShouldContain($"<script id='cookie-name' type='application/json'>{cookieName}</script>");
             }
         }
     }

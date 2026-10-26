@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
 using IdentityServer4.Configuration.DependencyInjection;
@@ -81,8 +81,8 @@ namespace IdentityServer.UnitTests.Cors
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
-            _mockPolicy.WasCalled.Should().BeTrue();
-            _mockInner.WasCalled.Should().BeFalse();
+            _mockPolicy.WasCalled.ShouldBeTrue();
+            _mockInner.WasCalled.ShouldBeFalse();
         }
 
         [Theory]
@@ -109,8 +109,8 @@ namespace IdentityServer.UnitTests.Cors
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
-            _mockPolicy.WasCalled.Should().BeFalse();
-            _mockInner.WasCalled.Should().BeFalse();
+            _mockPolicy.WasCalled.ShouldBeFalse();
+            _mockInner.WasCalled.ShouldBeFalse();
         }
 
         [Fact]
@@ -132,8 +132,8 @@ namespace IdentityServer.UnitTests.Cors
 
             var response = await _subject.GetPolicyAsync(ctx, "wrong_name");
 
-            _mockPolicy.WasCalled.Should().BeFalse();
-            _mockInner.WasCalled.Should().BeTrue();
+            _mockPolicy.WasCalled.ShouldBeFalse();
+            _mockInner.WasCalled.ShouldBeTrue();
         }
 
         [Fact]
@@ -153,8 +153,8 @@ namespace IdentityServer.UnitTests.Cors
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
-            _mockPolicy.WasCalled.Should().BeFalse();
-            _mockInner.WasCalled.Should().BeFalse();
+            _mockPolicy.WasCalled.ShouldBeFalse();
+            _mockInner.WasCalled.ShouldBeFalse();
         }
 
         [Theory]
@@ -176,8 +176,8 @@ namespace IdentityServer.UnitTests.Cors
 
             var response = await _subject.GetPolicyAsync(ctx, _options.Cors.CorsPolicyName);
 
-            _mockPolicy.WasCalled.Should().BeTrue();
-            _mockInner.WasCalled.Should().BeFalse();
+            _mockPolicy.WasCalled.ShouldBeTrue();
+            _mockInner.WasCalled.ShouldBeFalse();
         }
     }
 }

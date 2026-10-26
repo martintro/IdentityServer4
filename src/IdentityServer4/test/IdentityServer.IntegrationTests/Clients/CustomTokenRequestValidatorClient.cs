@@ -4,7 +4,7 @@
 
 
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
@@ -48,7 +48,7 @@ namespace IdentityServer.IntegrationTests.Clients
             }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace IdentityServer.IntegrationTests.Clients
             }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace IdentityServer.IntegrationTests.Clients
             }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace IdentityServer.IntegrationTests.Clients
             }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         private Dictionary<string, JsonElement> GetFields(TokenResponse response)

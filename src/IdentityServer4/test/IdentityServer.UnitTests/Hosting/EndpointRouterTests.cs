@@ -1,11 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
 using IdentityServer4.Hosting;
@@ -34,7 +35,7 @@ namespace IdentityServer.UnitTests.Hosting
         public void Endpoint_ctor_requires_path_to_start_with_slash()
         {
             Action a = () => new IdentityServer4.Hosting.Endpoint("ep1", "ep1", typeof(MyEndpointHandler));
-            a.Should().Throw<ArgumentException>();
+            a.ShouldThrow<ArgumentException>();
         }
 
         [Fact]
@@ -48,7 +49,7 @@ namespace IdentityServer.UnitTests.Hosting
             ctx.RequestServices = new StubServiceProvider();
 
             var result = _subject.Find(ctx);
-            result.Should().BeNull();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -62,7 +63,7 @@ namespace IdentityServer.UnitTests.Hosting
             ctx.RequestServices = new StubServiceProvider();
 
             var result = _subject.Find(ctx);
-            result.Should().BeOfType<MyEndpointHandler>();
+            result.ShouldBeOfType<MyEndpointHandler>();
         }
 
         [Fact]
@@ -76,7 +77,7 @@ namespace IdentityServer.UnitTests.Hosting
             ctx.RequestServices = new StubServiceProvider();
 
             var result = _subject.Find(ctx);
-            result.Should().BeNull();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -90,7 +91,7 @@ namespace IdentityServer.UnitTests.Hosting
             ctx.RequestServices = new StubServiceProvider();
 
             var result = _subject.Find(ctx);
-            result.Should().BeOfType<MyEndpointHandler>();
+            result.ShouldBeOfType<MyEndpointHandler>();
         }
 
         [Fact]
@@ -106,7 +107,7 @@ namespace IdentityServer.UnitTests.Hosting
             ctx.RequestServices = new StubServiceProvider();
 
             var result = _subject.Find(ctx);
-            result.Should().BeNull();
+            result.ShouldBeNull();
         }
 
         private class MyEndpointHandler : IEndpointHandler

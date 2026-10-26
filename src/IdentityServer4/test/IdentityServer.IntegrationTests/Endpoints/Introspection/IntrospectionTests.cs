@@ -4,7 +4,7 @@
 
 
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer.IntegrationTests.Endpoints.Introspection.Setup;
 using Microsoft.AspNetCore.Hosting;
@@ -47,7 +47,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             _client.SetBasicAuthentication("unknown", "invalid");
             var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             _client.SetBasicAuthentication("api1", "invalid");
             var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             _client.SetBasicAuthentication("api1", "secret");
             var response = await _client.PostAsync(IntrospectionEndpoint, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -99,8 +99,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Token = "invalid"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(false);
-            introspectionResponse.IsError.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(false);
+            introspectionResponse.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var client = new HttpClient(_handler);
             var response = await client.PostAsync(IntrospectionEndpoint, new StringContent(json, Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
-            response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+            response.StatusCode.ShouldBe(HttpStatusCode.UnsupportedMediaType);
         }
 
         [Fact]
@@ -149,15 +149,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Token = tokenResponse.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(true);
-            introspectionResponse.IsError.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(true);
+            introspectionResponse.IsError.ShouldBe(false);
 
             var scopes = from c in introspectionResponse.Claims
                          where c.Type == "scope"
                          select c;
 
-            scopes.Count().Should().Be(1);
-            scopes.First().Value.Should().Be("api1");
+            scopes.Count().ShouldBe(1);
+            scopes.First().Value.ShouldBe("api1");
         }
 
         [Fact]
@@ -183,15 +183,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
-            values["aud"].ValueKind.Should().Be(JsonValueKind.String);
-            values["iss"].ValueKind.Should().Be(JsonValueKind.String);
-            values["nbf"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["exp"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["client_id"].ValueKind.Should().Be(JsonValueKind.String);
-            values["active"].ValueKind.Should().Be(JsonValueKind.True);
-            values["scope"].ValueKind.Should().Be(JsonValueKind.String);
+            values["aud"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["iss"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["nbf"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["exp"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["client_id"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["active"].ValueKind.ShouldBe(JsonValueKind.True);
+            values["scope"].ValueKind.ShouldBe(JsonValueKind.String);
 
-            values["scope"].ToString().Should().Be("api1");
+            values["scope"].ToString().ShouldBe("api1");
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Scope = "api1",
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.IsError.ShouldBeFalse();
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -222,17 +222,17 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
-            values["aud"].ValueKind.Should().Be(JsonValueKind.String);
-            values["iss"].ValueKind.Should().Be(JsonValueKind.String);
-            values["nbf"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["exp"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["auth_time"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["client_id"].ValueKind.Should().Be(JsonValueKind.String);
-            values["sub"].ValueKind.Should().Be(JsonValueKind.String);
-            values["active"].ValueKind.Should().Be(JsonValueKind.True);
-            values["scope"].ValueKind.Should().Be(JsonValueKind.String);
+            values["aud"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["iss"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["nbf"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["exp"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["auth_time"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["client_id"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["sub"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["active"].ValueKind.ShouldBe(JsonValueKind.True);
+            values["scope"].ValueKind.ShouldBe(JsonValueKind.String);
 
-            values["scope"].ToString().Should().Be("api1");
+            values["scope"].ToString().ShouldBe("api1");
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Scope = "api2 api3-a api3-b",
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.IsError.ShouldBeFalse();
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -261,23 +261,23 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
-            values["aud"].ValueKind.Should().Be(JsonValueKind.Array);
+            values["aud"].ValueKind.ShouldBe(JsonValueKind.Array);
 
             var audiences = values["aud"].EnumerateArray();
             foreach (var aud in audiences)
             {
-                aud.ValueKind.Should().Be(JsonValueKind.String);
+                aud.ValueKind.ShouldBe(JsonValueKind.String);
             }
 
-            values["iss"].ValueKind.Should().Be(JsonValueKind.String);
-            values["nbf"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["exp"].ValueKind.Should().Be(JsonValueKind.Number);
-            values["client_id"].ValueKind.Should().Be(JsonValueKind.String);
-            values["active"].ValueKind.Should().Be(JsonValueKind.True);
-            values["scope"].ValueKind.Should().Be(JsonValueKind.String);
+            values["iss"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["nbf"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["exp"].ValueKind.ShouldBe(JsonValueKind.Number);
+            values["client_id"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["active"].ValueKind.ShouldBe(JsonValueKind.True);
+            values["scope"].ValueKind.ShouldBe(JsonValueKind.String);
 
             var scopes = values["scope"].ToString();
-            scopes.Should().Be("api3-a api3-b");
+            scopes.ShouldBe("api3-a api3-b");
         }
 
         [Fact]
@@ -293,7 +293,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Scope = "api3-a api3-b",
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.IsError.ShouldBeFalse();
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -306,16 +306,16 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             var values = introspectionResponse.Json.Value.ToObject<Dictionary<string, JsonElement>>();
 
-            values["aud"].ValueKind.Should().Be(JsonValueKind.String);
-            values["iss"].ValueKind.Should().Be(JsonValueKind.String); 
-            values["nbf"].ValueKind.Should().Be(JsonValueKind.Number); 
-            values["exp"].ValueKind.Should().Be(JsonValueKind.Number); 
-            values["client_id"].ValueKind.Should().Be(JsonValueKind.String); 
-            values["active"].ValueKind.Should().Be(JsonValueKind.True); 
-            values["scope"].ValueKind.Should().Be(JsonValueKind.String);
+            values["aud"].ValueKind.ShouldBe(JsonValueKind.String);
+            values["iss"].ValueKind.ShouldBe(JsonValueKind.String); 
+            values["nbf"].ValueKind.ShouldBe(JsonValueKind.Number); 
+            values["exp"].ValueKind.ShouldBe(JsonValueKind.Number); 
+            values["client_id"].ValueKind.ShouldBe(JsonValueKind.String); 
+            values["active"].ValueKind.ShouldBe(JsonValueKind.True); 
+            values["scope"].ValueKind.ShouldBe(JsonValueKind.String);
 
             var scopes = values["scope"].ToString();
-            scopes.Should().Be("api3-a api3-b");
+            scopes.ShouldBe("api3-a api3-b");
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Scope = "api1 api2 api3-a",
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.IsError.ShouldBeFalse();
 
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
             {
@@ -342,15 +342,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Token = tokenResponse.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().BeTrue();
-            introspectionResponse.IsError.Should().BeFalse();
+            introspectionResponse.IsActive.ShouldBeTrue();
+            introspectionResponse.IsError.ShouldBeFalse();
 
             var scopes = from c in introspectionResponse.Claims
                          where c.Type == "scope"
                          select c.Value;
 
-            scopes.Count().Should().Be(1);
-            scopes.First().Should().Be("api3-a");
+            scopes.Count().ShouldBe(1);
+            scopes.First().ShouldBe("api3-a");
         }
 
         [Fact]
@@ -375,15 +375,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Token = tokenResponse.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(true);
-            introspectionResponse.IsError.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(true);
+            introspectionResponse.IsError.ShouldBe(false);
 
             var scopes = from c in introspectionResponse.Claims
                          where c.Type == "scope"
                          select c;
 
-            scopes.Count().Should().Be(1);
-            scopes.First().Value.Should().Be("api1");
+            scopes.Count().ShouldBe(1);
+            scopes.First().Value.ShouldBe("api1");
         }
 
         [Fact]
@@ -408,8 +408,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
                 Token = tokenResponse.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(false);
-            introspectionResponse.IsError.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(false);
+            introspectionResponse.IsError.ShouldBe(false);
         }
     }
 }

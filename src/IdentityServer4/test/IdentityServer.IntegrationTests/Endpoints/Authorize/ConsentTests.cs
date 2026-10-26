@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
@@ -114,7 +114,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             );
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ConsentWasCalled.Should().BeTrue();
+            _mockPipeline.ConsentWasCalled.ShouldBeTrue();
         }
 
         [Theory]
@@ -152,15 +152,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             );
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ConsentRequest.Should().NotBeNull();
-            _mockPipeline.ConsentRequest.Client.ClientId.Should().Be("client2");
-            _mockPipeline.ConsentRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.ConsentRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.ConsentRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.ConsentRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
-            _mockPipeline.ConsentRequest.Parameters.AllKeys.Should().Contain("custom_foo");
-            _mockPipeline.ConsentRequest.Parameters["custom_foo"].Should().Be("foo_value");
-            _mockPipeline.ConsentRequest.ValidatedResources.RawScopeValues.Should().BeEquivalentTo(new string[] { "api2", "openid", "api1" });
+            _mockPipeline.ConsentRequest.ShouldNotBeNull();
+            _mockPipeline.ConsentRequest.Client.ClientId.ShouldBe("client2");
+            _mockPipeline.ConsentRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.ConsentRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.ConsentRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.ConsentRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
+            _mockPipeline.ConsentRequest.Parameters.AllKeys.ShouldContain("custom_foo");
+            _mockPipeline.ConsentRequest.Parameters["custom_foo"].ShouldBe("foo_value");
+            _mockPipeline.ConsentRequest.ValidatedResources.RawScopeValues.ShouldBe(new string[] { "api2", "openid", "api1" }, ignoreOrder: true);
         }
 
         [Theory]
@@ -196,15 +196,15 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://client2/callback");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://client2/callback");
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
-            authorization.IsError.Should().BeFalse();
-            authorization.IdentityToken.Should().NotBeNull();
-            authorization.State.Should().Be("123_state");
+            authorization.IsError.ShouldBeFalse();
+            authorization.IdentityToken.ShouldNotBeNull();
+            authorization.State.ShouldBe("123_state");
             var scopes = authorization.Scope.Split(' ');
-            scopes.Should().BeEquivalentTo(new string[] { "api2", "openid" });
+            scopes.ShouldBe(new string[] { "api2", "openid" }, ignoreOrder: true);
         }
 
         [Fact]
@@ -228,20 +228,20 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://server/consent");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://server/consent");
 
             response = await _mockPipeline.BrowserClient.GetAsync(response.Headers.Location.ToString(), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("/connect/authorize/callback");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("/connect/authorize/callback");
 
             var modifiedAuthorizeCallback = "https://server" + response.Headers.Location.ToString();
             modifiedAuthorizeCallback = modifiedAuthorizeCallback.Replace("api2", "api1%20api2");
 
             response = await _mockPipeline.BrowserClient.GetAsync(modifiedAuthorizeCallback, TestContext.Current.CancellationToken);
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://server/consent");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://server/consent");
         }
 
         [Fact()]
@@ -264,13 +264,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 state: "123_state",
                 nonce: "123_nonce");
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://client2/callback");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://client2/callback");
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
-            authorization.IsError.Should().BeTrue();
-            authorization.Error.Should().Be("access_denied");
-            authorization.State.Should().Be("123_state");
+            authorization.IsError.ShouldBeTrue();
+            authorization.Error.ShouldBe("access_denied");
+            authorization.State.ShouldBe("123_state");
         }
     }
 }

@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4;
@@ -50,8 +50,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -97,8 +97,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.ExpiredToken);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.ExpiredToken);
         }
 
         [Fact]
@@ -121,8 +121,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.AccessDenied);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.AccessDenied);
         }
 
         [Fact]
@@ -145,8 +145,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.AuthorizationPending);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.AuthorizationPending);
         }
 
         [Fact]
@@ -169,8 +169,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.AuthorizationPending);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.AuthorizationPending);
         }
 
 
@@ -192,8 +192,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -214,8 +214,8 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
 
-            context.Result.IsError.Should().BeTrue();
-            context.Result.Error.Should().Be(OidcConstants.TokenErrors.SlowDown);
+            context.Result.IsError.ShouldBeTrue();
+            context.Result.Error.ShouldBe(OidcConstants.TokenErrors.SlowDown);
         }
 
         [Fact]
@@ -236,7 +236,7 @@ namespace IdentityServer.UnitTests.Validation
 
             await validator.ValidateAsync(context);
             
-            context.Result.IsError.Should().BeFalse();
+            context.Result.IsError.ShouldBeFalse();
         }
     }
 }

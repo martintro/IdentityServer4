@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
 using IdentityServer4.Endpoints.Results;
@@ -54,12 +55,12 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockLogoutMessageStore.Messages.Count.Should().Be(1);
+            _mockLogoutMessageStore.Messages.Count.ShouldBe(1);
             var location = _context.Response.Headers["Location"].Single();
             var query = QueryHelpers.ParseQuery(new Uri(location).Query);
 
-            location.Should().StartWith("https://server/logout");
-            query["logoutId"].First().Should().Be(_mockLogoutMessageStore.Messages.First().Key);
+            location.ShouldStartWith("https://server/logout");
+            query["logoutId"].First().ShouldBe(_mockLogoutMessageStore.Messages.First().Key);
         }
 
         [Fact]
@@ -69,12 +70,12 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockLogoutMessageStore.Messages.Count.Should().Be(0);
+            _mockLogoutMessageStore.Messages.Count.ShouldBe(0);
             var location = _context.Response.Headers["Location"].Single();
             var query = QueryHelpers.ParseQuery(new Uri(location).Query);
 
-            location.Should().StartWith("https://server/logout");
-            query.Count.Should().Be(0);
+            location.ShouldStartWith("https://server/logout");
+            query.Count.ShouldBe(0);
         }
 
         [Fact]
@@ -92,12 +93,12 @@ namespace IdentityServer.UnitTests.Endpoints.Results
 
             await _subject.ExecuteAsync(_context);
 
-            _mockLogoutMessageStore.Messages.Count.Should().Be(0);
+            _mockLogoutMessageStore.Messages.Count.ShouldBe(0);
             var location = _context.Response.Headers["Location"].Single();
             var query = QueryHelpers.ParseQuery(new Uri(location).Query);
 
-            location.Should().StartWith("https://server/logout");
-            query.Count.Should().Be(0);
+            location.ShouldStartWith("https://server/logout");
+            query.Count.ShouldBe(0);
         }
     }
 }

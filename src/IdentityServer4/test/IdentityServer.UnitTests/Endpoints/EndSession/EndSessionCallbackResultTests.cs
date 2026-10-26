@@ -1,10 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Configuration;
 using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Validation;
@@ -41,7 +42,7 @@ namespace IdentityServer.UnitTests.Endpoints.EndSession
 
             await _subject.ExecuteAsync(ctx);
 
-            ctx.Response.Headers["Content-Security-Policy"].First().Should().Contain("frame-src http://foo");
+            ctx.Response.Headers["Content-Security-Policy"].First().ShouldContain("frame-src http://foo");
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace IdentityServer.UnitTests.Endpoints.EndSession
 
             await _subject.ExecuteAsync(ctx);
 
-            ctx.Response.Headers["Content-Security-Policy"].FirstOrDefault().Should().BeNull();
+            ctx.Response.Headers["Content-Security-Policy"].FirstOrDefault().ShouldBeNull();
         }
     }
 }

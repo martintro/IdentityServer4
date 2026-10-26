@@ -5,7 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Options;
@@ -37,7 +37,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var store = new ClientStore(context, FakeLogger<ClientStore>.Create());
                 var client = await store.FindClientByIdAsync(Guid.NewGuid().ToString());
-                client.Should().BeNull();
+                client.ShouldBeNull();
             }
         }
 
@@ -63,7 +63,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 client = await store.FindClientByIdAsync(testClient.ClientId);
             }
 
-            client.Should().NotBeNull();
+            client.ShouldNotBeNull();
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -97,7 +97,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 client = await store.FindClientByIdAsync(testClient.ClientId);
             }
 
-            client.Should().BeEquivalentTo(testClient);
+            client.ShouldBeEquivalentTo(testClient);
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -149,7 +149,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 if (await Task.WhenAny(task, Task.Delay(timeout, TestContext.Current.CancellationToken)) == task)
                 {
                     var client = await task;
-                    client.Should().BeEquivalentTo(testClient);
+                    client.ShouldBeEquivalentTo(testClient);
                 }
                 else
                 {

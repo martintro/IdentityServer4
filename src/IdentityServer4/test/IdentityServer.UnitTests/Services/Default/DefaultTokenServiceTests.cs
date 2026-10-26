@@ -1,11 +1,11 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
@@ -79,8 +79,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.CreateAccessTokenAsync(request);
 
-            result.Audiences.Count.Should().Be(3);
-            result.Audiences.Should().BeEquivalentTo(new[] { "api1", "api2", "api3" });
+            result.Audiences.Count.ShouldBe(3);
+            result.Audiences.ShouldBe(new[] { "api1", "api2", "api3" });
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.CreateAccessTokenAsync(request);
 
-            result.Audiences.Count.Should().Be(0);
+            result.Audiences.Count.ShouldBe(0);
         }
 
 
@@ -133,7 +133,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.CreateAccessTokenAsync(request);
 
-            result.Claims.SingleOrDefault(x => x.Type == JwtClaimTypes.SessionId).Should().BeNull();
+            result.Claims.SingleOrDefault(x => x.Type == JwtClaimTypes.SessionId).ShouldBeNull();
         }
         [Fact]
         public async Task CreateAccessTokenAsync_when_session_should_include_sid()
@@ -150,7 +150,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.CreateAccessTokenAsync(request);
 
-            result.Claims.SingleOrDefault(x => x.Type == JwtClaimTypes.SessionId).Value.Should().Be("123");
+            result.Claims.SingleOrDefault(x => x.Type == JwtClaimTypes.SessionId).Value.ShouldBe("123");
         }
     }
 }

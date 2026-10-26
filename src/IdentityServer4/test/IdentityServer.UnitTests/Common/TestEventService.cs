@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -6,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Events;
 using IdentityServer4.Services;
 
@@ -25,7 +26,7 @@ namespace IdentityServer.UnitTests.Common
         public T AssertEventWasRaised<T>()
             where T : class
         {
-            _events.ContainsKey(typeof(T)).Should().BeTrue();
+            _events.ContainsKey(typeof(T)).ShouldBeTrue();
             return (T)_events.Where(x => x.Key == typeof(T)).Select(x=>x.Value).First();
         }
 

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -53,13 +54,13 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
 
             var parameters = new NameValueCollection();
             var result = await _subject.ValidateAsync(parameters, null);
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
 
             result = await _subject.ValidateAsync(parameters, new ClaimsPrincipal());
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
 
             result = await _subject.ValidateAsync(parameters, new ClaimsPrincipal(new ClaimsIdentity()));
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -80,12 +81,12 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             parameters.Add("state", "foo");
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
 
-            result.ValidatedRequest.Client.ClientId.Should().Be("client");
-            result.ValidatedRequest.PostLogOutUri.Should().Be("http://client/signout-cb");
-            result.ValidatedRequest.State.Should().Be("foo");
-            result.ValidatedRequest.Subject.GetSubjectId().Should().Be(_user.GetSubjectId());
+            result.ValidatedRequest.Client.ClientId.ShouldBe("client");
+            result.ValidatedRequest.PostLogOutUri.ShouldBe("http://client/signout-cb");
+            result.ValidatedRequest.State.ShouldBe("foo");
+            result.ValidatedRequest.Subject.GetSubjectId().ShouldBe(_user.GetSubjectId());
         }
 
         [Fact]
@@ -103,8 +104,8 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             parameters.Add("id_token_hint", "id_token");
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeFalse();
-            result.ValidatedRequest.PostLogOutUri.Should().BeNull();
+            result.IsError.ShouldBeFalse();
+            result.ValidatedRequest.PostLogOutUri.ShouldBeNull();
         }
 
         [Fact]
@@ -122,8 +123,8 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             parameters.Add("id_token_hint", "id_token");
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeFalse();
-            result.ValidatedRequest.PostLogOutUri.Should().BeNull();
+            result.IsError.ShouldBeFalse();
+            result.ValidatedRequest.PostLogOutUri.ShouldBeNull();
         }
 
         [Fact]
@@ -144,13 +145,13 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             parameters.Add("state", "foo");
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
 
-            result.ValidatedRequest.Client.ClientId.Should().Be("client");
-            result.ValidatedRequest.Subject.GetSubjectId().Should().Be(_user.GetSubjectId());
+            result.ValidatedRequest.Client.ClientId.ShouldBe("client");
+            result.ValidatedRequest.Subject.GetSubjectId().ShouldBe(_user.GetSubjectId());
             
-            result.ValidatedRequest.State.Should().BeNull();
-            result.ValidatedRequest.PostLogOutUri.Should().BeNull();
+            result.ValidatedRequest.State.ShouldBeNull();
+            result.ValidatedRequest.PostLogOutUri.ShouldBeNull();
         }
 
         [Fact]
@@ -171,7 +172,7 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             parameters.Add("state", "foo");
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -180,8 +181,8 @@ namespace IdentityServer.UnitTests.Validation.EndSessionRequestValidation
             var parameters = new NameValueCollection();
 
             var result = await _subject.ValidateAsync(parameters, _user);
-            result.IsError.Should().BeFalse();
-            result.ValidatedRequest.Raw.Should().BeSameAs(parameters);
+            result.IsError.ShouldBeFalse();
+            result.ValidatedRequest.Raw.ShouldBeSameAs(parameters);
         }
     }
 }

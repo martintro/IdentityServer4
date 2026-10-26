@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -80,8 +80,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            nonce: nonce);
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
         }
 
         [Fact]
@@ -103,8 +103,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                           nonce: nonce);
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
         }
 
         [Fact]
@@ -126,14 +126,14 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            nonce: nonce);
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://code_client/callback?");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://code_client/callback?");
             var authorization = _mockPipeline.ParseAuthorizationResponseUrl(response.Headers.Location.ToString());
-            authorization.Code.Should().NotBeNull();
-            authorization.State.Should().Be(state);
+            authorization.Code.ShouldNotBeNull();
+            authorization.State.ShouldBe(state);
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(response.Headers.Location.Query);
-            query["foo"].ToString().Should().Be("bar");
-            query["baz"].ToString().Should().Be("quux");
+            query["foo"].ToString().ShouldBe("bar");
+            query["baz"].ToString().ShouldBe("quux");
         }
 
         [Fact]
@@ -154,8 +154,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            nonce: nonce);
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
         }
     }
 }

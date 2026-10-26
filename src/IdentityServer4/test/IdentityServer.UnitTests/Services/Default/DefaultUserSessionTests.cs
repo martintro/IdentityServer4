@@ -1,9 +1,9 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -49,7 +49,7 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             await _subject.CreateSessionIdAsync(_user, _props);
 
-            _props.GetSessionId().Should().NotBeNull();
+            _props.GetSessionId().ShouldNotBeNull();
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             await _subject.CreateSessionIdAsync(_user, _props);
 
-            _props.GetSessionId().Should().NotBeNull();
-            _props.GetSessionId().Should().Be("999");
+            _props.GetSessionId().ShouldNotBeNull();
+            _props.GetSessionId().ShouldBe("999");
         }
 
         [Fact]
@@ -72,11 +72,11 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             _mockAuthenticationHandler.Result = AuthenticateResult.Success(new AuthenticationTicket(_user, _props, "scheme"));
 
-            _props.GetSessionId().Should().BeNull();
+            _props.GetSessionId().ShouldBeNull();
 
             await _subject.CreateSessionIdAsync(_user, _props);
 
-            _props.GetSessionId().Should().NotBeNull();
+            _props.GetSessionId().ShouldNotBeNull();
         }
 
         [Fact]
@@ -87,8 +87,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             await _subject.CreateSessionIdAsync(new IdentityServerUser("alice").CreatePrincipal(), _props);
 
-            _props.GetSessionId().Should().NotBeNull();
-            _props.GetSessionId().Should().NotBe("999");
+            _props.GetSessionId().ShouldNotBeNull();
+            _props.GetSessionId().ShouldNotBe("999");
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockHttpContext.HttpContext.Response.Headers.Clear();
 
             var cookie = cookieContainer.GetCookies(new Uri("http://server")).Cast<Cookie>().Where(x => x.Name == _options.Authentication.CheckSessionCookieName).FirstOrDefault();
-            cookie.Value.Should().Be(_props.GetSessionId());
+            cookie.Value.ShouldBe(_props.GetSessionId());
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockHttpContext.HttpContext.Response.Headers.Clear();
 
             var cookie = cookieContainer.GetCookies(new Uri("http://server")).Cast<Cookie>().Where(x => x.Name == _options.Authentication.CheckSessionCookieName).FirstOrDefault();
-            cookie.Value.Should().Be("999");
+            cookie.Value.ShouldBe("999");
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockHttpContext.HttpContext.Response.Headers.Clear();
 
             var cookie = cookieContainer.GetCookies(new Uri("http://server")).Cast<Cookie>().Where(x => x.Name == _options.Authentication.CheckSessionCookieName).FirstOrDefault();
-            cookie.Should().BeNull();
+            cookie.ShouldBeNull();
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace IdentityServer.UnitTests.Services.Default
             cookieContainer.SetCookies(new Uri("http://server"), string.Join(",", cookies));
 
             var query = cookieContainer.GetCookies(new Uri("http://server")).Cast<Cookie>().Where(x => x.Name == _options.Authentication.CheckSessionCookieName);
-            query.Count().Should().Be(0);
+            query.Count().ShouldBe(0);
         }
 
         [Fact]
@@ -168,14 +168,14 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockAuthenticationHandler.Result = AuthenticateResult.Success(new AuthenticationTicket(_user, _props, "scheme"));
 
             var sid = await _subject.GetSessionIdAsync();
-            sid.Should().Be("999");
+            sid.ShouldBe("999");
         }
 
         [Fact]
         public async Task GetCurrentSessionIdAsync_when_user_is_anonymous_should_return_null()
         {
             var sid = await _subject.GetSessionIdAsync();
-            sid.Should().BeNull();
+            sid.ShouldBeNull();
         }
 
         [Fact]
@@ -183,9 +183,9 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             _mockAuthenticationHandler.Result = AuthenticateResult.Success(new AuthenticationTicket(_user, _props, "scheme"));
 
-            _props.Items.Count.Should().Be(0);
+            _props.Items.Count.ShouldBe(0);
             await _subject.AddClientIdAsync("client");
-            _props.Items.Count.Should().Be(1);
+            _props.Items.Count.ShouldBe(1);
         }
 
         [Fact]
@@ -194,14 +194,14 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockAuthenticationHandler.Result = AuthenticateResult.Success(new AuthenticationTicket(_user, _props, "scheme"));
 
             var user = await _subject.GetUserAsync();
-            user.GetSubjectId().Should().Be("123");
+            user.GetSubjectId().ShouldBe("123");
         }
 
         [Fact]
         public async Task when_anonymous_GetIdentityServerUserAsync_should_should_return_null()
         {
             var user = await _subject.GetUserAsync();
-            user.Should().BeNull();
+            user.ShouldBeNull();
         }
 
         [Fact]
@@ -214,8 +214,8 @@ namespace IdentityServer.UnitTests.Services.Default
             _props.Items[item.Key] = "junk";
 
             var clients = await _subject.GetClientListAsync();
-            clients.Should().BeEmpty();
-            _props.Items.Count.Should().Be(0);
+            clients.ShouldBeEmpty();
+            _props.Items.Count.ShouldBe(0);
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             await _subject.AddClientIdAsync("client");
             var clients = await _subject.GetClientListAsync();
-            clients.Should().Contain(new string[] { "client" });
+            clients.ShouldContain("client");
         }
 
         [Fact]
@@ -236,7 +236,8 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.AddClientIdAsync("client1");
             await _subject.AddClientIdAsync("client2");
             var clients = await _subject.GetClientListAsync();
-            clients.Should().Contain(new string[] { "client2", "client1" });
+            clients.ShouldContain("client2");
+            clients.ShouldContain("client1");
         }
     }
 }

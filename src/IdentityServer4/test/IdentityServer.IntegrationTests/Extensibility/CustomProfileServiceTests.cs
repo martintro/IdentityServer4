@@ -4,7 +4,7 @@
 
 
 using Duende.IdentityModel;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -70,19 +70,19 @@ namespace IdentityServer.IntegrationTests.Extensibility
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            response.Headers.Location.ToString().Should().StartWith("https://client/callback");
+            response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+            response.Headers.Location.ToString().ShouldStartWith("https://client/callback");
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
-            authorization.IsError.Should().BeFalse();
-            authorization.IdentityToken.Should().NotBeNull();
+            authorization.IsError.ShouldBeFalse();
+            authorization.IdentityToken.ShouldNotBeNull();
 
             var payload = authorization.IdentityToken.Split('.')[1];
             var json = Encoding.UTF8.GetString(Base64Url.DecodeFromChars(payload));
             var obj = JsonNode.Parse(json)?.AsObject();
 
-            obj["foo"].Should().NotBeNull();
-            obj["foo"].GetValue<string>().Should().Be("bar");
+            obj["foo"].ShouldNotBeNull();
+            obj["foo"].GetValue<string>().ShouldBe("bar");
         }
     }
 

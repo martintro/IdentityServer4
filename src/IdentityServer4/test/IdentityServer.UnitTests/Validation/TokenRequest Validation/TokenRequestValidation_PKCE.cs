@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer.UnitTests.Validation.Setup;
@@ -67,7 +67,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Theory]
@@ -151,7 +151,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Theory]
@@ -187,8 +187,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -227,8 +227,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -270,8 +270,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -315,8 +315,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         private static string VerifierToSha256CodeChallenge(string codeVerifier)

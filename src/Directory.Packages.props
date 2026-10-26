@@ -14,7 +14,7 @@
     <PackageVersion Include="Bullseye" Version="6.3.0" />
 
     <!--tests -->
-    <PackageVersion Include="FluentAssertions" Version="8.11.0" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.2" />
 
     <!--our stuff -->

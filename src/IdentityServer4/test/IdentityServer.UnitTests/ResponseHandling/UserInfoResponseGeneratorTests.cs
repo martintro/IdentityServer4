@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -58,7 +58,7 @@ namespace IdentityServer.UnitTests.ResponseHandling
         {
             var resources = await _subject.GetRequestedResourcesAsync(null);
             var claims = await _subject.GetRequestedClaimTypesAsync(resources);
-            claims.Should().BeEquivalentTo(new string[] { });
+            claims.ShouldBe(new string[] { });
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             var resources = await _subject.GetRequestedResourcesAsync(new[] { "id1", "id2", "id3" });
             var claims = await _subject.GetRequestedClaimTypesAsync(resources);
-            claims.Should().BeEquivalentTo(new string[] { "c1", "c2", "c3" });
+            claims.ShouldBe(new string[] { "c1", "c2", "c3" });
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             var resources = await _subject.GetRequestedResourcesAsync(new[] { "id1", "id2", "id3" });
             var claims = await _subject.GetRequestedClaimTypesAsync(resources);
-            claims.Should().BeEquivalentTo(new string[] { "c2", "c3" });
+            claims.ShouldBe(new string[] { "c2", "c3" });
         }
 
         [Fact]
@@ -106,8 +106,8 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             var claims = await _subject.ProcessAsync(result);
 
-            _mockProfileService.GetProfileWasCalled.Should().BeTrue();
-            _mockProfileService.ProfileContext.RequestedClaimTypes.Should().BeEquivalentTo(new[] { "foo", "bar" });
+            _mockProfileService.GetProfileWasCalled.ShouldBeTrue();
+            _mockProfileService.ProfileContext.RequestedClaimTypes.ShouldBe(new[] { "foo", "bar" });
         }
 
         [Fact]
@@ -149,18 +149,18 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             var claims = await _subject.ProcessAsync(result);
 
-            claims.Should().ContainKey("email");
-            claims["email"].Should().Be("fred@gmail.com");
-            claims.Should().ContainKey("name");
-            claims["name"].Should().Be("fred jones");
+            claims.ShouldContainKey("email");
+            claims["email"].ShouldBe("fred@gmail.com");
+            claims.ShouldContainKey("name");
+            claims["name"].ShouldBe("fred jones");
             
             // this will be treated as a string because this is not valid JSON from the System.Text library point of view
-            claims.Should().ContainKey("address");
-            claims["address"].Should().Be("{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }");
+            claims.ShouldContainKey("address");
+            claims["address"].ShouldBe("{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }");
             
             // this is a JsonElement
-            claims.Should().ContainKey("address2");
-            claims["address2"].ToString().Should().Be("{\"street_address\":\"One Hacker Way\",\"locality\":\"Heidelberg\",\"postal_code\":69118,\"country\":\"Germany\"}");
+            claims.ShouldContainKey("address2");
+            claims["address2"].ToString().ShouldBe("{\"street_address\":\"One Hacker Way\",\"locality\":\"Heidelberg\",\"postal_code\":69118,\"country\":\"Germany\"}");
         }
 
         [Fact]
@@ -186,8 +186,8 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             var claims = await _subject.ProcessAsync(result);
 
-            claims.Should().ContainKey("sub");
-            claims["sub"].Should().Be("bob");
+            claims.ShouldContainKey("sub");
+            claims["sub"].ShouldBe("bob");
         }
 
         [Fact]
@@ -217,8 +217,8 @@ namespace IdentityServer.UnitTests.ResponseHandling
 
             Func<Task> act = () => _subject.ProcessAsync(result);
 
-            (await act.Should().ThrowAsync<InvalidOperationException>())
-                .And.Message.Should().Contain("subject");
+            (await act.ShouldThrowAsync<InvalidOperationException>())
+                .Message.ShouldContain("subject");
         }
 
     }

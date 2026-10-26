@@ -4,7 +4,7 @@
 
 
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.Mappers;
 using Xunit;
 using ApiResource = IdentityServer4.Models.ApiResource;
@@ -39,19 +39,19 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
 
             var mappedEntity = model.ToEntity();
 
-            mappedEntity.Scopes.Count.Should().Be(2);
+            mappedEntity.Scopes.Count.ShouldBe(2);
             var foo1 = mappedEntity.Scopes.FirstOrDefault(x => x.Scope == "foo1");
-            foo1.Should().NotBeNull();
+            foo1.ShouldNotBeNull();
             var foo2 = mappedEntity.Scopes.FirstOrDefault(x => x.Scope == "foo2");
-            foo2.Should().NotBeNull();
+            foo2.ShouldNotBeNull();
             
 
             var mappedModel = mappedEntity.ToModel();
             
-            mappedModel.Description.Should().Be("description");
-            mappedModel.DisplayName.Should().Be("displayname");
-            mappedModel.Enabled.Should().BeFalse();
-            mappedModel.Name.Should().Be("foo");
+            mappedModel.Description.ShouldBe("description");
+            mappedModel.DisplayName.ShouldBe("displayname");
+            mappedModel.Enabled.ShouldBeFalse();
+            mappedModel.Name.ShouldBe("foo");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
             };
 
             var model = entity.ToModel();
-            model.ApiSecrets.First().Type.Should().Be(def.ApiSecrets.First().Type);
+            model.ApiSecrets.First().Type.ShouldBe(def.ApiSecrets.First().Type);
         }
     }
 }

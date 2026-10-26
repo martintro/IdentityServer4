@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
@@ -80,7 +80,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var response = await _pipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = _pipeline.ParseAuthorizationResponseUrl(response.Headers.Location.ToString());
-            authorization.Code.Should().NotBeNull();
+            authorization.Code.ShouldNotBeNull();
 
             var code = authorization.Code;
 
@@ -97,15 +97,15 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                 RedirectUri = "https://code_pipeline.Client/callback?foo=bar&baz=quux"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResult.IsError.Should().BeFalse();
-            tokenResult.HttpErrorReason.Should().Be("OK");
-            tokenResult.TokenType.Should().Be("Bearer");
-            tokenResult.AccessToken.Should().NotBeNull();
-            tokenResult.ExpiresIn.Should().BeGreaterThan(0);
-            tokenResult.IdentityToken.Should().NotBeNull();
+            tokenResult.IsError.ShouldBeFalse();
+            tokenResult.HttpErrorReason.ShouldBe("OK");
+            tokenResult.TokenType.ShouldBe("Bearer");
+            tokenResult.AccessToken.ShouldNotBeNull();
+            tokenResult.ExpiresIn.ShouldBeGreaterThan(0);
+            tokenResult.IdentityToken.ShouldNotBeNull();
 
-            wrapper.Response.Headers.CacheControl.NoCache.Should().BeTrue();
-            wrapper.Response.Headers.CacheControl.NoStore.Should().BeTrue();
+            wrapper.Response.Headers.CacheControl.NoCache.ShouldBeTrue();
+            wrapper.Response.Headers.CacheControl.NoStore.ShouldBeTrue();
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var response = await _pipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
             var authorization = _pipeline.ParseAuthorizationResponseUrl(response.Headers.Location.ToString());
-            authorization.Code.Should().NotBeNull();
+            authorization.Code.ShouldNotBeNull();
 
             var code = authorization.Code;
 
@@ -144,12 +144,12 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                 RedirectUri = "https://code_pipeline.Client/callback?foo=bar&baz=quux"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResult.IsError.Should().BeFalse();
-            tokenResult.HttpErrorReason.Should().Be("OK");
-            tokenResult.TokenType.Should().Be("Bearer");
-            tokenResult.AccessToken.Should().NotBeNull();
-            tokenResult.ExpiresIn.Should().BeGreaterThan(0);
-            tokenResult.IdentityToken.Should().NotBeNull();
+            tokenResult.IsError.ShouldBeFalse();
+            tokenResult.HttpErrorReason.ShouldBe("OK");
+            tokenResult.TokenType.ShouldBe("Bearer");
+            tokenResult.AccessToken.ShouldNotBeNull();
+            tokenResult.ExpiresIn.ShouldBeGreaterThan(0);
+            tokenResult.IdentityToken.ShouldNotBeNull();
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
@@ -47,12 +47,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
         public async Task get_should_return_InvalidRequest()
         {
             var response = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DeviceAuthorization, TestContext.Current.CancellationToken);
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
             var resultDto = ParseJsonBody<ErrorResultDto>(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken));
 
-            resultDto.Should().NotBeNull();
-            resultDto.error.Should().Be(OidcConstants.TokenErrors.InvalidRequest);
+            resultDto.ShouldNotBeNull();
+            resultDto.error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
         }
 
         [Fact]
@@ -65,12 +65,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
             };
             var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.DeviceAuthorization, new StringContent(@"{""client_id"": ""client1""}", Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
             var resultDto = ParseJsonBody<ErrorResultDto>(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken));
 
-            resultDto.Should().NotBeNull();
-            resultDto.error.Should().Be(OidcConstants.TokenErrors.InvalidRequest);
+            resultDto.ShouldNotBeNull();
+            resultDto.error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
         }
 
         [Fact]
@@ -79,12 +79,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
         {
             var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.DeviceAuthorization, new FormUrlEncodedContent(new Dictionary<string, string>()), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
             var resultDto = ParseJsonBody<ErrorResultDto>(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken));
 
-            resultDto.Should().NotBeNull();
-            resultDto.error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
+            resultDto.ShouldNotBeNull();
+            resultDto.error.ShouldBe(OidcConstants.TokenErrors.InvalidClient);
         }
 
         [Fact]
@@ -97,12 +97,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
             };
             var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.DeviceAuthorization, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
             var resultDto = ParseJsonBody<ErrorResultDto>(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken));
 
-            resultDto.Should().NotBeNull();
-            resultDto.error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
+            resultDto.ShouldNotBeNull();
+            resultDto.error.ShouldBe(OidcConstants.TokenErrors.InvalidClient);
         }
 
         [Fact]
@@ -116,20 +116,20 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
             };
             var response = await _mockPipeline.BackChannelClient.PostAsync(IdentityServerPipeline.DeviceAuthorization, new FormUrlEncodedContent(form), TestContext.Current.CancellationToken);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.Content.Headers.ContentType.MediaType.ShouldBe("application/json");
             
             var resultDto = ParseJsonBody<ResultDto>(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken));
 
-            resultDto.Should().NotBeNull();
+            resultDto.ShouldNotBeNull();
 
-            resultDto.Should().NotBeNull();
-            resultDto.device_code.Should().NotBeNull();
-            resultDto.user_code.Should().NotBeNull();
-            resultDto.verification_uri.Should().NotBeNull();
-            resultDto.verification_uri_complete.Should().NotBeNull();
-            resultDto.expires_in.Should().BeGreaterThan(0);
-            resultDto.interval.Should().BeGreaterThan(0);
+            resultDto.ShouldNotBeNull();
+            resultDto.device_code.ShouldNotBeNull();
+            resultDto.user_code.ShouldNotBeNull();
+            resultDto.verification_uri.ShouldNotBeNull();
+            resultDto.verification_uri_complete.ShouldNotBeNull();
+            resultDto.expires_in.ShouldBeGreaterThan(0);
+            resultDto.interval.ShouldBeGreaterThan(0);
         }
 
         private T ParseJsonBody<T>(Stream streamBody)

@@ -1,9 +1,14 @@
-﻿using IdentityServer4.Models;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using FluentAssertions;
+using Shouldly;
 
 namespace IdentityServer.UnitTests.Stores
 {
@@ -34,13 +39,13 @@ namespace IdentityServer.UnitTests.Stores
             };
 
             Action act = () => new InMemoryResourcesStore(identityResources, null, null);
-            act.Should().Throw<ArgumentException>();
+            act.ShouldThrow<ArgumentException>();
 
             act = () => new InMemoryResourcesStore(null, apiResources, null);
-            act.Should().Throw<ArgumentException>();
+            act.ShouldThrow<ArgumentException>();
             
             act = () => new InMemoryResourcesStore(null, null, scopes);
-            act.Should().Throw<ArgumentException>();
+            act.ShouldThrow<ArgumentException>();
         }
 
         [Fact]

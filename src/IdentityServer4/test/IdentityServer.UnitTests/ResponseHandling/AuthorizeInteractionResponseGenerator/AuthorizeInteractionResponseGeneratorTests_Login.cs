@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
@@ -45,7 +45,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessInteractionAsync(request);
 
-            result.IsLogin.Should().BeFalse();
+            result.IsLogin.ShouldBeFalse();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeFalse();
+            result.IsLogin.ShouldBeFalse();
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeFalse();
+            result.IsLogin.ShouldBeFalse();
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeFalse();
+            result.IsLogin.ShouldBeFalse();
         }
 
         [Fact]
@@ -197,7 +197,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            result.IsLogin.Should().BeTrue();
+            result.IsLogin.ShouldBeTrue();
         }
 
         [Fact]
@@ -269,7 +269,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessLoginAsync(request);
 
-            request.Raw.AllKeys.Should().NotContain(OidcConstants.AuthorizeRequest.Prompt);
+            request.Raw.AllKeys.ShouldNotContain(OidcConstants.AuthorizeRequest.Prompt);
         }
     }
 }

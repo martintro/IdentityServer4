@@ -5,7 +5,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +46,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             // introspect - should be active
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
@@ -58,7 +58,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Token = response.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(true);
+            introspectionResponse.IsActive.ShouldBe(true);
 
             // revoke access token
             var revocationResponse = await _client.RevokeTokenAsync(new TokenRevocationRequest
@@ -80,7 +80,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Token = response.AccessToken
             }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(false);
         }
     }
 }

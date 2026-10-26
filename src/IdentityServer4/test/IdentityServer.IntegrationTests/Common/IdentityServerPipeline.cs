@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.IntegrationTests.Common
@@ -77,29 +78,34 @@ namespace IdentityServer.IntegrationTests.Common
 
         public void Initialize(string basePath = null, bool enableLogging = false)
         {
-            var builder = new WebHostBuilder();
-            builder.ConfigureServices(ConfigureServices);
-            builder.Configure(app=>
-            {
-                if (basePath != null)
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder =>
                 {
-                    app.Map(basePath, map =>
+                    builder.UseTestServer();
+                    builder.ConfigureServices(ConfigureServices);
+                    builder.Configure(app =>
                     {
-                        ConfigureApp(map);
+                        if (basePath != null)
+                        {
+                            app.Map(basePath, map =>
+                            {
+                                ConfigureApp(map);
+                            });
+                        }
+                        else
+                        {
+                            ConfigureApp(app);
+                        }
                     });
-                }
-                else
-                {
-                    ConfigureApp(app);
-                }
-            });
 
-            if (enableLogging)
-            {
-                builder.ConfigureLogging((ctx, b) => b.AddConsole());
-            }
+                    if (enableLogging)
+                    {
+                        builder.ConfigureLogging((ctx, b) => b.AddConsole());
+                    }
+                })
+                .Start();
 
-            Server = new TestServer(builder);
+            Server = host.GetTestServer();
             Handler = Server.CreateHandler();
             
             BrowserClient = new BrowserClient(new BrowserHandler(Handler));

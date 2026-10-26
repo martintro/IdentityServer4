@@ -10,6 +10,7 @@ using IdentityServer.IntegrationTests.Clients.Setup;
 using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -30,9 +31,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public CustomTokenResponseClients()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<StartupWithCustomTokenResponses>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<StartupWithCustomTokenResponses>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }

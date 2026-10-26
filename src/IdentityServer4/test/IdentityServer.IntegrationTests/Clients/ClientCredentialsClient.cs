@@ -16,6 +16,7 @@ using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 using System.Text.Json;
 
@@ -29,9 +30,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public ClientCredentialsClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }

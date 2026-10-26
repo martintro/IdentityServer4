@@ -1,14 +1,16 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -29,9 +31,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public UserInfoEndpointClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -48,22 +53,22 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            userInfo.IsError.Should().BeFalse();
-            userInfo.Claims.Count().Should().Be(3);
+            userInfo.IsError.ShouldBeFalse();
+            userInfo.Claims.Count().ShouldBe(3);
 
-            userInfo.Claims.Should().Contain(c => c.Type == "sub" && c.Value == "88421113");
-            userInfo.Claims.Should().Contain(c => c.Type == "email" && c.Value == "BobSmith@email.com");
-            userInfo.Claims.Should().Contain(c => c.Type == "email_verified" && c.Value == "true");
+            userInfo.Claims.ShouldContain(c => c.Type == "sub" && c.Value == "88421113");
+            userInfo.Claims.ShouldContain(c => c.Type == "email" && c.Value == "BobSmith@email.com");
+            userInfo.Claims.ShouldContain(c => c.Type == "email_verified" && c.Value == "true");
         }
 
         [Fact]
@@ -78,18 +83,18 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid address",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            userInfo.IsError.Should().BeFalse();
-            userInfo.Claims.First().Value.Should().Be("{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }");
+            userInfo.IsError.ShouldBeFalse();
+            userInfo.Claims.First().Value.ShouldBe("{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }");
         }
 
         [Fact]
@@ -104,18 +109,18 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            userInfo.IsError.Should().BeTrue();
-            userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Forbidden);
+            userInfo.IsError.ShouldBeTrue();
+            userInfo.HttpStatusCode.ShouldBe(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -130,18 +135,18 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "email api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            userInfo.IsError.Should().BeTrue();
-            userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Forbidden);
+            userInfo.IsError.ShouldBeTrue();
+            userInfo.HttpStatusCode.ShouldBe(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -151,10 +156,10 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = UserInfoEndpoint,
                 Token = "invalid"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            userInfo.IsError.Should().BeTrue();
-            userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            userInfo.IsError.ShouldBeTrue();
+            userInfo.HttpStatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -169,42 +174,42 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "openid email api1 api4.with.roles roles",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
             
             var payload = GetPayload(response);
 
             var scopes = payload["scope"].EnumerateArray().Select(x => x.ToString()).ToArray();
-            scopes.Length.Should().Be(5);
-            scopes.Should().Contain("openid");
-            scopes.Should().Contain("email");
-            scopes.Should().Contain("api1");
-            scopes.Should().Contain("api4.with.roles");
-            scopes.Should().Contain("roles");
+            scopes.Length.ShouldBe(5);
+            scopes.ShouldContain("openid");
+            scopes.ShouldContain("email");
+            scopes.ShouldContain("api1");
+            scopes.ShouldContain("api4.with.roles");
+            scopes.ShouldContain("roles");
 
             var roles = payload["role"].EnumerateArray().Select(x => x.ToString()).ToArray();
-            roles.Length.Should().Be(2);
-            roles.Should().Contain("Geek");
-            roles.Should().Contain("Developer");
+            roles.Length.ShouldBe(2);
+            roles.ShouldContain("Geek");
+            roles.ShouldContain("Developer");
 
             var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
             {
                 Address = UserInfoEndpoint,
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             roles = userInfo.Json.Value.TryGetStringArray("role").ToArray();
-            roles.Length.Should().Be(2);
-            roles.Should().Contain("Geek");
-            roles.Should().Contain("Developer");
+            roles.Length.ShouldBe(2);
+            roles.ShouldContain("Geek");
+            roles.ShouldContain("Developer");
         }
 
         private Dictionary<string, JsonElement> GetPayload(TokenResponse response)
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

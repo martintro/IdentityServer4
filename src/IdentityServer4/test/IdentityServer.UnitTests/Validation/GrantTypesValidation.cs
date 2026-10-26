@@ -1,10 +1,11 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Models;
 using Xunit;
 
@@ -57,7 +58,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { type1, type2 };
 
-            act.Should().Throw<InvalidOperationException>();            
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Theory]
@@ -71,7 +72,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", type2, "custom2", type1 };
 
-            act.Should().Throw<InvalidOperationException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Fact]
@@ -81,7 +82,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", "custom2", "custom1" };
 
-            act.Should().Throw<InvalidOperationException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Fact]
@@ -91,7 +92,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = null;
 
-            act.Should().Throw<ArgumentNullException>();
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -101,7 +102,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custo m2" };
 
-            act.Should().Throw<InvalidOperationException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Fact]
@@ -111,7 +112,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", "custo m2", "custom1" };
 
-            act.Should().Throw<InvalidOperationException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Fact]
@@ -124,7 +125,7 @@ namespace IdentityServer.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes.Add("authorization_code");
 
-            act.Should().Throw<InvalidOperationException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Fact]
@@ -137,7 +138,7 @@ namespace IdentityServer.UnitTests.Validation
 
             client.AllowedGrantTypes.Add("custom");
 
-            client.AllowedGrantTypes.Count.Should().Be(2);
+            client.AllowedGrantTypes.Count.ShouldBe(2);
         }
     }
 }

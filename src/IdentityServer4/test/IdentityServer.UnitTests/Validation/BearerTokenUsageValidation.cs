@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +28,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create< BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -97,9 +97,9 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeTrue();
-            result.Token.Should().Be("token");
-            result.UsageType.Should().Be(BearerTokenUsageType.AuthorizationHeader);
+            result.TokenFound.ShouldBeTrue();
+            result.Token.ShouldBe("token");
+            result.UsageType.ShouldBe(BearerTokenUsageType.AuthorizationHeader);
         }
 
         [Fact]
@@ -115,9 +115,9 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeTrue();
-            result.Token.Should().Be("token");
-            result.UsageType.Should().Be(BearerTokenUsageType.PostBody);
+            result.TokenFound.ShouldBeTrue();
+            result.Token.ShouldBe("token");
+            result.UsageType.ShouldBe(BearerTokenUsageType.PostBody);
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = new BearerTokenUsageValidator(TestLogger.Create<BearerTokenUsageValidator>());
             var result = await validator.ValidateAsync(ctx);
 
-            result.TokenFound.Should().BeFalse();
+            result.TokenFound.ShouldBeFalse();
         }
     }
 }

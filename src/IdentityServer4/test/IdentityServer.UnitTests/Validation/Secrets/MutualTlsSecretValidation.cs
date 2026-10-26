@@ -1,11 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4;
@@ -45,7 +45,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             Func<Task> act = async () => await validator.ValidateAsync(client.ClientSecrets, secret);
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            await act.ShouldThrowAsync<InvalidOperationException>();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
         }
 
         ///////////////////
@@ -132,7 +132,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             Func<Task> act = async () => await validator.ValidateAsync(client.ClientSecrets, secret);
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            await act.ShouldThrowAsync<InvalidOperationException>();
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
         }
     }
 }

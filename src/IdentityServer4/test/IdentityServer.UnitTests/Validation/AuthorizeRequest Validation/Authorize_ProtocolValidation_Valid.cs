@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4;
@@ -31,7 +31,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().Be(false);
+            result.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -184,7 +184,7 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.ValidatedRequest.SessionId.Should().NotBeNull();
+            result.ValidatedRequest.SessionId.ShouldNotBeNull();
         }
         
         [Fact]
@@ -202,9 +202,9 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
-            result.ValidatedRequest.PromptModes.Count().Should().Be(2);
-            result.ValidatedRequest.PromptModes.Should().Contain(OidcConstants.PromptModes.Login);
-            result.ValidatedRequest.PromptModes.Should().Contain(OidcConstants.PromptModes.Consent);
+            result.ValidatedRequest.PromptModes.Count().ShouldBe(2);
+            result.ValidatedRequest.PromptModes.ShouldContain(OidcConstants.PromptModes.Login);
+            result.ValidatedRequest.PromptModes.ShouldContain(OidcConstants.PromptModes.Consent);
         }
     }
 }

@@ -1,26 +1,28 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
+using Shouldly;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Xunit;
-using System.Text.Json;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
@@ -33,9 +35,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public ClientAssertionClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -76,7 +81,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
         }
@@ -99,7 +104,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
         }
@@ -122,7 +127,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             AssertValidToken(response);
             
@@ -140,10 +145,10 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeTrue();
-            response.Error.Should().Be("invalid_client");
+            response.IsError.ShouldBeTrue();
+            response.Error.ShouldBe("invalid_client");
         }
 
         [Fact]
@@ -162,11 +167,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
-            response.Error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
-            response.ErrorType.Should().Be(ResponseErrorType.Protocol);
+            response.IsError.ShouldBe(true);
+            response.Error.ShouldBe(OidcConstants.TokenErrors.InvalidClient);
+            response.ErrorType.ShouldBe(ResponseErrorType.Protocol);
         }
 
         [Fact]
@@ -188,11 +193,11 @@ namespace IdentityServer.IntegrationTests.Clients
                 },
 
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
-            response.Error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
-            response.ErrorType.Should().Be(ResponseErrorType.Protocol);
+            response.IsError.ShouldBe(true);
+            response.Error.ShouldBe(OidcConstants.TokenErrors.InvalidClient);
+            response.ErrorType.ShouldBe(ResponseErrorType.Protocol);
         }
 
         private async Task<TokenResponse> GetToken(FormUrlEncodedContent body)
@@ -203,30 +208,30 @@ namespace IdentityServer.IntegrationTests.Clients
 
         private void AssertValidToken(TokenResponse response)
         {
-            response.IsError.Should().Be(false);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBe(false);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
             
-            payload.Count().Should().Be(8);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be(ClientId);
-            payload.Keys.Should().Contain("iat");
+            payload.Count().ShouldBe(8);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe(ClientId);
+            payload.Keys.ShouldContain("iat");
             
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
         }
 
         private Dictionary<string, JsonElement> GetPayload(TokenResponse response)
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

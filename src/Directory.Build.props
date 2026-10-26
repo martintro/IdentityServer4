@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <FrameworkVersion>10.0.13</FrameworkVersion>
+    <ExtensionsVersion>10.0.13</ExtensionsVersion>
+    <EntityFrameworkVersion>10.0.13</EntityFrameworkVersion>
+    <IdentityModelVersion>8.23.0</IdentityModelVersion>
+
+    <IdentityServerVersion>6.0.0-*</IdentityServerVersion>
+    <MinVerMinimumMajorMinor>6.0</MinVerMinimumMajorMinor>
+  </PropertyGroup>
+
+</Project>

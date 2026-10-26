@@ -1,4 +1,9 @@
-using FluentAssertions;
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -45,7 +50,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var handle = await _subject.CreateRefreshTokenAsync(_user, accessToken, client);
 
-            (await _store.GetRefreshTokenAsync(handle)).Should().NotBeNull();
+            (await _store.GetRefreshTokenAsync(handle)).ShouldNotBeNull();
         }
 
         [Fact]
@@ -63,8 +68,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var refreshToken = (await _store.GetRefreshTokenAsync(handle));
 
-            refreshToken.Should().NotBeNull();
-            refreshToken.Lifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
+            refreshToken.ShouldNotBeNull();
+            refreshToken.Lifetime.ShouldBe(client.AbsoluteRefreshTokenLifetime);
         }
 
         [Fact]
@@ -83,8 +88,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var refreshToken = (await _store.GetRefreshTokenAsync(handle));
 
-            refreshToken.Should().NotBeNull();
-            refreshToken.Lifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
+            refreshToken.ShouldNotBeNull();
+            refreshToken.Lifetime.ShouldBe(client.AbsoluteRefreshTokenLifetime);
         }
 
         [Fact]
@@ -102,8 +107,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var refreshToken = (await _store.GetRefreshTokenAsync(handle));
 
-            refreshToken.Should().NotBeNull();
-            refreshToken.Lifetime.Should().Be(client.SlidingRefreshTokenLifetime);
+            refreshToken.ShouldNotBeNull();
+            refreshToken.Lifetime.ShouldBe(client.SlidingRefreshTokenLifetime);
         }
 
         [Fact]
@@ -134,9 +139,8 @@ namespace IdentityServer.UnitTests.Services.Default
             var handle = await _store.StoreRefreshTokenAsync(refreshToken);
 
             (await _subject.UpdateRefreshTokenAsync(handle, refreshToken, client))
-                .Should().NotBeNull()
-                .And
-                .NotBe(handle);
+                .ShouldNotBeNull()
+                .ShouldNotBe(handle);
         }
 
         [Fact]
@@ -172,12 +176,13 @@ namespace IdentityServer.UnitTests.Services.Default
             var refreshToken = await _store.GetRefreshTokenAsync(handle);
             var newHandle = await _subject.UpdateRefreshTokenAsync(handle, refreshToken, client);
 
-            newHandle.Should().NotBeNull().And.Be(handle);
+            newHandle.ShouldNotBeNull();
+            newHandle.ShouldBe(handle);
 
             var newRefreshToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            newRefreshToken.Should().NotBeNull();
-            newRefreshToken.Lifetime.Should().Be((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
+            newRefreshToken.ShouldNotBeNull();
+            newRefreshToken.Lifetime.ShouldBe((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
         }
 
         [Fact]
@@ -213,12 +218,13 @@ namespace IdentityServer.UnitTests.Services.Default
             var refreshToken = await _store.GetRefreshTokenAsync(handle);
             var newHandle = await _subject.UpdateRefreshTokenAsync(handle, refreshToken, client);
 
-            newHandle.Should().NotBeNull().And.Be(handle);
+            newHandle.ShouldNotBeNull();
+            newHandle.ShouldBe(handle);
 
             var newRefreshToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            newRefreshToken.Should().NotBeNull();
-            newRefreshToken.Lifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
+            newRefreshToken.ShouldNotBeNull();
+            newRefreshToken.Lifetime.ShouldBe(client.AbsoluteRefreshTokenLifetime);
         }
 
         [Fact]
@@ -254,12 +260,13 @@ namespace IdentityServer.UnitTests.Services.Default
             var refreshToken = await _store.GetRefreshTokenAsync(handle);
             var newHandle = await _subject.UpdateRefreshTokenAsync(handle, refreshToken, client);
 
-            newHandle.Should().NotBeNull().And.Be(handle);
+            newHandle.ShouldNotBeNull();
+            newHandle.ShouldBe(handle);
 
             var newRefreshToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            newRefreshToken.Should().NotBeNull();
-            newRefreshToken.Lifetime.Should().Be((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
+            newRefreshToken.ShouldNotBeNull();
+            newRefreshToken.Lifetime.ShouldBe((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
         }
 
         [Fact]
@@ -295,12 +302,13 @@ namespace IdentityServer.UnitTests.Services.Default
             var refreshToken = await _store.GetRefreshTokenAsync(handle);
             var newHandle = await _subject.UpdateRefreshTokenAsync(handle, refreshToken, client);
 
-            newHandle.Should().NotBeNull().And.NotBe(handle);
+            newHandle.ShouldNotBeNull();
+            newHandle.ShouldNotBe(handle);
 
             var newRefreshToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            newRefreshToken.Should().NotBeNull();
-            newRefreshToken.Lifetime.Should().Be((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
+            newRefreshToken.ShouldNotBeNull();
+            newRefreshToken.Lifetime.ShouldBe((int)(now - newRefreshToken.CreationTime).TotalSeconds + client.SlidingRefreshTokenLifetime);
         }
 
         [Fact]
@@ -338,8 +346,8 @@ namespace IdentityServer.UnitTests.Services.Default
             var oldToken = await _store.GetRefreshTokenAsync(handle);
             var newToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            oldToken.ConsumedTime.Should().Be(now);
-            newToken.ConsumedTime.Should().BeNull();
+            oldToken.ConsumedTime.ShouldBe(now);
+            newToken.ConsumedTime.ShouldBeNull();
         }
         
         [Fact]
@@ -353,7 +361,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync("invalid", client);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
         
         [Fact]
@@ -388,7 +396,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
         
         [Fact]
@@ -424,7 +432,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
         
         [Fact]
@@ -460,7 +468,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
         
         [Fact]
@@ -498,7 +506,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
         
         [Fact]
@@ -534,7 +542,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
     }
 }

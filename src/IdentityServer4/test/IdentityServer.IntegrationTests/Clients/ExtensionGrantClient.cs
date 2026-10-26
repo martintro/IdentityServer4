@@ -1,24 +1,26 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
+using Shouldly;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Xunit;
-using System.Text.Json;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
@@ -30,9 +32,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public ExtensionGrantClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -53,36 +58,36 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
             var unixNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var exp = Int64.Parse(payload["exp"].ToString());
-            exp.Should().BeLessThan(unixNow + 3605);
-            exp.Should().BeGreaterThan(unixNow + 3595);
+            exp.ShouldBeLessThan(unixNow + 3605);
+            exp.ShouldBeGreaterThan(unixNow + 3595);
 
-            payload.Count().Should().Be(12);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.custom");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
+            payload.Count().ShouldBe(12);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.custom");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("custom");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("custom");
         }
 
         [Fact]
@@ -102,37 +107,37 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "extra_claim", "extra_value" },
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
             var unixNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var exp = Int64.Parse(payload["exp"].ToString());
-            exp.Should().BeLessThan(unixNow + 3605);
-            exp.Should().BeGreaterThan(unixNow + 3595);
+            exp.ShouldBeLessThan(unixNow + 3605);
+            exp.ShouldBeGreaterThan(unixNow + 3595);
 
-            payload.Count().Should().Be(13);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.custom");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
-            payload["extra_claim"].GetString().Should().Be("extra_value");
+            payload.Count().ShouldBe(13);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.custom");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
+            payload["extra_claim"].GetString().ShouldBe("extra_value");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("custom");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("custom");
         }
 
         [Fact]
@@ -152,14 +157,14 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "extra_claim", "extra_value" },
                     { "scope", "api1 offline_access" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var refreshResponse = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
@@ -169,37 +174,37 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            refreshResponse.IsError.Should().BeFalse();
-            refreshResponse.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            refreshResponse.ExpiresIn.Should().Be(3600);
-            refreshResponse.TokenType.Should().Be("Bearer");
-            refreshResponse.IdentityToken.Should().BeNull();
-            refreshResponse.RefreshToken.Should().NotBeNull();
+            refreshResponse.IsError.ShouldBeFalse();
+            refreshResponse.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            refreshResponse.ExpiresIn.ShouldBe(3600);
+            refreshResponse.TokenType.ShouldBe("Bearer");
+            refreshResponse.IdentityToken.ShouldBeNull();
+            refreshResponse.RefreshToken.ShouldNotBeNull();
 
             var payload = GetPayload(refreshResponse);
 
             var unixNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var exp = Int64.Parse(payload["exp"].ToString());
-            exp.Should().BeLessThan(unixNow + 3605);
-            exp.Should().BeGreaterThan(unixNow + 3595);
+            exp.ShouldBeLessThan(unixNow + 3605);
+            exp.ShouldBeGreaterThan(unixNow + 3595);
 
-            payload.Count().Should().Be(13);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.custom");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
-            payload["extra_claim"].GetString().Should().Be("extra_value");
+            payload.Count().ShouldBe(13);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.custom");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
+            payload["extra_claim"].GetString().ShouldBe("extra_value");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("custom");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("custom");
         }
 
         [Fact]
@@ -218,25 +223,25 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
-            payload.Count().Should().Be(8);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.custom");
+            payload.Count().ShouldBe(8);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.custom");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
         }
 
         [Fact]
@@ -254,34 +259,34 @@ namespace IdentityServer.IntegrationTests.Clients
                 {
                     { "custom_credential", "custom credential"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().NotBeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldNotBeNull();
 
             var payload = GetPayload(response);
 
-            payload.Count().Should().Be(12);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.custom");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
+            payload.Count().ShouldBe(12);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.custom");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("custom");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("custom");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.Count().Should().Be(3);
-            scopes.First().ToString().Should().Be("api1");
-            scopes.Skip(1).First().ToString().Should().Be("api2");
-            scopes.Skip(2).First().ToString().Should().Be("offline_access");
+            scopes.Count().ShouldBe(3);
+            scopes.First().ToString().ShouldBe("api1");
+            scopes.Skip(1).First().ToString().ShouldBe("api2");
+            scopes.Skip(2).First().ToString().ShouldBe("offline_access");
         }
 
         [Fact]
@@ -299,12 +304,12 @@ namespace IdentityServer.IntegrationTests.Clients
                 {
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
-            response.ErrorType.Should().Be(ResponseErrorType.Protocol);
-            response.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
-            response.ErrorDescription.Should().Be("invalid_custom_credential");
+            response.IsError.ShouldBe(true);
+            response.ErrorType.ShouldBe(ResponseErrorType.Protocol);
+            response.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
+            response.ErrorDescription.ShouldBe("invalid_custom_credential");
         }
 
         [Fact]
@@ -323,12 +328,12 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
-            response.ErrorType.Should().Be(ResponseErrorType.Protocol);
-            response.HttpStatusCode.Should().Be(HttpStatusCode.BadRequest);
-            response.Error.Should().Be("unsupported_grant_type");
+            response.IsError.ShouldBe(true);
+            response.ErrorType.ShouldBe(ResponseErrorType.Protocol);
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.BadRequest);
+            response.Error.ShouldBe("unsupported_grant_type");
         }
 
         [Fact]
@@ -347,12 +352,12 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "custom_credential", "custom credential"},
                     { "scope", "api1" }
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
-            response.ErrorType.Should().Be(ResponseErrorType.Protocol);
-            response.HttpStatusCode.Should().Be(HttpStatusCode.BadRequest);
-            response.Error.Should().Be("unsupported_grant_type");
+            response.IsError.ShouldBe(true);
+            response.ErrorType.ShouldBe(ResponseErrorType.Protocol);
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.BadRequest);
+            response.Error.ShouldBe("unsupported_grant_type");
         }
 
         [Fact(Skip = "needs improvement")]
@@ -373,36 +378,36 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "lifetime", "5000"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(5000);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(5000);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
             var unixNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var exp = Int64.Parse(payload["exp"].ToString());
-            exp.Should().BeLessThan(unixNow + 5005);
-            exp.Should().BeGreaterThan(unixNow + 4995);
+            exp.ShouldBeLessThan(unixNow + 5005);
+            exp.ShouldBeGreaterThan(unixNow + 4995);
 
-            payload.Count().Should().Be(10);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.dynamic");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
+            payload.Count().ShouldBe(10);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.dynamic");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("delegation");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("delegation");
         }
 
         [Fact]
@@ -423,16 +428,16 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "type", "jwt"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
-            response.AccessToken.Should().Contain(".");
+            response.AccessToken.ShouldContain(".");
         }
 
         [Fact]
@@ -454,19 +459,19 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "impersonated_client", "impersonated_client_id"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
-            response.AccessToken.Should().Contain(".");
+            response.AccessToken.ShouldContain(".");
 
             var jwt = new JwtSecurityToken(response.AccessToken);
-            jwt.Payload["client_id"].Should().Be("impersonated_client_id");
+            jwt.Payload["client_id"].ShouldBe("impersonated_client_id");
         }
 
         [Fact]
@@ -487,16 +492,16 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "type", "reference"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
-            response.AccessToken.Should().NotContain(".");
+            response.AccessToken.ShouldNotContain(".");
         }
 
         [Fact]
@@ -517,33 +522,33 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "claim", "extra_claim"},
                     { "sub",  "818727"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
-            payload.Count().Should().Be(13);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.dynamic");
-            payload["sub"].GetString().Should().Be("818727");
-            payload["idp"].GetString().Should().Be("local");
+            payload.Count().ShouldBe(13);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.dynamic");
+            payload["sub"].GetString().ShouldBe("818727");
+            payload["idp"].GetString().ShouldBe("local");
 
-            payload["client_extra"].GetString().Should().Be("extra_claim");
+            payload["client_extra"].GetString().ShouldBe("extra_claim");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
 
             var amr = payload["amr"].EnumerateArray();
-            amr.Count().Should().Be(1);
-            amr.First().ToString().Should().Be("delegation");
+            amr.Count().ShouldBe(1);
+            amr.First().ToString().ShouldBe("delegation");
         }
 
         [Fact]
@@ -563,33 +568,33 @@ namespace IdentityServer.IntegrationTests.Clients
 
                     { "claim", "extra_claim"},
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
-            response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
-            response.ExpiresIn.Should().Be(3600);
-            response.TokenType.Should().Be("Bearer");
-            response.IdentityToken.Should().BeNull();
-            response.RefreshToken.Should().BeNull();
+            response.IsError.ShouldBeFalse();
+            response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
+            response.ExpiresIn.ShouldBe(3600);
+            response.TokenType.ShouldBe("Bearer");
+            response.IdentityToken.ShouldBeNull();
+            response.RefreshToken.ShouldBeNull();
 
             var payload = GetPayload(response);
 
-            payload.Count().Should().Be(9);
-            payload["iss"].GetString().Should().Be("https://idsvr4");
-            payload["client_id"].GetString().Should().Be("client.dynamic");
-            payload["client_extra"].GetString().Should().Be("extra_claim");
+            payload.Count().ShouldBe(9);
+            payload["iss"].GetString().ShouldBe("https://idsvr4");
+            payload["client_id"].GetString().ShouldBe("client.dynamic");
+            payload["client_extra"].GetString().ShouldBe("extra_claim");
 
-            payload["aud"].GetString().Should().Be("api");
+            payload["aud"].GetString().ShouldBe("api");
 
             var scopes = payload["scope"].EnumerateArray();
-            scopes.First().ToString().Should().Be("api1");
+            scopes.First().ToString().ShouldBe("api1");
         }
 
         private Dictionary<string, JsonElement> GetPayload(TokenResponse response)
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

@@ -1,11 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using Xunit;
@@ -32,7 +32,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator();
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -68,8 +68,8 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -81,8 +81,8 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
     }
 }

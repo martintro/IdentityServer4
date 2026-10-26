@@ -1,4 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Extensions;
@@ -67,14 +68,14 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _codes.StoreAuthorizationCodeAsync(code1);
             var code2 = await _codes.GetAuthorizationCodeAsync(handle);
 
-            code1.ClientId.Should().Be(code2.ClientId);
-            code1.CreationTime.Should().Be(code2.CreationTime);
-            code1.Lifetime.Should().Be(code2.Lifetime);
-            code1.Subject.GetSubjectId().Should().Be(code2.Subject.GetSubjectId());
-            code1.CodeChallenge.Should().Be(code2.CodeChallenge);
-            code1.RedirectUri.Should().Be(code2.RedirectUri);
-            code1.Nonce.Should().Be(code2.Nonce);
-            code1.RequestedScopes.Should().BeEquivalentTo(code2.RequestedScopes);
+            code1.ClientId.ShouldBe(code2.ClientId);
+            code1.CreationTime.ShouldBe(code2.CreationTime);
+            code1.Lifetime.ShouldBe(code2.Lifetime);
+            code1.Subject.GetSubjectId().ShouldBe(code2.Subject.GetSubjectId());
+            code1.CodeChallenge.ShouldBe(code2.CodeChallenge);
+            code1.RedirectUri.ShouldBe(code2.RedirectUri);
+            code1.Nonce.ShouldBe(code2.Nonce);
+            code1.RequestedScopes.ShouldBe(code2.RequestedScopes);
         }
 
         [Fact]
@@ -95,7 +96,7 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _codes.StoreAuthorizationCodeAsync(code1);
             await _codes.RemoveAuthorizationCodeAsync(handle);
             var code2 = await _codes.GetAuthorizationCodeAsync(handle);
-            code2.Should().BeNull();
+            code2.ShouldBeNull();
         }
 
         [Fact]
@@ -123,16 +124,16 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _refreshTokens.StoreRefreshTokenAsync(token1);
             var token2 = await _refreshTokens.GetRefreshTokenAsync(handle);
 
-            token1.ClientId.Should().Be(token2.ClientId);
-            token1.CreationTime.Should().Be(token2.CreationTime);
-            token1.Lifetime.Should().Be(token2.Lifetime);
-            token1.Subject.GetSubjectId().Should().Be(token2.Subject.GetSubjectId());
-            token1.Version.Should().Be(token2.Version);
-            token1.AccessToken.Audiences.Count.Should().Be(1);
-            token1.AccessToken.Audiences.First().Should().Be("aud");
-            token1.AccessToken.ClientId.Should().Be(token2.AccessToken.ClientId);
-            token1.AccessToken.CreationTime.Should().Be(token2.AccessToken.CreationTime);
-            token1.AccessToken.Type.Should().Be(token2.AccessToken.Type);
+            token1.ClientId.ShouldBe(token2.ClientId);
+            token1.CreationTime.ShouldBe(token2.CreationTime);
+            token1.Lifetime.ShouldBe(token2.Lifetime);
+            token1.Subject.GetSubjectId().ShouldBe(token2.Subject.GetSubjectId());
+            token1.Version.ShouldBe(token2.Version);
+            token1.AccessToken.Audiences.Count.ShouldBe(1);
+            token1.AccessToken.Audiences.First().ShouldBe("aud");
+            token1.AccessToken.ClientId.ShouldBe(token2.AccessToken.ClientId);
+            token1.AccessToken.CreationTime.ShouldBe(token2.AccessToken.CreationTime);
+            token1.AccessToken.Type.ShouldBe(token2.AccessToken.Type);
         }
 
         [Fact]
@@ -161,7 +162,7 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _refreshTokens.StoreRefreshTokenAsync(token1);
             await _refreshTokens.RemoveRefreshTokenAsync(handle);
             var token2 = await _refreshTokens.GetRefreshTokenAsync(handle);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
         }
 
         [Fact]
@@ -191,9 +192,9 @@ namespace IdentityServer.UnitTests.Stores.Default
             await _refreshTokens.RemoveRefreshTokensAsync("123", "client");
 
             var token2 = await _refreshTokens.GetRefreshTokenAsync(handle1);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
             token2 = await _refreshTokens.GetRefreshTokenAsync(handle2);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
         }
 
         [Fact]
@@ -217,13 +218,13 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _referenceTokens.StoreReferenceTokenAsync(token1);
             var token2 = await _referenceTokens.GetReferenceTokenAsync(handle);
 
-            token1.ClientId.Should().Be(token2.ClientId);
-            token1.Audiences.Count.Should().Be(1);
-            token1.Audiences.First().Should().Be("aud");
-            token1.CreationTime.Should().Be(token2.CreationTime);
-            token1.Type.Should().Be(token2.Type);
-            token1.Lifetime.Should().Be(token2.Lifetime);
-            token1.Version.Should().Be(token2.Version);
+            token1.ClientId.ShouldBe(token2.ClientId);
+            token1.Audiences.Count.ShouldBe(1);
+            token1.Audiences.First().ShouldBe("aud");
+            token1.CreationTime.ShouldBe(token2.CreationTime);
+            token1.Type.ShouldBe(token2.Type);
+            token1.Lifetime.ShouldBe(token2.Lifetime);
+            token1.Version.ShouldBe(token2.Version);
         }
 
         [Fact]
@@ -246,7 +247,7 @@ namespace IdentityServer.UnitTests.Stores.Default
             var handle = await _referenceTokens.StoreReferenceTokenAsync(token1);
             await _referenceTokens.RemoveReferenceTokenAsync(handle);
             var token2 = await _referenceTokens.GetReferenceTokenAsync(handle);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
         }
 
         [Fact]
@@ -271,9 +272,9 @@ namespace IdentityServer.UnitTests.Stores.Default
             await _referenceTokens.RemoveReferenceTokensAsync("123", "client");
 
             var token2 = await _referenceTokens.GetReferenceTokenAsync(handle1);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
             token2 = await _referenceTokens.GetReferenceTokenAsync(handle2);
-            token2.Should().BeNull();
+            token2.ShouldBeNull();
         }
 
         [Fact]
@@ -290,9 +291,9 @@ namespace IdentityServer.UnitTests.Stores.Default
             await _userConsent.StoreUserConsentAsync(consent1);
             var consent2 = await _userConsent.GetUserConsentAsync("123", "client");
 
-            consent2.ClientId.Should().Be(consent1.ClientId);
-            consent2.SubjectId.Should().Be(consent1.SubjectId);
-            consent2.Scopes.Should().BeEquivalentTo(new string[] { "bar", "foo" });
+            consent2.ClientId.ShouldBe(consent1.ClientId);
+            consent2.SubjectId.ShouldBe(consent1.SubjectId);
+            consent2.Scopes.ShouldBe(new string[] { "bar", "foo" }, ignoreOrder: true);
         }
 
         [Fact]
@@ -309,7 +310,7 @@ namespace IdentityServer.UnitTests.Stores.Default
             await _userConsent.StoreUserConsentAsync(consent1);
             await _userConsent.RemoveUserConsentAsync("123", "client");
             var consent2 = await _userConsent.GetUserConsentAsync("123", "client");
-            consent2.Should().BeNull();
+            consent2.ShouldBeNull();
         }
 
         [Fact]
@@ -364,9 +365,9 @@ namespace IdentityServer.UnitTests.Stores.Default
                 RequestedScopes = new string[] { "quux1", "quux2" }
             });
 
-            (await _codes.GetAuthorizationCodeAsync("key")).Lifetime.Should().Be(30);
-            (await _refreshTokens.GetRefreshTokenAsync("key")).Lifetime.Should().Be(20);
-            (await _referenceTokens.GetReferenceTokenAsync("key")).Lifetime.Should().Be(10);
+            (await _codes.GetAuthorizationCodeAsync("key")).Lifetime.ShouldBe(30);
+            (await _refreshTokens.GetRefreshTokenAsync("key")).Lifetime.ShouldBe(20);
+            (await _referenceTokens.GetReferenceTokenAsync("key")).Lifetime.ShouldBe(10);
         }
     }
 }

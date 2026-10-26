@@ -1,15 +1,16 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -24,9 +25,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public RevocationClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -44,9 +48,9 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1",
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().BeFalse();
+            response.IsError.ShouldBeFalse();
 
             // introspect - should be active
             var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
@@ -56,9 +60,9 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(true);
+            introspectionResponse.IsActive.ShouldBe(true);
 
             // revoke access token
             var revocationResponse = await _client.RevokeTokenAsync(new TokenRevocationRequest
@@ -68,7 +72,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             // introspect - should be inactive
             introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
@@ -78,9 +82,9 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 Token = response.AccessToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            introspectionResponse.IsActive.Should().Be(false);
+            introspectionResponse.IsActive.ShouldBe(false);
         }
     }
 }

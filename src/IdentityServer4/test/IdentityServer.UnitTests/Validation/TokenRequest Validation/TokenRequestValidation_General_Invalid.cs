@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4;
@@ -32,7 +32,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             Func<Task> act = () => validator.ValidateRequestAsync(null, null);
 
-            await act.Should().ThrowAsync<ArgumentNullException>();
+            await act.ShouldThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             Func<Task> act = () => validator.ValidateRequestAsync(parameters, null);
 
-            await act.Should().ThrowAsync<ArgumentNullException>();
+            await act.ShouldThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
@@ -80,8 +80,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.UnsupportedGrantType);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.UnsupportedGrantType);
         }
 
         [Fact]
@@ -99,8 +99,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidClient);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidClient);
         }
 
         [Fact]
@@ -131,8 +131,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.UnsupportedGrantType);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.UnsupportedGrantType);
         }
     }
 }

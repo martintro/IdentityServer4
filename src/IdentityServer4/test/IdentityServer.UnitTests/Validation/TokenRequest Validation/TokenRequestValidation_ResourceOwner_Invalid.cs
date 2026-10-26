@@ -1,11 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer.UnitTests.Validation.Setup;
@@ -35,8 +35,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.UnauthorizedClient);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -73,8 +73,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -92,8 +92,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -111,8 +111,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -128,8 +128,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -146,8 +146,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -165,9 +165,9 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
-            result.ErrorDescription.Should().Be("invalid_username_or_password");
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
+            result.ErrorDescription.ShouldBe("invalid_username_or_password");
         }
         
         [Fact]
@@ -184,7 +184,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -202,9 +202,9 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.UnsupportedGrantType);
-            result.ErrorDescription.Should().BeNull();
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.UnsupportedGrantType);
+            result.ErrorDescription.ShouldBeNull();
         }
 
         [Fact]
@@ -222,8 +222,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -241,9 +241,9 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
-            result.ErrorDescription.Should().Be("custom error description");
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
+            result.ErrorDescription.ShouldBe("custom error description");
         }
     }
 }

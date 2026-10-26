@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -68,9 +69,9 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<AuthorizeResult>();
-            ((AuthorizeResult)result).Response.IsError.Should().BeTrue();
-            ((AuthorizeResult)result).Response.SessionState.Should().NotBeNull();
+            result.ShouldBeOfType<AuthorizeResult>();
+            ((AuthorizeResult)result).Response.IsError.ShouldBeTrue();
+            ((AuthorizeResult)result).Response.SessionState.ShouldNotBeNull();
         }
 
         [Fact]
@@ -82,8 +83,8 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<AuthorizeResult>();
-            ((AuthorizeResult)result).Response.IsError.Should().BeTrue();
+            result.ShouldBeOfType<AuthorizeResult>();
+            ((AuthorizeResult)result).Response.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -94,7 +95,7 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<ConsentPageResult>();
+            result.ShouldBeOfType<ConsentPageResult>();
         }
 
         [Fact]
@@ -105,8 +106,8 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<AuthorizeResult>();
-            ((AuthorizeResult)result).Response.IsError.Should().BeTrue();
+            result.ShouldBeOfType<AuthorizeResult>();
+            ((AuthorizeResult)result).Response.IsError.ShouldBeTrue();
         }
 
         [Fact]
@@ -120,10 +121,10 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
              var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-             result.Should().BeOfType<AuthorizeResult>();
+             result.ShouldBeOfType<AuthorizeResult>();
             var authorizeResult = ((AuthorizeResult)result);
-            authorizeResult.Response.IsError.Should().BeTrue();
-            authorizeResult.Response.ErrorDescription.Should().Be(errorDescription);
+            authorizeResult.Response.IsError.ShouldBeTrue();
+            authorizeResult.Response.ErrorDescription.ShouldBe(errorDescription);
         }
 
         [Fact]
@@ -134,7 +135,7 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<LoginPageResult>();
+            result.ShouldBeOfType<LoginPageResult>();
         }
 
         [Fact]
@@ -146,7 +147,7 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<CustomRedirectResult>();
+            result.ShouldBeOfType<CustomRedirectResult>();
         }
 
         [Fact]
@@ -155,7 +156,7 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
         {
             var result = await _subject.ProcessAuthorizeRequestAsync(_params, _user, null);
 
-            result.Should().BeOfType<AuthorizeResult>();
+            result.ShouldBeOfType<AuthorizeResult>();
         }
 
         internal void Init()

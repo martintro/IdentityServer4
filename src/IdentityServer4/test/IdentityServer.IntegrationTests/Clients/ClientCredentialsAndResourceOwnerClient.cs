@@ -1,15 +1,16 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -22,9 +23,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public ClientCredentialsandResourceOwnerClient()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -38,9 +42,9 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.and.ro",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -52,9 +56,9 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client.and.ro",
                 ClientSecret = "secret",
                 Scope = "openid api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(true);
+            response.IsError.ShouldBe(true);
         }
 
         [Fact]
@@ -69,9 +73,9 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
 
         [Fact]
@@ -86,9 +90,9 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            response.IsError.Should().Be(false);
+            response.IsError.ShouldBe(false);
         }
     }
 }

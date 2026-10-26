@@ -1,12 +1,13 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,9 +24,12 @@ namespace IdentityServer.IntegrationTests.Clients
 
         public DiscoveryClientTests()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -40,18 +44,18 @@ namespace IdentityServer.IntegrationTests.Clients
                 {
                     ValidateIssuerName = false
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             // endpoints
-            doc.TokenEndpoint.Should().Be("https://server/connect/token");
-            doc.AuthorizeEndpoint.Should().Be("https://server/connect/authorize");
-            doc.IntrospectionEndpoint.Should().Be("https://server/connect/introspect");
-            doc.EndSessionEndpoint.Should().Be("https://server/connect/endsession");
+            doc.TokenEndpoint.ShouldBe("https://server/connect/token");
+            doc.AuthorizeEndpoint.ShouldBe("https://server/connect/authorize");
+            doc.IntrospectionEndpoint.ShouldBe("https://server/connect/introspect");
+            doc.EndSessionEndpoint.ShouldBe("https://server/connect/endsession");
 
             // jwk
-            doc.KeySet.Keys.Count.Should().Be(1);
-            doc.KeySet.Keys.First().E.Should().NotBeNull();
-            doc.KeySet.Keys.First().N.Should().NotBeNull();
+            doc.KeySet.Keys.Count.ShouldBe(1);
+            doc.KeySet.Keys.First().E.ShouldNotBeNull();
+            doc.KeySet.Keys.First().N.ShouldNotBeNull();
         }
     }
 }

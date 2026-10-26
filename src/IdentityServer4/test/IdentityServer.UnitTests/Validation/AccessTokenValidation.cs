@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer.UnitTests.Validation.Setup;
@@ -59,9 +59,9 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync(handle);
 
-            result.IsError.Should().BeFalse();
-            result.Claims.Count().Should().Be(8);
-            result.Claims.First(c => c.Type == JwtClaimTypes.ClientId).Value.Should().Be("roclient");
+            result.IsError.ShouldBeFalse();
+            result.Claims.Count().ShouldBe(8);
+            result.Claims.First(c => c.Type == JwtClaimTypes.ClientId).Value.ShouldBe("roclient");
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync(handle, "read");
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -93,8 +93,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync(handle, "missing");
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InsufficientScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InsufficientScope);
         }
 
         [Fact]
@@ -105,8 +105,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync("unknown");
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -119,8 +119,8 @@ namespace IdentityServer.UnitTests.Validation
             var longToken = "x".Repeat(options.InputLengthRestrictions.TokenHandle + 1);
             var result = await validator.ValidateAccessTokenAsync(longToken);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -141,8 +141,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync(handle);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.ExpiredToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.ExpiredToken);
         }
 
         [Fact]
@@ -153,8 +153,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
         
         [Theory]
@@ -185,15 +185,15 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            result.IsError.Should().BeFalse();
-            result.Jwt.Should().NotBeNullOrEmpty();
-            result.Client.ClientId.Should().Be("roclient");
+            result.IsError.ShouldBeFalse();
+            result.Jwt.ShouldNotBeNullOrEmpty();
+            result.Client.ClientId.ShouldBe("roclient");
 
-            result.Claims.Count().Should().Be(8);
+            result.Claims.Count().ShouldBe(8);
             var scopes = result.Claims.Where(c => c.Type == "scope").Select(c => c.Value).ToArray();
-            scopes.Count().Should().Be(2);
-            scopes[0].Should().Be("read");
-            scopes[1].Should().Be("write");
+            scopes.Count().ShouldBe(2);
+            scopes[0].ShouldBe("read");
+            scopes[1].ShouldBe("write");
         }
         
         [Fact]
@@ -208,8 +208,8 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -222,8 +222,8 @@ namespace IdentityServer.UnitTests.Validation
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -239,7 +239,7 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateAccessTokenAsync(handle);
 
-            result.IsError.Should().BeTrue();
+            result.IsError.ShouldBeTrue();
         }
     }
 }

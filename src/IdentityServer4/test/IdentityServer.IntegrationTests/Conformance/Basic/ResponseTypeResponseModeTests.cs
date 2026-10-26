@@ -1,11 +1,11 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -69,8 +69,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
         {
             await _mockPipeline.LoginAsync("bob");
 
-            var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint);
-            metadata.StatusCode.Should().Be(HttpStatusCode.OK);
+            var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint, TestContext.Current.CancellationToken);
+            metadata.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
@@ -82,13 +82,13 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                            redirectUri: "https://code_client/callback",
                            state: state,
                            nonce: nonce);
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            response.StatusCode.Should().Be(HttpStatusCode.Found);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
+            response.StatusCode.ShouldBe(HttpStatusCode.Found);
 
             var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
-            authorization.IsError.Should().BeFalse();
-            authorization.Code.Should().NotBeNull();
-            authorization.State.Should().Be(state);
+            authorization.IsError.ShouldBeFalse();
+            authorization.Code.ShouldNotBeNull();
+            authorization.State.ShouldBe(state);
         }
 
         // this might not be in sync with the actual conformance tests
@@ -116,9 +116,9 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var url = request.Create(values);
 
             _mockPipeline.BrowserClient.AllowAutoRedirect = true;
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("unsupported_response_type");
+            _mockPipeline.ErrorMessage.Error.ShouldBe("unsupported_response_type");
         }
     }
 }

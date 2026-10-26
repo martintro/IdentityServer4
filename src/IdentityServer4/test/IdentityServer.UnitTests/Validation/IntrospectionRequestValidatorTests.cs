@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -6,7 +7,7 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4.Models;
@@ -55,10 +56,10 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _subject.ValidateAsync(param, null);
 
-            result.IsError.Should().Be(false);
-            result.IsActive.Should().Be(true);
-            result.Claims.Count().Should().Be(5);
-            result.Token.Should().Be(handle);
+            result.IsError.ShouldBe(false);
+            result.IsActive.ShouldBe(true);
+            result.Claims.Count().ShouldBe(5);
+            result.Token.ShouldBe(handle);
         }
 
         [Fact]
@@ -69,11 +70,11 @@ namespace IdentityServer.UnitTests.Validation
             
             var result = await _subject.ValidateAsync(param, null);
 
-            result.IsError.Should().Be(true);
-            result.Error.Should().Be("missing_token");
-            result.IsActive.Should().Be(false);
-            result.Claims.Should().BeNull();
-            result.Token.Should().BeNull();
+            result.IsError.ShouldBe(true);
+            result.Error.ShouldBe("missing_token");
+            result.IsActive.ShouldBe(false);
+            result.Claims.ShouldBeNull();
+            result.Token.ShouldBeNull();
         }
 
         [Fact]
@@ -87,10 +88,10 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _subject.ValidateAsync(param, null);
 
-            result.IsError.Should().Be(false);
-            result.IsActive.Should().Be(false);
-            result.Claims.Should().BeNull();
-            result.Token.Should().Be("invalid");
+            result.IsError.ShouldBe(false);
+            result.IsActive.ShouldBe(false);
+            result.Claims.ShouldBeNull();
+            result.Token.ShouldBe("invalid");
         }
     }
 }

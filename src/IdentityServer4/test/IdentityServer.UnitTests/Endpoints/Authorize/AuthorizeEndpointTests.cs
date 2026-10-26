@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -62,7 +63,7 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
 
             var result = await _subject.ProcessAsync(_context);
 
-            result.Should().BeOfType<AuthorizeResult>();
+            result.ShouldBeOfType<AuthorizeResult>();
         }
 
         [Fact]
@@ -74,8 +75,8 @@ namespace IdentityServer.UnitTests.Endpoints.Authorize
             var result = await _subject.ProcessAsync(_context);
 
             var statusCode = result as StatusCodeResult;
-            statusCode.Should().NotBeNull();
-            statusCode.StatusCode.Should().Be(415);
+            statusCode.ShouldNotBeNull();
+            statusCode.StatusCode.ShouldBe(415);
         }
 
         internal void Init()

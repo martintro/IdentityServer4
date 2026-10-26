@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
@@ -74,7 +74,7 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.UpdateConsentAsync(_user, _client, new [] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
             var consent = await _userConsentStore.GetUserConsentAsync(_user.GetSubjectId(), _client.ClientId);
-            consent.Should().BeNull();
+            consent.ShouldBeNull();
         }
 
         [Fact]
@@ -83,9 +83,9 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.UpdateConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
             var consent = await _userConsentStore.GetUserConsentAsync(_user.GetSubjectId(), _client.ClientId);
-            consent.Scopes.Count().Should().Be(2);
-            consent.Scopes.Should().Contain("scope1");
-            consent.Scopes.Should().Contain("scope2");
+            consent.Scopes.Count().ShouldBe(2);
+            consent.Scopes.ShouldContain("scope1");
+            consent.Scopes.ShouldContain("scope2");
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.UpdateConsentAsync(_user, _client, new ParsedScopeValue[] { });
 
             var consent = await _userConsentStore.GetUserConsentAsync(_user.GetSubjectId(), _client.ClientId);
-            consent.Should().BeNull();
+            consent.ShouldBeNull();
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             var result = await _subject.RequiresConsentAsync(_user, _client, new ParsedScopeValue[] { });
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("offline_access") });
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, new [] { new ParsedScopeValue("scope2") });
 
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, new[] { new ParsedScopeValue("scope1"), new ParsedScopeValue("scope2") });
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _subject.RequiresConsentAsync(_user, _client, scopes);
 
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var result = await _userConsentStore.GetUserConsentAsync(_user.GetSubjectId(), _client.ClientId);
 
-            result.Should().BeNull();
+            result.ShouldBeNull();
         }
     }
 }

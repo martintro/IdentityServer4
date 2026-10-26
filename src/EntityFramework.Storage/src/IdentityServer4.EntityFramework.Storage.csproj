@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>IdentityServer4NG.EntityFramework.Storage</PackageId>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -36,11 +36,7 @@
   
   <ItemGroup>
     <PackageReference Include="IdentityServer4NG.Storage" />
-    
-    <PackageReference Include="AutoMapper" />
-
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

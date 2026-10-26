@@ -1,7 +1,12 @@
-﻿using IdentityServer4.Models;
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Xunit;
-using FluentAssertions;
+using Shouldly;
 using System.Threading.Tasks;
 using System.Linq;
 
@@ -21,14 +26,14 @@ namespace IdentityServer.UnitTests.Stores
         {
             {
                 var item = await _subject.GetAsync("key1");
-                item.Should().BeNull();
+                item.ShouldBeNull();
             }
 
             await _subject.StoreAsync(new PersistedGrant() { Key = "key1" });
 
             {
                 var item = await _subject.GetAsync("key1");
-                item.Should().NotBeNull();
+                item.ShouldNotBeNull();
             }
         }
 
@@ -50,75 +55,75 @@ namespace IdentityServer.UnitTests.Stores
             {
                 SubjectId = "sub1"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key1", "key2", "key3", "key4", "key5", "key6" });
+            .Select(x => x.Key).ShouldBe(new[] { "key1", "key2", "key3", "key4", "key5", "key6" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub2"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key7" });
+            .Select(x => x.Key).ShouldBe(new[] { "key7" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub3"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub1",
                 ClientId = "client1"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key1", "key3" });
+            .Select(x => x.Key).ShouldBe(new[] { "key1", "key3" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub1",
                 ClientId = "client2"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key2" });
+            .Select(x => x.Key).ShouldBe(new[] { "key2" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub1",
                 ClientId = "client3"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key4" });
+            .Select(x => x.Key).ShouldBe(new[] { "key4" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub1",
                 ClientId = "client4"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key5", "key6" });
+            .Select(x => x.Key).ShouldBe(new[] { "key5", "key6" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub1",
                 ClientId = "client5"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub2",
                 ClientId = "client1"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub2",
                 ClientId = "client4"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key7" });
+            .Select(x => x.Key).ShouldBe(new[] { "key7" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
                 SubjectId = "sub3",
                 ClientId = "client1"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -126,7 +131,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client1",
                 SessionId = "session1"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key1" });
+            .Select(x => x.Key).ShouldBe(new[] { "key1" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -134,7 +139,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client1",
                 SessionId = "session2"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key3" });
+            .Select(x => x.Key).ShouldBe(new[] { "key3" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -142,7 +147,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client1",
                 SessionId = "session3"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -150,7 +155,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client2",
                 SessionId = "session1"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key2" });
+            .Select(x => x.Key).ShouldBe(new[] { "key2" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -158,7 +163,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client2",
                 SessionId = "session2"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -166,7 +171,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client4",
                 SessionId = "session4"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key6" });
+            .Select(x => x.Key).ShouldBe(new[] { "key6" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -174,7 +179,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client4",
                 SessionId = "session4"
             }))
-            .Select(x => x.Key).Should().BeEquivalentTo(new[] { "key7" });
+            .Select(x => x.Key).ShouldBe(new[] { "key7" }, ignoreOrder: true);
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -182,7 +187,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client4",
                 SessionId = "session1"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
 
             (await _subject.GetAllAsync(new PersistedGrantFilter
             {
@@ -190,7 +195,7 @@ namespace IdentityServer.UnitTests.Stores
                 ClientId = "client4",
                 SessionId = "session5"
             }))
-            .Select(x => x.Key).Should().BeEmpty();
+            .Select(x => x.Key).ShouldBeEmpty();
         }
 
         [Fact]
@@ -202,13 +207,13 @@ namespace IdentityServer.UnitTests.Stores
                 {
                     SubjectId = "sub1"
                 });
-                (await _subject.GetAsync("key1")).Should().BeNull();
-                (await _subject.GetAsync("key2")).Should().BeNull();
-                (await _subject.GetAsync("key3")).Should().BeNull();
-                (await _subject.GetAsync("key4")).Should().BeNull();
-                (await _subject.GetAsync("key5")).Should().BeNull();
-                (await _subject.GetAsync("key6")).Should().BeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldBeNull();
+                (await _subject.GetAsync("key2")).ShouldBeNull();
+                (await _subject.GetAsync("key3")).ShouldBeNull();
+                (await _subject.GetAsync("key4")).ShouldBeNull();
+                (await _subject.GetAsync("key5")).ShouldBeNull();
+                (await _subject.GetAsync("key6")).ShouldBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -216,13 +221,13 @@ namespace IdentityServer.UnitTests.Stores
                 {
                     SubjectId = "sub2"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().BeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldBeNull();
             }
             {
                 await Populate();
@@ -230,13 +235,13 @@ namespace IdentityServer.UnitTests.Stores
                 {
                     SubjectId = "sub3"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -245,13 +250,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client1"
                 });
-                (await _subject.GetAsync("key1")).Should().BeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().BeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -260,13 +265,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client2"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().BeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -275,13 +280,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client3"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().BeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -290,13 +295,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client4"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().BeNull();
-                (await _subject.GetAsync("key6")).Should().BeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldBeNull();
+                (await _subject.GetAsync("key6")).ShouldBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -305,13 +310,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client5"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -320,13 +325,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub2",
                     ClientId = "client1"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -335,13 +340,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub1",
                     ClientId = "client4"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().BeNull();
-                (await _subject.GetAsync("key6")).Should().BeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldBeNull();
+                (await _subject.GetAsync("key6")).ShouldBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -350,13 +355,13 @@ namespace IdentityServer.UnitTests.Stores
                     SubjectId = "sub3",
                     ClientId = "client1"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -366,13 +371,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client1",
                     SessionId = "session1"
                 });
-                (await _subject.GetAsync("key1")).Should().BeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -382,13 +387,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client1",
                     SessionId = "session2"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().BeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -398,13 +403,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client1",
                     SessionId = "session3"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -414,13 +419,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client2",
                     SessionId = "session1"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().BeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -430,13 +435,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client2",
                     SessionId = "session2"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -446,13 +451,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client4",
                     SessionId = "session4"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().BeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -462,13 +467,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client4",
                     SessionId = "session4"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().BeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldBeNull();
             }
             {
                 await Populate();
@@ -478,13 +483,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client4",
                     SessionId = "session1"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -494,13 +499,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client4",
                     SessionId = "session5"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
             {
                 await Populate();
@@ -510,13 +515,13 @@ namespace IdentityServer.UnitTests.Stores
                     ClientId = "client1",
                     SessionId = "session1"
                 });
-                (await _subject.GetAsync("key1")).Should().NotBeNull();
-                (await _subject.GetAsync("key2")).Should().NotBeNull();
-                (await _subject.GetAsync("key3")).Should().NotBeNull();
-                (await _subject.GetAsync("key4")).Should().NotBeNull();
-                (await _subject.GetAsync("key5")).Should().NotBeNull();
-                (await _subject.GetAsync("key6")).Should().NotBeNull();
-                (await _subject.GetAsync("key7")).Should().NotBeNull();
+                (await _subject.GetAsync("key1")).ShouldNotBeNull();
+                (await _subject.GetAsync("key2")).ShouldNotBeNull();
+                (await _subject.GetAsync("key3")).ShouldNotBeNull();
+                (await _subject.GetAsync("key4")).ShouldNotBeNull();
+                (await _subject.GetAsync("key5")).ShouldNotBeNull();
+                (await _subject.GetAsync("key6")).ShouldNotBeNull();
+                (await _subject.GetAsync("key7")).ShouldNotBeNull();
             }
         }
 

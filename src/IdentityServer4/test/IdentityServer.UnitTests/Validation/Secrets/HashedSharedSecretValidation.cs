@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -37,7 +38,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
         }
 
         [Fact]
@@ -56,7 +57,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -74,19 +75,19 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
 
             secret.Credential = "foobar";
             result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
 
             secret.Credential = "quux";
             result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
 
             secret.Credential = "notexpired";
             result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeTrue();
+            result.Success.ShouldBeTrue();
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -123,7 +124,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -140,7 +141,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
 
         [Fact]
@@ -158,7 +159,7 @@ namespace IdentityServer.UnitTests.Validation.Secrets
             };
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-            result.Success.Should().BeFalse();
+            result.Success.ShouldBeFalse();
         }
     }
 }

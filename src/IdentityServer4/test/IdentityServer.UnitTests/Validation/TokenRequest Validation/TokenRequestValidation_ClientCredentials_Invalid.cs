@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4.Stores;
@@ -33,8 +33,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.UnauthorizedClient);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -51,12 +51,12 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeFalse();
-            result.ValidatedRequest.ValidatedResources.Resources.ApiResources.Count.Should().Be(1);
-            result.ValidatedRequest.ValidatedResources.Resources.ApiResources.First().Name.Should().Be("api");
+            result.IsError.ShouldBeFalse();
+            result.ValidatedRequest.ValidatedResources.Resources.ApiResources.Count.ShouldBe(1);
+            result.ValidatedRequest.ValidatedResources.Resources.ApiResources.First().Name.ShouldBe("api");
 
-            result.ValidatedRequest.ValidatedResources.Resources.ApiScopes.Count.Should().Be(2);
-            result.ValidatedRequest.ValidatedResources.Resources.ApiScopes.Select(x=>x.Name).Should().BeEquivalentTo(new[] { "resource", "resource2" });
+            result.ValidatedRequest.ValidatedResources.Resources.ApiScopes.Count.ShouldBe(2);
+            result.ValidatedRequest.ValidatedResources.Resources.ApiScopes.Select(x=>x.Name).ShouldBe(new[] { "resource", "resource2" });
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -106,8 +106,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -123,8 +123,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -142,8 +142,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -159,8 +159,8 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             var result = await validator.ValidateRequestAsync(parameters, client.ToValidationResult());
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidScope);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidScope);
         }
     }
 }

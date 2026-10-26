@@ -1,9 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Options;
 using IdentityServer4.EntityFramework.Stores;
@@ -17,7 +17,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Duende.IdentityModel;
 using IdentityServer4.EntityFramework.Entities;
-using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
 using Xunit;
 
 namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
@@ -57,9 +56,9 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var foundDeviceFlowCodes = context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == deviceCode);
 
-                foundDeviceFlowCodes.Should().NotBeNull();
-                foundDeviceFlowCodes?.DeviceCode.Should().Be(deviceCode);
-                foundDeviceFlowCodes?.UserCode.Should().Be(userCode);
+                foundDeviceFlowCodes.ShouldNotBeNull();
+                foundDeviceFlowCodes?.DeviceCode.ShouldBe(deviceCode);
+                foundDeviceFlowCodes?.UserCode.ShouldBe(userCode);
             }
         }
 
@@ -85,12 +84,12 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var foundDeviceFlowCodes = context.DeviceFlowCodes.FirstOrDefault(x => x.DeviceCode == deviceCode);
 
-                foundDeviceFlowCodes.Should().NotBeNull();
+                foundDeviceFlowCodes.ShouldNotBeNull();
                 var deserializedData = new PersistentGrantSerializer().Deserialize<DeviceCode>(foundDeviceFlowCodes?.Data);
 
-                deserializedData.CreationTime.Should().BeCloseTo(data.CreationTime, TimeSpan.FromMicroseconds(1));
-                deserializedData.ClientId.Should().Be(data.ClientId);
-                deserializedData.Lifetime.Should().Be(data.Lifetime);
+                deserializedData.CreationTime.ShouldBe(data.CreationTime, TimeSpan.FromMicroseconds(1));
+                deserializedData.ClientId.ShouldBe(data.ClientId);
+                deserializedData.Lifetime.ShouldBe(data.Lifetime);
             }
         }
 
@@ -129,7 +128,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
 
                 // skip odd behaviour of in-memory provider
-                if (options.Extensions.All(x => x.GetType() != typeof(InMemoryOptionsExtension)))
+                if (!context.Database.IsInMemory())
                 {
                     await Assert.ThrowsAsync<DbUpdateException>(() =>
                         store.StoreDeviceAuthorizationAsync($"device_{Guid.NewGuid().ToString()}", existingUserCode, deviceCodeData));
@@ -172,7 +171,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
 
                 // skip odd behaviour of in-memory provider
-                if (options.Extensions.All(x => x.GetType() != typeof(InMemoryOptionsExtension)))
+                if (!context.Database.IsInMemory())
                 {
                     await Assert.ThrowsAsync<DbUpdateException>(() =>
                         store.StoreDeviceAuthorizationAsync(existingDeviceCode, $"user_{Guid.NewGuid().ToString()}", deviceCodeData));
@@ -219,10 +218,9 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 code = await store.FindByUserCodeAsync(testUserCode);
             }
             
-            code.Should().BeEquivalentTo(expectedDeviceCodeData, 
-                assertionOptions => assertionOptions.Excluding(x=> x.Subject));
+            ShouldBeEquivalentExceptSubject(code, expectedDeviceCodeData);
 
-            code.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).Should().NotBeNull();
+            code.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).ShouldNotBeNull();
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -232,7 +230,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
                 var code = await store.FindByUserCodeAsync($"user_{Guid.NewGuid().ToString()}");
-                code.Should().BeNull();
+                code.ShouldBeNull();
             }
         }
 
@@ -275,10 +273,9 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 code = await store.FindByDeviceCodeAsync(testDeviceCode);
             }
 
-            code.Should().BeEquivalentTo(expectedDeviceCodeData,
-                assertionOptions => assertionOptions.Excluding(x => x.Subject));
+            ShouldBeEquivalentExceptSubject(code, expectedDeviceCodeData);
 
-            code.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).Should().NotBeNull();
+            code.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).ShouldNotBeNull();
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -288,7 +285,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
                 var code = await store.FindByDeviceCodeAsync($"device_{Guid.NewGuid().ToString()}");
-                code.Should().BeNull();
+                code.ShouldBeNull();
             }
         }
 
@@ -347,15 +344,15 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             }
 
             // should be unchanged
-            updatedCodes.DeviceCode.Should().Be(testDeviceCode);
-            updatedCodes.ClientId.Should().Be(unauthorizedDeviceCode.ClientId);
-            updatedCodes.CreationTime.Should().Be(unauthorizedDeviceCode.CreationTime);
-            updatedCodes.Expiration.Should().Be(unauthorizedDeviceCode.CreationTime.AddSeconds(authorizedDeviceCode.Lifetime));
+            updatedCodes.DeviceCode.ShouldBe(testDeviceCode);
+            updatedCodes.ClientId.ShouldBe(unauthorizedDeviceCode.ClientId);
+            updatedCodes.CreationTime.ShouldBe(unauthorizedDeviceCode.CreationTime);
+            updatedCodes.Expiration.ShouldBe(unauthorizedDeviceCode.CreationTime.AddSeconds(authorizedDeviceCode.Lifetime));
 
             // should be changed
             var parsedCode = serializer.Deserialize<DeviceCode>(updatedCodes.Data);
-            parsedCode.Should().BeEquivalentTo(authorizedDeviceCode, assertionOptions => assertionOptions.Excluding(x => x.Subject));
-            parsedCode.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).Should().NotBeNull();
+            ShouldBeEquivalentExceptSubject(parsedCode, authorizedDeviceCode);
+            parsedCode.Subject.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject && x.Value == expectedSubject).ShouldNotBeNull();
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -395,7 +392,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.DeviceFlowCodes.FirstOrDefault(x => x.UserCode == testUserCode).Should().BeNull();
+                context.DeviceFlowCodes.FirstOrDefault(x => x.UserCode == testUserCode).ShouldBeNull();
             }
         }
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -406,6 +403,19 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
                 await store.RemoveByDeviceCodeAsync($"device_{Guid.NewGuid().ToString()}");
             }
+        }
+
+        private static void ShouldBeEquivalentExceptSubject(DeviceCode actual, DeviceCode expected)
+        {
+            actual.CreationTime.ShouldBe(expected.CreationTime);
+            actual.Lifetime.ShouldBe(expected.Lifetime);
+            actual.ClientId.ShouldBe(expected.ClientId);
+            actual.Description.ShouldBe(expected.Description);
+            actual.IsOpenId.ShouldBe(expected.IsOpenId);
+            actual.IsAuthorized.ShouldBe(expected.IsAuthorized);
+            actual.RequestedScopes.ShouldBe(expected.RequestedScopes, ignoreOrder: true);
+            actual.AuthorizedScopes.ShouldBe(expected.AuthorizedScopes, ignoreOrder: true);
+            actual.SessionId.ShouldBe(expected.SessionId);
         }
     }
 }

@@ -1,14 +1,15 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
@@ -180,8 +181,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            _pipeline.ErrorWasCalled.Should().BeTrue();
-            _pipeline.ErrorMessage.Error.Should().Be(OidcConstants.AuthorizeErrors.InvalidRequest);
+            _pipeline.ErrorWasCalled.ShouldBeTrue();
+            _pipeline.ErrorMessage.Error.ShouldBe(OidcConstants.AuthorizeErrors.InvalidRequest);
         }
 
         [Theory]
@@ -202,7 +203,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -215,13 +216,13 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
-            tokenResponse.TokenType.Should().Be("Bearer");
-            tokenResponse.AccessToken.Should().NotBeNull();
-            tokenResponse.IdentityToken.Should().NotBeNull();
-            tokenResponse.ExpiresIn.Should().BeGreaterThan(0);
+            tokenResponse.IsError.ShouldBeFalse();
+            tokenResponse.TokenType.ShouldBe("Bearer");
+            tokenResponse.AccessToken.ShouldNotBeNull();
+            tokenResponse.IdentityToken.ShouldNotBeNull();
+            tokenResponse.ExpiresIn.ShouldBeGreaterThan(0);
         }
 
         [Theory]
@@ -242,7 +243,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Sha256);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -255,13 +256,13 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeFalse();
-            tokenResponse.TokenType.Should().Be("Bearer");
-            tokenResponse.AccessToken.Should().NotBeNull();
-            tokenResponse.IdentityToken.Should().NotBeNull();
-            tokenResponse.ExpiresIn.Should().BeGreaterThan(0);
+            tokenResponse.IsError.ShouldBeFalse();
+            tokenResponse.TokenType.ShouldBe("Bearer");
+            tokenResponse.AccessToken.ShouldNotBeNull();
+            tokenResponse.IdentityToken.ShouldNotBeNull();
+            tokenResponse.ExpiresIn.ShouldBeGreaterThan(0);
         }
 
         [Theory]
@@ -279,7 +280,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 redirect_uri,
                 nonce: nonce);
 
-            authorizeResponse.Should().BeNull();
+            authorizeResponse.ShouldBeNull();
         }
         
         [Fact]
@@ -295,7 +296,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 redirect_uri,
                 nonce: nonce);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -308,9 +309,9 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = code_verifier
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeTrue();
+            tokenResponse.IsError.ShouldBeTrue();
         }
 
         [Theory]
@@ -332,8 +333,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 nonce: nonce,
                 codeChallenge:"a");
 
-            _pipeline.ErrorWasCalled.Should().BeTrue();
-            _pipeline.ErrorMessage.Error.Should().Be(OidcConstants.AuthorizeErrors.InvalidRequest);
+            _pipeline.ErrorWasCalled.ShouldBeTrue();
+            _pipeline.ErrorMessage.Error.ShouldBe(OidcConstants.AuthorizeErrors.InvalidRequest);
         }
 
         [Theory]
@@ -356,8 +357,8 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: new string('a', _pipeline.Options.InputLengthRestrictions.CodeChallengeMaxLength + 1)
             );
 
-            _pipeline.ErrorWasCalled.Should().BeTrue();
-            _pipeline.ErrorMessage.Error.Should().Be(OidcConstants.AuthorizeErrors.InvalidRequest);
+            _pipeline.ErrorWasCalled.ShouldBeTrue();
+            _pipeline.ErrorMessage.Error.ShouldBe(OidcConstants.AuthorizeErrors.InvalidRequest);
         }
 
         [Theory]
@@ -381,7 +382,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallengeMethod: "unknown_code_challenge_method"
             );
 
-            authorizeResponse.Should().BeNull();
+            authorizeResponse.ShouldBeNull();
         }
 
         [Theory]
@@ -402,7 +403,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -414,10 +415,10 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
 
                 Code = code,
                 RedirectUri = redirect_uri,
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeTrue();
-            tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            tokenResponse.IsError.ShouldBeTrue();
+            tokenResponse.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -438,7 +439,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -451,10 +452,10 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "a"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeTrue();
-            tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            tokenResponse.IsError.ShouldBeTrue();
+            tokenResponse.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -475,7 +476,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -488,10 +489,10 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = new string('a', _pipeline.Options.InputLengthRestrictions.CodeVerifierMaxLength + 1)
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeTrue();
-            tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            tokenResponse.IsError.ShouldBeTrue();
+            tokenResponse.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         [Theory]
@@ -512,7 +513,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 codeChallenge: code_challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Plain);
 
-            authorizeResponse.IsError.Should().BeFalse();
+            authorizeResponse.IsError.ShouldBeFalse();
 
             var code = authorizeResponse.Code;
 
@@ -525,17 +526,17 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 Code = code,
                 RedirectUri = redirect_uri,
                 CodeVerifier = "mismatched_code_verifier"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
-            tokenResponse.IsError.Should().BeTrue();
-            tokenResponse.Error.Should().Be(OidcConstants.TokenErrors.InvalidGrant);
+            tokenResponse.IsError.ShouldBeTrue();
+            tokenResponse.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
 
         private static string Sha256OfCodeVerifier(string codeVerifier)
         {
             var codeVerifierBytes = Encoding.ASCII.GetBytes(codeVerifier);
             var hashedBytes = codeVerifierBytes.Sha256();
-            var transformedCodeVerifier = Base64Url.Encode(hashedBytes);
+            var transformedCodeVerifier = Base64Url.EncodeToString(hashedBytes);
 
             return transformedCodeVerifier;
         }

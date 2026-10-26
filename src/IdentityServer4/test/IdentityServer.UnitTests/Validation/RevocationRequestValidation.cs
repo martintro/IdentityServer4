@@ -1,12 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
@@ -57,8 +57,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidRequest);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.TokenErrors.InvalidRequest);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
         }
 
         [Fact]
@@ -88,9 +88,9 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeFalse();
-            result.Token.Should().Be("foo");
-            result.TokenTypeHint.Should().Be("access_token");
+            result.IsError.ShouldBeFalse();
+            result.Token.ShouldBe("foo");
+            result.TokenTypeHint.ShouldBe("access_token");
         }
 
         [Fact]
@@ -105,9 +105,9 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeFalse();
-            result.Token.Should().Be("foo");
-            result.TokenTypeHint.Should().Be("refresh_token");
+            result.IsError.ShouldBeFalse();
+            result.Token.ShouldBe("foo");
+            result.TokenTypeHint.ShouldBe("refresh_token");
         }
 
         [Fact]
@@ -121,9 +121,9 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeFalse();
-            result.Token.Should().Be("foo");
-            result.TokenTypeHint.Should().BeNull();
+            result.IsError.ShouldBeFalse();
+            result.Token.ShouldBe("foo");
+            result.TokenTypeHint.ShouldBeNull();
         }
 
         [Fact]
@@ -138,8 +138,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await _validator.ValidateRequestAsync(parameters, _client);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.RevocationErrors.UnsupportedTokenType);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(Constants.RevocationErrors.UnsupportedTokenType);
         }
     }
 }

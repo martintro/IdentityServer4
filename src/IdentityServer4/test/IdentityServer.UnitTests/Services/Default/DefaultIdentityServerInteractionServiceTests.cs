@@ -1,12 +1,12 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -62,7 +62,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var context = await _subject.GetLogoutContextAsync("id");
 
-            context.SignOutIFrameUrl.Should().BeNull();
+            context.SignOutIFrameUrl.ShouldBeNull();
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var context = await _subject.GetLogoutContextAsync(null);
 
-            context.SignOutIFrameUrl.Should().NotBeNull();
+            context.SignOutIFrameUrl.ShouldNotBeNull();
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var context = await _subject.GetLogoutContextAsync("id");
 
-            context.SignOutIFrameUrl.Should().BeNull();
+            context.SignOutIFrameUrl.ShouldBeNull();
         }
 
         [Fact]
@@ -93,8 +93,8 @@ namespace IdentityServer.UnitTests.Services.Default
         {
             var context = await _subject.CreateLogoutContextAsync();
 
-            context.Should().BeNull();
-            _mockLogoutMessageStore.Messages.Should().BeEmpty();
+            context.ShouldBeNull();
+            _mockLogoutMessageStore.Messages.ShouldBeEmpty();
         }
 
         [Fact]
@@ -106,8 +106,8 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var context = await _subject.CreateLogoutContextAsync();
 
-            context.Should().NotBeNull();
-            _mockLogoutMessageStore.Messages.Should().NotBeEmpty();
+            context.ShouldNotBeNull();
+            _mockLogoutMessageStore.Messages.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -118,8 +118,8 @@ namespace IdentityServer.UnitTests.Services.Default
                 new ConsentResponse() { ScopesValuesConsented = new[] { "openid" } }, 
                 null);
 
-            (await act.Should().ThrowAsync<ArgumentNullException>())
-                .And.Message.Should().Contain("subject");
+            (await act.ShouldThrowAsync<ArgumentNullException>())
+                .Message.ShouldContain("subject");
         }
 
         [Fact]
@@ -144,9 +144,9 @@ namespace IdentityServer.UnitTests.Services.Default
             };
             await _subject.GrantConsentAsync(req, new ConsentResponse(), null);
 
-            _mockConsentStore.Messages.Should().NotBeEmpty();
+            _mockConsentStore.Messages.ShouldNotBeEmpty();
             var consentRequest = new ConsentRequest(req, "bob");
-            _mockConsentStore.Messages.First().Key.Should().Be(consentRequest.Id);
+            _mockConsentStore.Messages.First().Key.ShouldBe(consentRequest.Id);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.IntegrationTests.Common
@@ -77,29 +78,34 @@ namespace IdentityServer.IntegrationTests.Common
 
         public void Initialize(string basePath = null, bool enableLogging = false)
         {
-            var builder = new WebHostBuilder();
-            builder.ConfigureServices(ConfigureServices);
-            builder.Configure(app=>
-            {
-                if (basePath != null)
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder =>
                 {
-                    app.Map(basePath, map =>
+                    builder.UseTestServer();
+                    builder.ConfigureServices(ConfigureServices);
+                    builder.Configure(app =>
                     {
-                        ConfigureApp(map);
+                        if (basePath != null)
+                        {
+                            app.Map(basePath, map =>
+                            {
+                                ConfigureApp(map);
+                            });
+                        }
+                        else
+                        {
+                            ConfigureApp(app);
+                        }
                     });
-                }
-                else
-                {
-                    ConfigureApp(app);
-                }
-            });
 
-            if (enableLogging)
-            {
-                builder.ConfigureLogging((ctx, b) => b.AddConsole());
-            }
+                    if (enableLogging)
+                    {
+                        builder.ConfigureLogging((ctx, b) => b.AddConsole());
+                    }
+                })
+                .Start();
 
-            Server = new TestServer(builder);
+            Server = host.GetTestServer();
             Handler = Server.CreateHandler();
             
             BrowserClient = new BrowserClient(new BrowserHandler(Handler));
@@ -361,7 +367,7 @@ namespace IdentityServer.IntegrationTests.Common
 
             var url = CreateAuthorizeUrl(clientId, responseType, scope, redirectUri, state, nonce, loginHint, acrValues, responseMode, codeChallenge, codeChallengeMethod, extra);
             var result = await BrowserClient.GetAsync(url);
-            result.StatusCode.Should().Be(HttpStatusCode.Found);
+            result.StatusCode.ShouldBe(HttpStatusCode.Found);
 
             BrowserClient.AllowAutoRedirect = old;
 

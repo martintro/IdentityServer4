@@ -1,9 +1,9 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4.Stores;
@@ -39,8 +39,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateRequestAsync("token");
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateRequestAsync("token");
 
-            result.IsError.Should().BeFalse();
+            result.IsError.ShouldBeFalse();
         }
 
         [Fact]
@@ -88,8 +88,8 @@ namespace IdentityServer.UnitTests.Validation
 
             var result = await validator.ValidateRequestAsync("token");
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
     }
 }

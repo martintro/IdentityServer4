@@ -1,7 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Models;
 using Xunit;
 
@@ -16,7 +21,7 @@ namespace IdentityServer.UnitTests.Extensions
 
             var allowedAlgorithms = new List<ApiResource> { resource }.FindMatchingSigningAlgorithms();
 
-            allowedAlgorithms.Count().Should().Be(0);
+            allowedAlgorithms.Count().ShouldBe(0);
         }
         
         [Fact]
@@ -27,7 +32,7 @@ namespace IdentityServer.UnitTests.Extensions
 
             var allowedAlgorithms = new List<ApiResource> { resource1, resource2 }.FindMatchingSigningAlgorithms();
 
-            allowedAlgorithms.Count().Should().Be(0);
+            allowedAlgorithms.Count().ShouldBe(0);
         }
         
         [Theory]
@@ -69,12 +74,12 @@ namespace IdentityServer.UnitTests.Extensions
             if (expectedAlgorithms.Any())
             {
                 var allowedAlgorithms = new List<ApiResource> { resource1, resource2 }.FindMatchingSigningAlgorithms();
-                allowedAlgorithms.Should().BeEquivalentTo(expectedAlgorithms);
+                allowedAlgorithms.ShouldBe(expectedAlgorithms);
             }
             else
             {
                 Action act = () => new List<ApiResource> { resource1, resource2 }.FindMatchingSigningAlgorithms();
-                act.Should().Throw<InvalidOperationException>();
+                act.ShouldThrow<InvalidOperationException>();
             }
         }
         
@@ -128,12 +133,12 @@ namespace IdentityServer.UnitTests.Extensions
             if (expectedAlgorithms.Any())
             {
                 var allowedAlgorithms = new List<ApiResource> {resource1, resource2, resource3}.FindMatchingSigningAlgorithms();
-                allowedAlgorithms.Should().BeEquivalentTo(expectedAlgorithms);
+                allowedAlgorithms.ShouldBe(expectedAlgorithms);
             }
             else
             {
                 Action act = () => new List<ApiResource> {resource1, resource2, resource3}.FindMatchingSigningAlgorithms();
-                act.Should().Throw<InvalidOperationException>();
+                act.ShouldThrow<InvalidOperationException>();
             }
         }
     }

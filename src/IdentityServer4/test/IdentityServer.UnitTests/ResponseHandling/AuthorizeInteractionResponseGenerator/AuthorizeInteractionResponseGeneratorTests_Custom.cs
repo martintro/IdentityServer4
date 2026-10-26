@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -86,8 +86,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessInteractionAsync(request);
 
-            result.IsRedirect.Should().BeTrue();
-            result.RedirectUrl.Should().Be("/custom");
+            result.IsRedirect.ShouldBeTrue();
+            result.RedirectUrl.ShouldBe("/custom");
         }
 
         [Fact]
@@ -113,8 +113,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessInteractionAsync(request);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be("login_required");
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe("login_required");
         }
 
         [Fact]
@@ -140,9 +140,9 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessInteractionAsync(request);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be("interaction_required");
-            result.RedirectUrl.Should().BeNull();
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe("interaction_required");
+            result.RedirectUrl.ShouldBeNull();
         }
 
         [Fact]
@@ -168,8 +168,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             var result = await _subject.ProcessInteractionAsync(request);
 
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be("consent_required");
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe("consent_required");
         }
     }
 }

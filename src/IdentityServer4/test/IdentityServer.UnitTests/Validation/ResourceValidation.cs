@@ -1,11 +1,12 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.UnitTests.Validation.Setup;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -83,7 +84,7 @@ namespace IdentityServer.UnitTests.Validation
         {
             var scopes = string.Empty.ParseScopesString();
 
-            scopes.Should().BeNull();
+            scopes.ShouldBeNull();
         }
 
         [Fact]
@@ -92,11 +93,11 @@ namespace IdentityServer.UnitTests.Validation
         {
             var scopes = "scope3 scope2 scope1".ParseScopesString();
 
-            scopes.Count.Should().Be(3);
+            scopes.Count.ShouldBe(3);
 
-            scopes[0].Should().Be("scope1");
-            scopes[1].Should().Be("scope2");
-            scopes[2].Should().Be("scope3");
+            scopes[0].ShouldBe("scope1");
+            scopes[1].ShouldBe("scope2");
+            scopes[2].ShouldBe("scope3");
         }
 
         [Fact]
@@ -105,11 +106,11 @@ namespace IdentityServer.UnitTests.Validation
         {
             var scopes = "   scope3     scope2     scope1   ".ParseScopesString();
 
-            scopes.Count.Should().Be(3);
+            scopes.Count.ShouldBe(3);
 
-            scopes[0].Should().Be("scope1");
-            scopes[1].Should().Be("scope2");
-            scopes[2].Should().Be("scope3");
+            scopes[0].ShouldBe("scope1");
+            scopes[1].ShouldBe("scope2");
+            scopes[2].ShouldBe("scope3");
         }
 
         [Fact]
@@ -118,10 +119,10 @@ namespace IdentityServer.UnitTests.Validation
         {
             var scopes = "scope2 scope1 scope2".ParseScopesString();
 
-            scopes.Count.Should().Be(2);
+            scopes.Count.ShouldBe(2);
 
-            scopes[0].Should().Be("scope1");
-            scopes[1].Should().Be("scope2");
+            scopes[0].ShouldBe("scope1");
+            scopes[1].ShouldBe("scope2");
         }
 
         [Fact]
@@ -138,8 +139,8 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeFalse();
-            result.InvalidScopes.Should().Contain("offline_access");
+            result.Succeeded.ShouldBeFalse();
+            result.InvalidScopes.ShouldContain("offline_access");
         }
 
         [Fact]
@@ -155,8 +156,8 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.InvalidScopes.Should().BeEmpty();
+            result.Succeeded.ShouldBeTrue();
+            result.InvalidScopes.ShouldBeEmpty();
         }
 
         [Fact]
@@ -173,9 +174,9 @@ namespace IdentityServer.UnitTests.Validation
                     Scopes = scopes
                 });
 
-                result.Succeeded.Should().BeFalse();
-                result.InvalidScopes.Should().Contain("unknown");
-                result.InvalidScopes.Should().Contain("email");
+                result.Succeeded.ShouldBeFalse();
+                result.InvalidScopes.ShouldContain("unknown");
+                result.InvalidScopes.ShouldContain("email");
             }
             {
                 var scopes = "openid resource1 resource2".ParseScopesString();
@@ -187,8 +188,8 @@ namespace IdentityServer.UnitTests.Validation
                     Scopes = scopes
                 });
 
-                result.Succeeded.Should().BeFalse();
-                result.InvalidScopes.Should().Contain("resource2");
+                result.Succeeded.ShouldBeFalse();
+                result.InvalidScopes.ShouldContain("resource2");
             }
             {
                 var scopes = "openid email resource1".ParseScopesString();
@@ -200,8 +201,8 @@ namespace IdentityServer.UnitTests.Validation
                     Scopes = scopes
                 });
 
-                result.Succeeded.Should().BeFalse();
-                result.InvalidScopes.Should().Contain("email");
+                result.Succeeded.ShouldBeFalse();
+                result.InvalidScopes.ShouldContain("email");
             }
         }
 
@@ -218,8 +219,8 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeFalse();
-            result.InvalidScopes.Should().Contain("disabled");
+            result.Succeeded.ShouldBeFalse();
+            result.InvalidScopes.ShouldContain("disabled");
         }
 
         [Fact]
@@ -235,8 +236,8 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.InvalidScopes.Should().BeEmpty();
+            result.Succeeded.ShouldBeTrue();
+            result.InvalidScopes.ShouldBeEmpty();
         }
 
         [Fact]
@@ -252,9 +253,9 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeFalse();
-            result.InvalidScopes.Should().Contain("email");
-            result.InvalidScopes.Should().Contain("resource2");
+            result.Succeeded.ShouldBeFalse();
+            result.InvalidScopes.ShouldContain("email");
+            result.InvalidScopes.ShouldContain("resource2");
         }
 
         [Fact]
@@ -270,9 +271,9 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.Resources.IdentityResources.SelectMany(x => x.Name).Should().Contain("openid");
-            result.Resources.ApiScopes.Select(x => x.Name).Should().Contain("resource1");
+            result.Succeeded.ShouldBeTrue();
+            result.Resources.IdentityResources.Select(x => x.Name).ShouldContain("openid");
+            result.Resources.ApiScopes.Select(x => x.Name).ShouldContain("resource1");
         }
 
         [Fact]
@@ -288,9 +289,9 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.Resources.IdentityResources.Should().BeEmpty();
-            result.Resources.ApiScopes.Select(x => x.Name).Should().Contain("resource1");
+            result.Succeeded.ShouldBeTrue();
+            result.Resources.IdentityResources.ShouldBeEmpty();
+            result.Resources.ApiScopes.Select(x => x.Name).ShouldContain("resource1");
         }
 
         [Fact]
@@ -306,9 +307,9 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = scopes
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.Resources.IdentityResources.SelectMany(x => x.Name).Should().Contain("openid");
-            result.Resources.ApiResources.Should().BeEmpty();
+            result.Succeeded.ShouldBeTrue();
+            result.Resources.IdentityResources.Select(x => x.Name).ShouldContain("openid");
+            result.Resources.ApiResources.ShouldBeEmpty();
         }
 
         [Fact]
@@ -328,11 +329,11 @@ namespace IdentityServer.UnitTests.Validation
                 Scopes = new[] { "resource" }
             });
 
-            result.Succeeded.Should().BeTrue();
-            result.Resources.ApiResources.Count.Should().Be(2);
-            result.Resources.ApiResources.Select(x => x.Name).Should().BeEquivalentTo(new[] { "api1", "api2" });
-            result.RawScopeValues.Count().Should().Be(1);
-            result.RawScopeValues.Should().BeEquivalentTo(new[] { "resource" });
+            result.Succeeded.ShouldBeTrue();
+            result.Resources.ApiResources.Count.ShouldBe(2);
+            result.Resources.ApiResources.Select(x => x.Name).ShouldBe(new[] { "api1", "api2" });
+            result.RawScopeValues.Count().ShouldBe(1);
+            result.RawScopeValues.ShouldBe(new[] { "resource" });
         }
     }
 }

@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Xunit;
@@ -27,7 +27,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            (await a.Should().ThrowAsync<Exception>()).And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            var exception = await a.ShouldThrowAsync<Exception>();
+            exception.Message.ShouldContain("duplicate");
+            exception.Message.ShouldContain("identity scopes");
         }
 
         [Fact]
@@ -52,7 +54,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            (await a.Should().ThrowAsync<Exception>()).And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("api resources");
+            var exception = await a.ShouldThrowAsync<Exception>();
+            exception.Message.ShouldContain("duplicate");
+            exception.Message.ShouldContain("api resources");
         }
 
         [Fact]
@@ -77,7 +81,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.FindResourcesByScopeAsync(new string[] { "A" });
-            (await a.Should().ThrowAsync<Exception>()).And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            var exception = await a.ShouldThrowAsync<Exception>();
+            exception.Message.ShouldContain("duplicate");
+            exception.Message.ShouldContain("identity scopes");
         }
 
         [Fact]
@@ -108,10 +114,10 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             var result = await store.FindResourcesByScopeAsync(new string[] { "a" });
-            result.ApiResources.Count.Should().Be(2);
-            result.ApiScopes.Count.Should().Be(1);
-            result.ApiResources.Select(x => x.Name).Should().BeEquivalentTo(new[] { "api1", "api2" });
-            result.ApiScopes.Select(x => x.Name).Should().BeEquivalentTo(new[] { "a" });
+            result.ApiResources.Count.ShouldBe(2);
+            result.ApiScopes.Count.ShouldBe(1);
+            result.ApiResources.Select(x => x.Name).ShouldBe(new[] { "api1", "api2" });
+            result.ApiScopes.Select(x => x.Name).ShouldBe(new[] { "a" });
         }
 
         [Fact]
@@ -141,7 +147,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             var result = await store.FindResourcesByScopeAsync(new string[] { "a" });
-            result.ApiResources.Count.Should().Be(1);
+            result.ApiResources.Count.ShouldBe(1);
         }
 
         public class MockResourceStore : IResourceStore

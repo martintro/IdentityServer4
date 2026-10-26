@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4;
@@ -202,11 +202,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 nonce: "123nonce",
                 redirectUri: "https://client/callback");
             
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Client must use request object, but no request or request_uri parameter present");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Client must use request object, but no request or request_uri parameter present");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -238,23 +238,23 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
 
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            _mockPipeline.LoginRequest.RequestObjectValues.Should().ContainKey("foo");
-            _mockPipeline.LoginRequest.RequestObjectValues["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.RequestObjectValues.Count.ShouldBe(11);
+            _mockPipeline.LoginRequest.RequestObjectValues.ShouldContainKey("foo");
+            _mockPipeline.LoginRequest.RequestObjectValues["foo"].ShouldBe("123foo");
         }
 
         [Fact]
@@ -286,23 +286,23 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
 
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            _mockPipeline.LoginRequest.RequestObjectValues.Should().ContainKey("foo");
-            _mockPipeline.LoginRequest.RequestObjectValues["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.RequestObjectValues.Count.ShouldBe(11);
+            _mockPipeline.LoginRequest.RequestObjectValues.ShouldContainKey("foo");
+            _mockPipeline.LoginRequest.RequestObjectValues["foo"].ShouldBe("123foo");
         }
 
         [Fact]
@@ -334,23 +334,23 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
 
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            _mockPipeline.LoginRequest.RequestObjectValues.Should().ContainKey("foo");
-            _mockPipeline.LoginRequest.RequestObjectValues["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.RequestObjectValues.Count.ShouldBe(11);
+            _mockPipeline.LoginRequest.RequestObjectValues.ShouldContainKey("foo");
+            _mockPipeline.LoginRequest.RequestObjectValues["foo"].ShouldBe("123foo");
         }
         
         [Fact]
@@ -384,23 +384,23 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
 
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            _mockPipeline.LoginRequest.RequestObjectValues.Should().ContainKey("foo");
-            _mockPipeline.LoginRequest.RequestObjectValues["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.RequestObjectValues.Count.ShouldBe(11);
+            _mockPipeline.LoginRequest.RequestObjectValues.ShouldContainKey("foo");
+            _mockPipeline.LoginRequest.RequestObjectValues["foo"].ShouldBe("123foo");
         }
         
         [Fact]
@@ -434,10 +434,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
         
         [Fact]
@@ -478,11 +478,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     foo = "bad",
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Parameter mismatch in JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Parameter mismatch in JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -522,26 +522,30 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
 
-            _mockPipeline.LoginRequest.Parameters["someObj"].Should().NotBeNull();
+            _mockPipeline.LoginRequest.Parameters["someObj"].ShouldNotBeNull();
             var someObj2 = JsonSerializer.Deserialize(_mockPipeline.LoginRequest.Parameters["someObj"], someObj.GetType());
-            someObj.Should().BeEquivalentTo(someObj2);
-            _mockPipeline.LoginRequest.Parameters["someArr"].Should().NotBeNull();
+            someObj.ShouldBe(someObj2);
+            _mockPipeline.LoginRequest.Parameters["someArr"].ShouldNotBeNull();
             var someArr2 = JsonSerializer.Deserialize<string[]>(_mockPipeline.LoginRequest.Parameters["someArr"]);
-            someArr2.Should().Contain(new[] { "a", "c", "b" });
-            someArr2.Length.Should().Be(3);
+            someArr2.ShouldContain("a");
+            someArr2.ShouldContain("c");
+            someArr2.ShouldContain("b");
+            someArr2.Length.ShouldBe(3);
 
-            _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(13);
-            _mockPipeline.LoginRequest.RequestObjectValues["someObj"].Should().NotBeNull();
+            _mockPipeline.LoginRequest.RequestObjectValues.Count.ShouldBe(13);
+            _mockPipeline.LoginRequest.RequestObjectValues["someObj"].ShouldNotBeNull();
             someObj2 = JsonSerializer.Deserialize(_mockPipeline.LoginRequest.RequestObjectValues["someObj"], someObj.GetType());
-            someObj.Should().BeEquivalentTo(someObj2);
-            _mockPipeline.LoginRequest.RequestObjectValues["someArr"].Should().NotBeNull();
+            someObj.ShouldBe(someObj2);
+            _mockPipeline.LoginRequest.RequestObjectValues["someArr"].ShouldNotBeNull();
             someArr2 = JsonSerializer.Deserialize<string[]>(_mockPipeline.LoginRequest.Parameters["someArr"]);
-            someArr2.Should().Contain(new[] { "a", "c", "b" });
-            someArr2.Length.Should().Be(3);
+            someArr2.ShouldContain("a");
+            someArr2.ShouldContain("c");
+            someArr2.ShouldContain("b");
+            someArr2.Length.ShouldBe(3);
         }
 
         [Fact]
@@ -571,11 +575,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid client_id");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid client_id");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
         
         [Fact]
@@ -606,11 +610,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request = requestJwt
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -643,11 +647,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -680,11 +684,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -717,11 +721,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -754,11 +758,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_object");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_object");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -790,11 +794,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
 
         [Fact]
@@ -827,11 +831,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt
                 });
 
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request");
-            _mockPipeline.ErrorMessage.ErrorDescription.Should().Be("Invalid JWT request");
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request");
+            _mockPipeline.ErrorMessage.ErrorDescription.ShouldBe("Invalid JWT request");
+            _mockPipeline.LoginRequest.ShouldBeNull();
         }
         
         [Fact]
@@ -859,7 +863,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             });
             _mockPipeline.JwtRequestMessageHandler.OnInvoke = req =>
             {
-                req.RequestUri.Should().Be(new Uri("http://client_jwt"));
+                req.RequestUri.ShouldBe(new Uri("http://client_jwt"));
                 return Task.CompletedTask;
             };
             _mockPipeline.JwtRequestMessageHandler.Response.Content = new StringContent(requestJwt);
@@ -872,10 +876,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeFalse();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeFalse();
         }
 
         [Fact]
@@ -903,7 +907,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             });
             _mockPipeline.JwtRequestMessageHandler.OnInvoke = req =>
             {
-                req.RequestUri.Should().Be(new Uri("http://client_jwt"));
+                req.RequestUri.ShouldBe(new Uri("http://client_jwt"));
                 return Task.CompletedTask;
             };
             _mockPipeline.JwtRequestMessageHandler.Response.Content = new StringContent(requestJwt);
@@ -916,20 +920,20 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeTrue();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeTrue();
         }
         
         [Fact]
@@ -958,7 +962,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             }, setJwtTyp: true);
             _mockPipeline.JwtRequestMessageHandler.OnInvoke = req =>
             {
-                req.RequestUri.Should().Be(new Uri("http://client_jwt"));
+                req.RequestUri.ShouldBe(new Uri("http://client_jwt"));
                 return Task.CompletedTask;
             };
             _mockPipeline.JwtRequestMessageHandler.Response.Content = new StringContent(requestJwt);
@@ -972,20 +976,20 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.LoginRequest.Should().NotBeNull();
-            _mockPipeline.LoginRequest.Client.ClientId.Should().Be(_client.ClientId);
-            _mockPipeline.LoginRequest.DisplayMode.Should().Be("popup");
-            _mockPipeline.LoginRequest.UiLocales.Should().Be("ui_locale_value");
-            _mockPipeline.LoginRequest.IdP.Should().Be("idp_value");
-            _mockPipeline.LoginRequest.Tenant.Should().Be("tenant_value");
-            _mockPipeline.LoginRequest.LoginHint.Should().Be("login_hint_value");
-            _mockPipeline.LoginRequest.AcrValues.Should().BeEquivalentTo(new string[] { "acr_2", "acr_1" });
-            _mockPipeline.LoginRequest.Parameters.AllKeys.Should().Contain("foo");
-            _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
+            _mockPipeline.LoginRequest.ShouldNotBeNull();
+            _mockPipeline.LoginRequest.Client.ClientId.ShouldBe(_client.ClientId);
+            _mockPipeline.LoginRequest.DisplayMode.ShouldBe("popup");
+            _mockPipeline.LoginRequest.UiLocales.ShouldBe("ui_locale_value");
+            _mockPipeline.LoginRequest.IdP.ShouldBe("idp_value");
+            _mockPipeline.LoginRequest.Tenant.ShouldBe("tenant_value");
+            _mockPipeline.LoginRequest.LoginHint.ShouldBe("login_hint_value");
+            _mockPipeline.LoginRequest.AcrValues.ShouldBe(new string[] { "acr_2", "acr_1" }, ignoreOrder: true);
+            _mockPipeline.LoginRequest.Parameters.AllKeys.ShouldContain("foo");
+            _mockPipeline.LoginRequest.Parameters["foo"].ShouldBe("123foo");
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeTrue();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeTrue();
         }
         
         [Fact]
@@ -1014,7 +1018,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             }, setJwtTyp: true);
             _mockPipeline.JwtRequestMessageHandler.OnInvoke = req =>
             {
-                req.RequestUri.Should().Be(new Uri("http://client_jwt"));
+                req.RequestUri.ShouldBe(new Uri("http://client_jwt"));
                 return Task.CompletedTask;
             };
             _mockPipeline.JwtRequestMessageHandler.Response.Content = new StringContent(requestJwt);
@@ -1027,11 +1031,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorMessage.Error.Should().Be("invalid_request_uri");
-            _mockPipeline.LoginRequest.Should().BeNull();
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeTrue();
+            _mockPipeline.ErrorMessage.Error.ShouldBe("invalid_request_uri");
+            _mockPipeline.LoginRequest.ShouldBeNull();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeTrue();
         }
         
         [Fact]
@@ -1049,12 +1053,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.LoginRequest.ShouldBeNull();
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeTrue();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeTrue();
         }
 
         [Fact]
@@ -1072,12 +1076,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
 
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.LoginRequest.Should().BeNull();
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.LoginRequest.ShouldBeNull();
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeTrue();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeTrue();
         }
 
         [Fact]
@@ -1093,11 +1097,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     request_uri = "http://" + new string('x', 512)
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.LoginRequest.Should().BeNull();
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.LoginRequest.ShouldBeNull();
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeFalse();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeFalse();
         }
 
         [Fact]
@@ -1134,11 +1138,11 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                     request = requestJwt,
                     request_uri = "http://client_jwt"
                 });
-            var response = await _mockPipeline.BrowserClient.GetAsync(url);
-            _mockPipeline.ErrorWasCalled.Should().BeTrue();
-            _mockPipeline.LoginRequest.Should().BeNull();
+            var response = await _mockPipeline.BrowserClient.GetAsync(url, TestContext.Current.CancellationToken);
+            _mockPipeline.ErrorWasCalled.ShouldBeTrue();
+            _mockPipeline.LoginRequest.ShouldBeNull();
 
-            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.Should().BeFalse();
+            _mockPipeline.JwtRequestMessageHandler.InvokeWasCalled.ShouldBeFalse();
         }
     }
 }

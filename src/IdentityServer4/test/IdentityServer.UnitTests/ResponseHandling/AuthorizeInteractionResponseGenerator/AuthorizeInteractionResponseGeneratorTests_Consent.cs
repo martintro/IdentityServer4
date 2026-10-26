@@ -1,5 +1,5 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Duende.IdentityModel;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
@@ -32,16 +32,16 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
         private void AssertUpdateConsentNotCalled()
         {
-            _mockConsent.ConsentClient.Should().BeNull();
-            _mockConsent.ConsentSubject.Should().BeNull();
-            _mockConsent.ConsentScopes.Should().BeNull();
+            _mockConsent.ConsentClient.ShouldBeNull();
+            _mockConsent.ConsentSubject.ShouldBeNull();
+            _mockConsent.ConsentScopes.ShouldBeNull();
         }
 
         private void AssertUpdateConsentCalled(Client client, ClaimsPrincipal user, params string[] scopes)
         {
-            _mockConsent.ConsentClient.Should().BeSameAs(client);
-            _mockConsent.ConsentSubject.Should().BeSameAs(user);
-            _mockConsent.ConsentScopes.Should().BeEquivalentTo(scopes);
+            _mockConsent.ConsentClient.ShouldBeSameAs(client);
+            _mockConsent.ConsentSubject.ShouldBeSameAs(user);
+            _mockConsent.ConsentScopes.ShouldBe(scopes);
         }
 
         private static IEnumerable<IdentityResource> GetIdentityScopes()
@@ -112,8 +112,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         {
             Func<Task> act = () => _subject.ProcessConsentAsync(null, new ConsentResponse());
 
-            (await act.Should().ThrowAsync<ArgumentNullException>())
-                .And.ParamName.Should().Be("request");
+            (await act.ShouldThrowAsync<ArgumentNullException>())
+                .ParamName.ShouldBe("request");
         }
         
         [Fact]
@@ -147,8 +147,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            (await act.Should().ThrowAsync<ArgumentException>())
-                .And.Message.Should().Contain("PromptMode");
+            (await act.ShouldThrowAsync<ArgumentException>())
+                .Message.ShouldContain("PromptMode");
         }
 
         [Fact]
@@ -167,8 +167,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            (await act.Should().ThrowAsync<ArgumentException>())
-                .And.Message.Should().Contain("PromptMode");
+            (await act.ShouldThrowAsync<ArgumentException>())
+                .Message.ShouldContain("PromptMode");
         }
 
 
@@ -187,9 +187,9 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             };
             var result = await _subject.ProcessConsentAsync(request);
 
-            request.WasConsentShown.Should().BeFalse();
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.AuthorizeErrors.ConsentRequired);
+            request.WasConsentShown.ShouldBeFalse();
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.AuthorizeErrors.ConsentRequired);
             AssertUpdateConsentNotCalled();
         }
         
@@ -206,8 +206,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ValidatedResources = GetValidatedResources("openid", "read", "write"),
             };
             var result = await _subject.ProcessConsentAsync(request);
-            request.WasConsentShown.Should().BeFalse();
-            result.IsConsent.Should().BeTrue();
+            request.WasConsentShown.ShouldBeFalse();
+            result.IsConsent.ShouldBeTrue();
             AssertUpdateConsentNotCalled();
         }
 
@@ -225,8 +225,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ValidatedResources = GetValidatedResources("openid", "read", "write"),
             };
             var result = await _subject.ProcessConsentAsync(request);
-            request.WasConsentShown.Should().BeFalse();
-            result.IsConsent.Should().BeTrue();
+            request.WasConsentShown.ShouldBeFalse();
+            result.IsConsent.ShouldBeTrue();
             AssertUpdateConsentNotCalled();
         }
 
@@ -249,9 +249,9 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ScopesValuesConsented = new string[] {}
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
-            request.WasConsentShown.Should().BeTrue();
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.AuthorizeErrors.AccessDenied);
+            request.WasConsentShown.ShouldBeTrue();
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.AuthorizeErrors.AccessDenied);
             AssertUpdateConsentNotCalled();
         }
 
@@ -273,9 +273,9 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ScopesValuesConsented = new string[] {}
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
-            request.WasConsentShown.Should().BeTrue();
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.AuthorizeErrors.AccessDenied);
+            request.WasConsentShown.ShouldBeTrue();
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.AuthorizeErrors.AccessDenied);
             AssertUpdateConsentNotCalled();
         }
 
@@ -301,8 +301,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             };
 
             var result = await _subject.ProcessConsentAsync(request, consent);
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(OidcConstants.AuthorizeErrors.AccessDenied);
+            result.IsError.ShouldBeTrue();
+            result.Error.ShouldBe(OidcConstants.AuthorizeErrors.AccessDenied);
             AssertUpdateConsentNotCalled();
         }
 
@@ -327,12 +327,12 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ScopesValuesConsented = new string[] { "openid", "read" }
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
-            request.ValidatedResources.Resources.IdentityResources.Count().Should().Be(1);
-            request.ValidatedResources.Resources.ApiScopes.Count().Should().Be(1);
-            "openid".Should().Be(request.ValidatedResources.Resources.IdentityResources.Select(x => x.Name).First());
-            "read".Should().Be(request.ValidatedResources.Resources.ApiScopes.First().Name);
-            request.WasConsentShown.Should().BeTrue();
-            result.IsConsent.Should().BeFalse();
+            request.ValidatedResources.Resources.IdentityResources.Count().ShouldBe(1);
+            request.ValidatedResources.Resources.ApiScopes.Count().ShouldBe(1);
+            "openid".ShouldBe(request.ValidatedResources.Resources.IdentityResources.Select(x => x.Name).First());
+            "read".ShouldBe(request.ValidatedResources.Resources.ApiScopes.First().Name);
+            request.WasConsentShown.ShouldBeTrue();
+            result.IsConsent.ShouldBeFalse();
             AssertUpdateConsentNotCalled();
         }
         
@@ -357,11 +357,11 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ScopesValuesConsented = new string[] { "openid", "read" }
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
-            request.ValidatedResources.Resources.IdentityResources.Count().Should().Be(1);
-            request.ValidatedResources.Resources.ApiScopes.Count().Should().Be(1);
-            "read".Should().Be(request.ValidatedResources.Resources.ApiScopes.First().Name);
-            request.WasConsentShown.Should().BeTrue();
-            result.IsConsent.Should().BeFalse();
+            request.ValidatedResources.Resources.IdentityResources.Count().ShouldBe(1);
+            request.ValidatedResources.Resources.ApiScopes.Count().ShouldBe(1);
+            "read".ShouldBe(request.ValidatedResources.Resources.ApiScopes.First().Name);
+            request.WasConsentShown.ShouldBeTrue();
+            result.IsConsent.ShouldBeFalse();
             AssertUpdateConsentNotCalled();
         }
 

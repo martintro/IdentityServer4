@@ -1,12 +1,11 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Options;
@@ -38,7 +37,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var store = new ClientStore(context, FakeLogger<ClientStore>.Create());
                 var client = await store.FindClientByIdAsync(Guid.NewGuid().ToString());
-                client.Should().BeNull();
+                client.ShouldBeNull();
             }
         }
 
@@ -64,7 +63,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 client = await store.FindClientByIdAsync(testClient.ClientId);
             }
 
-            client.Should().NotBeNull();
+            client.ShouldNotBeNull();
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -98,7 +97,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 client = await store.FindClientByIdAsync(testClient.ClientId);
             }
 
-            client.Should().BeEquivalentTo(testClient);
+            client.ShouldBeEquivalentTo(testClient);
         }
 
         [Theory, MemberData(nameof(TestDatabaseProviders))]
@@ -147,14 +146,14 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 const int timeout = 5000;
                 var task = Task.Run(() => store.FindClientByIdAsync(testClient.ClientId));
 
-                if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+                if (await Task.WhenAny(task, Task.Delay(timeout, TestContext.Current.CancellationToken)) == task)
                 {
-                    var client = task.Result;
-                    client.Should().BeEquivalentTo(testClient);
+                    var client = await task;
+                    client.ShouldBeEquivalentTo(testClient);
                 }
                 else
                 {
-                    throw new TestTimeoutException(timeout);
+                    throw TestTimeoutException.ForTimedOutTest(timeout);
                 }
             }
         }

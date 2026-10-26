@@ -1,14 +1,15 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Copyright (c) 2025 Martin Troedsson. All rights reserved.
+// Copyright (c) 2026 Martin Troedsson. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using Duende.IdentityModel.Client;
-using FluentAssertions;
+using Shouldly;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -28,9 +29,12 @@ namespace IdentityServer.IntegrationTests.Clients
             var val = new TestCustomTokenRequestValidator();
             Startup.CustomTokenRequestValidator = val;
 
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var host = new HostBuilder()
+                .ConfigureWebHost(builder => builder
+                    .UseTestServer()
+                    .UseStartup<Startup>())
+                .Start();
+            var server = host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -45,10 +49,10 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientId = "client",
                 ClientSecret = "secret",
                 Scope = "api1"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -64,10 +68,10 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -83,7 +87,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
                 UserName = "bob",
                 Password = "bob"
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
@@ -92,10 +96,10 @@ namespace IdentityServer.IntegrationTests.Clients
                 ClientSecret = "secret",
 
                 RefreshToken = response.RefreshToken
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         [Fact]
@@ -114,10 +118,10 @@ namespace IdentityServer.IntegrationTests.Clients
                     { "scope", "api1" },
                     { "custom_credential", "custom credential"}
                 }
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
             var fields = GetFields(response);
-            fields["custom"].GetString().Should().Be("custom");
+            fields["custom"].GetString().ShouldBe("custom");
         }
 
         private Dictionary<string, JsonElement> GetFields(TokenResponse response)
